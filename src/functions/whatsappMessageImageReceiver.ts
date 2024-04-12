@@ -10,6 +10,7 @@ export async function whatsappMessageImageReceiver(
   context: InvocationContext
 ): Promise<HttpResponseInit> {
   context.log(request);
+  context.log(request.body);
 
   const name = request.query.get("name") || (await request.text()) || "world";
 
