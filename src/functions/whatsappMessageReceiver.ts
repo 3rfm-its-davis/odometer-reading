@@ -14,16 +14,21 @@ export async function whatsappMessageReceiver(
 ): Promise<HttpResponseInit> {
   const str = await request.text();
   context.log(request.query);
+  context.log(request.query.get("hub.verify_token"));
   context.log(request.query.get("hub.challenge"));
 
   const body: any = JSON.parse(str);
   const imageId = body.entry[0].changes[0].value.messages[0].image.id;
 
-  if (process.env.VERIFY_TOKEN === request.query.get("VERIFY_TOKEN")) {
+  if (process.env.VERIFY_TOKEN === request.query.get("hub.verify_token")) {
     return {
       body: request.query.get("hub.challenge"),
       status: 200,
     };
+  }
+
+  if (!imageId) {
+    return { body: "No image found", status: 200 };
   }
 
   axios
@@ -90,7 +95,7 @@ export async function whatsappMessageReceiver(
 }
 
 app.http("whatsappMessageReceiver", {
-  methods: ["POST"],
+  methods: ["GET", "POST"],
   authLevel: "anonymous",
   handler: whatsappMessageReceiver,
 });
