@@ -13,12 +13,14 @@ export async function whatsappMessageReceiver(
   context: InvocationContext
 ): Promise<HttpResponseInit> {
   const str = await request.text();
-  context.log(request.query);
-  context.log(request.query.get("hub.verify_token"));
-  context.log(request.query.get("hub.challenge"));
 
-  const body: any = JSON.parse(str);
-  const imageId = body.entry[0].changes[0].value.messages[0].image.id;
+  const body: WhatsappMessageRequest = JSON.parse(str);
+  let imageId = "";
+  try {
+    imageId = body.entry[0]?.changes[0]?.value?.messages[0]?.image?.id;
+  } catch (error) {
+    throw new Error("Error parsing image id");
+  }
 
   if (process.env.VERIFY_TOKEN === request.query.get("hub.verify_token")) {
     return {
