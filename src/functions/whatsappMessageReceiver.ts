@@ -13,9 +13,18 @@ export async function whatsappMessageReceiver(
   context: InvocationContext
 ): Promise<HttpResponseInit> {
   const str = await request.text();
+  context.log(request.query);
+  context.log(request.query.get("hub.challenge"));
 
-  const body: WhatsappMessageRequest = JSON.parse(str);
+  const body: any = JSON.parse(str);
   const imageId = body.entry[0].changes[0].value.messages[0].image.id;
+
+  if (process.env.VERIFY_TOKEN === request.query.get("VERIFY_TOKEN")) {
+    return {
+      body: request.query.get("hub.challenge"),
+      status: 200,
+    };
+  }
 
   axios
     .get(`https://graph.facebook.com/v19.0/${imageId}`, {
@@ -32,7 +41,6 @@ export async function whatsappMessageReceiver(
           responseType: "arraybuffer",
         })
         .then((response) => {
-          console.log(response.data);
           analyzeImage(response.data).then((odometerLines) => {
             if (odometerLines.length === 1) {
               axios.post(
@@ -78,7 +86,7 @@ export async function whatsappMessageReceiver(
         });
     });
 
-  return { body: request.query.get("hub.challenge") };
+  return { body: "OK", status: 200 };
 }
 
 app.http("whatsappMessageReceiver", {
