@@ -1,12 +1,88 @@
-import { app, EventGridEvent, InvocationContext } from "@azure/functions";
+import {
+  app,
+  HttpRequest,
+  HttpResponseInit,
+  InvocationContext,
+} from "@azure/functions";
+import { analyzeImage } from "../utils/vision";
+import axios from "axios";
+require("dotenv").config();
 
 export async function whatsappMessageReceiver(
-  event: EventGridEvent,
+  request: HttpRequest,
   context: InvocationContext
-): Promise<void> {
-  context.log("Event grid function processed event:", event);
+): Promise<HttpResponseInit> {
+  const str = await request.text();
+
+  const body: WhatsappMessageRequest = JSON.parse(str);
+  const imageId = body.entry[0].changes[0].value.messages[0].image.id;
+
+  axios
+    .get(`https://graph.facebook.com/v19.0/${imageId}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
+      },
+    })
+    .then((response) => {
+      axios
+        .get(response.data.url, {
+          headers: {
+            Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
+          },
+          responseType: "arraybuffer",
+        })
+        .then((response) => {
+          console.log(response.data);
+          analyzeImage(response.data).then((odometerLines) => {
+            if (odometerLines.length === 1) {
+              axios.post(
+                `https://graph.facebook.com/v19.0/${body.entry[0].changes[0].value.metadata.phone_number_id}/messages`,
+                {
+                  messaging_product: "whatsapp",
+                  to: body.entry[0].changes[0].value.contacts[0].wa_id,
+                  type: "interactive",
+                  interactive: {
+                    type: "button",
+                    body: {
+                      text: `Your odometer reading is ${odometerLines[0].text}. Is this correct?`,
+                    },
+                    action: {
+                      buttons: [
+                        {
+                          type: "reply",
+                          reply: {
+                            id: "UNIQUE_BUTTON_ID_1",
+                            title: "Yes",
+                          },
+                        },
+                        {
+                          type: "reply",
+                          reply: {
+                            id: "UNIQUE_BUTTON_ID_2",
+                            title: "No",
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
+                    "Content-Type": "application/json",
+                  },
+                }
+              );
+            }
+          });
+        });
+    });
+
+  return { body: request.query.get("hub.challenge") };
 }
 
-app.eventGrid("whatsappMessageReceiver", {
+app.http("whatsappMessageReceiver", {
+  methods: ["POST"],
+  authLevel: "anonymous",
   handler: whatsappMessageReceiver,
 });
