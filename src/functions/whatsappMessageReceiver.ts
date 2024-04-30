@@ -12,24 +12,18 @@ export async function whatsappMessageReceiver(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
-  const str = await request.text();
-
-  const body: WhatsappMessageRequest = JSON.parse(str);
-  let imageId = "";
-  try {
-    imageId = body.entry[0]?.changes[0]?.value?.messages[0]?.image?.id;
-  } catch (error) {
-    throw new Error("Error parsing image id");
-  }
-
   if (process.env.VERIFY_TOKEN === request.query.get("hub.verify_token")) {
     return {
       body: request.query.get("hub.challenge"),
       status: 200,
     };
   }
-
-  if (!imageId) {
+  const str = await request.text();
+  const body: WhatsappMessageRequest = JSON.parse(str);
+  let imageId = "";
+  try {
+    imageId = body.entry[0]?.changes[0]?.value?.messages[0]?.image?.id;
+  } catch (error) {
     return { body: "No image found", status: 200 };
   }
 
