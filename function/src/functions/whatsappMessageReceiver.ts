@@ -23,11 +23,11 @@ export async function whatsappMessageReceiver(
   const body: WhatsappMessageRequest = JSON.parse(str);
   let imageId = "";
   try {
-    imageId = body.entry[0]?.changes[0]?.value?.messages[0]?.image?.id;
+    imageId = body.entry[0].changes[0].value.messages[0].image.id;
   } catch (error) {
-    return { body: "No image found", status: 200 };
+    return { body: "No image found", status: 500 };
   }
-  context.log(body);
+  context.log(JSON.stringify(body));
 
   axios
     .get(`https://graph.facebook.com/v19.0/${imageId}`, {
