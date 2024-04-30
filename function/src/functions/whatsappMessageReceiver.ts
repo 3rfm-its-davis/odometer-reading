@@ -13,6 +13,7 @@ export async function whatsappMessageReceiver(
   context: InvocationContext
 ): Promise<HttpResponseInit> {
   if (process.env.VERIFY_TOKEN === request.query.get("hub.verify_token")) {
+    context.log("Validating webhook");
     return {
       body: request.query.get("hub.challenge"),
       status: 200,
@@ -20,13 +21,13 @@ export async function whatsappMessageReceiver(
   }
 
   const str = await request.text();
-  context.log(str);
   const body: WhatsappMessageRequest = JSON.parse(str);
   let imageId = "";
   try {
     imageId = body.entry[0].changes[0].value.messages[0].image.id;
   } catch (error) {
-    return { body: "No image found", status: 500 };
+    context.log("No image found");
+    return { body: "No image found", status: 200 };
   }
 
   axios
