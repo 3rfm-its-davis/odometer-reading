@@ -18,6 +18,7 @@ export async function whatsappMessageReceiver(
       status: 200,
     };
   }
+
   const str = await request.text();
   const body: WhatsappMessageRequest = JSON.parse(str);
   let imageId = "";
@@ -26,6 +27,7 @@ export async function whatsappMessageReceiver(
   } catch (error) {
     return { body: "No image found", status: 200 };
   }
+  context.log(body);
 
   axios
     .get(`https://graph.facebook.com/v19.0/${imageId}`, {
