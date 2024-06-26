@@ -26,6 +26,8 @@ export async function whatsappMessageReceiver(
   const str = await request.text();
   const body: WhatsappMessageRequest = JSON.parse(str);
 
+  context.log("Body: ", body);
+
   let senderPhoneNumber: string = "";
   try {
     senderPhoneNumber = body.entry[0].changes[0].value.contacts[0].wa_id;
