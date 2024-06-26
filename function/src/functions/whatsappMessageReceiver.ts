@@ -6,6 +6,9 @@ import {
 } from "@azure/functions";
 import { analyzeImage } from "../utils/vision";
 import axios from "axios";
+import { client } from "../apollo";
+import { gql } from "@apollo/client";
+import { handleRegistration } from "./handleRegistration";
 require("dotenv").config();
 
 export async function whatsappMessageReceiver(
@@ -22,6 +25,39 @@ export async function whatsappMessageReceiver(
 
   const str = await request.text();
   const body: WhatsappMessageRequest = JSON.parse(str);
+
+  let senderPhoneNumber: string = "";
+  try {
+    senderPhoneNumber = body.entry[0].changes[0].value.contacts[0].wa_id;
+  } catch (error) {
+    context.log("No sender found");
+    return { body: "No sender found", status: 400 };
+  }
+
+  const userId = (
+    await client.query({
+      query: gql`
+        query FindUniqueUser($findUniqueUserWhere: UserWhereUniqueInput!) {
+          findUniqueUser(where: $findUniqueUserWhere) {
+            id
+          }
+        }
+      `,
+      variables: {
+        findUniqueUserWhere: {
+          phoneNumber: senderPhoneNumber,
+        },
+      },
+    })
+  ).data?.findUniqueUser?.id;
+
+  context.log("userId: ", userId);
+
+  if (userId === undefined) {
+    context.log("User not found");
+    return await handleRegistration(body, senderPhoneNumber, context, client);
+  }
+
   let imageId = "";
   try {
     imageId = body.entry[0].changes[0].value.messages[0].image.id;
@@ -30,64 +66,73 @@ export async function whatsappMessageReceiver(
     return { body: "No image found", status: 200 };
   }
 
-  axios
-    .get(`https://graph.facebook.com/v19.0/${imageId}`, {
+  const imageUrl = (
+    await axios.get(`https://graph.facebook.com/v19.0/${imageId}`, {
       headers: {
         Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
       },
     })
+  ).data.url;
+
+  const imageBuffer = Buffer.from(
+    (
+      await axios.get(imageUrl, {
+        headers: {
+          Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
+        },
+        responseType: "arraybuffer",
+      })
+    ).data
+  );
+
+  // register image buffer to the database
+  client
+    .mutate({
+      mutation: gql`
+        mutation CreateOnePost($data: PostCreateInput!) {
+          createOnePost(data: $data) {
+            id
+          }
+        }
+      `,
+      variables: {
+        data: {
+          image: imageBuffer,
+          postStatus: {
+            connect: {
+              type: {
+                equals: "submitted",
+              },
+            },
+          },
+          postedBy: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
+      },
+    })
     .then((response) => {
-      axios
-        .get(response.data.url, {
+      context.log("Post created", response);
+      // reply to the user for confirmation
+      axios.post(
+        `https://graph.facebook.com/v19.0/${body.entry[0].changes[0].value.metadata.phone_number_id}/messages`,
+        {
+          messaging_product: "whatsapp",
+          to: senderPhoneNumber,
+          type: "text",
+          text: {
+            body: "Your image has been received. We will confirm your submission shortly.",
+          },
+        },
+        {
           headers: {
             Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
+            "Content-Type": "application/json",
           },
-          responseType: "arraybuffer",
-        })
-        .then((response) => {
-          analyzeImage(response.data).then((odometerLines) => {
-            if (odometerLines.length === 1) {
-              axios.post(
-                `https://graph.facebook.com/v19.0/${body.entry[0].changes[0].value.metadata.phone_number_id}/messages`,
-                {
-                  messaging_product: "whatsapp",
-                  to: body.entry[0].changes[0].value.contacts[0].wa_id,
-                  type: "interactive",
-                  interactive: {
-                    type: "button",
-                    body: {
-                      text: `Your odometer reading is ${odometerLines[0].text}. Is this correct?`,
-                    },
-                    action: {
-                      buttons: [
-                        {
-                          type: "reply",
-                          reply: {
-                            id: "UNIQUE_BUTTON_ID_1",
-                            title: "Yes",
-                          },
-                        },
-                        {
-                          type: "reply",
-                          reply: {
-                            id: "UNIQUE_BUTTON_ID_2",
-                            title: "No",
-                          },
-                        },
-                      ],
-                    },
-                  },
-                },
-                {
-                  headers: {
-                    Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
-                    "Content-Type": "application/json",
-                  },
-                }
-              );
-            }
-          });
-        });
+        }
+      );
     });
 
   return { body: "OK", status: 200 };

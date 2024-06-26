@@ -1,0 +1,238 @@
+<mxfile host="65bd71144e">
+    <diagram id="o5kpKGzLWNGaeX7kiuKC" name="Page-1">
+        <mxGraphModel dx="1253" dy="801" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="24" value="Message received" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=Helvetica;fontSize=12;fontColor=#000099;align=center;strokeColor=#666666;fillColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="520" y="120" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="599.5699999999999" y="160" as="sourcePoint"/>
+                        <mxPoint x="599.5699999999999" y="200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="Retrieve the image from Meta server" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="520" y="440" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="599.57" y="240" as="sourcePoint"/>
+                        <mxPoint x="599.57" y="280" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="28" value="Is the phone number in the database?" style="rhombus;whiteSpace=wrap;html=1;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="520" y="280" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="680" y="299.57" as="sourcePoint"/>
+                        <mxPoint x="760" y="300" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="30" value="No" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#990000;" vertex="1" parent="1">
+                    <mxGeometry x="690" y="280" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="Yes" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#990000;" vertex="1" parent="1">
+                    <mxGeometry x="610" y="330" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="599.1300000000001" y="320" as="sourcePoint"/>
+                        <mxPoint x="599.1300000000001" y="360" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="33" value="Does the message match an access code?" style="rhombus;whiteSpace=wrap;html=1;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="760" y="280" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="920" y="299.56999999999994" as="sourcePoint"/>
+                        <mxPoint x="1000" y="300" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="35" value="No" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#990000;" vertex="1" parent="1">
+                    <mxGeometry x="930" y="280" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="Yes" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#990000;" vertex="1" parent="1">
+                    <mxGeometry x="850.87" y="330" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="840.0000000000001" y="320" as="sourcePoint"/>
+                        <mxPoint x="840.0000000000001" y="360" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="38" value="&quot;Please sign up by replying your access code.&quot;&amp;nbsp;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=Helvetica;fontSize=12;fontColor=#000099;align=center;strokeColor=#666666;fillColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="1000" y="280" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="Start" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="520" y="40" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="599.57" y="80" as="sourcePoint"/>
+                        <mxPoint x="599.57" y="120" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="41" value="&quot;You have successfully signed up. Please send your odometer reading.&quot;&amp;nbsp;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=Helvetica;fontSize=12;fontColor=#000099;align=center;strokeColor=#666666;fillColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="760" y="440" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="Register the phone number to the database" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="760" y="360" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="839.5699999999999" y="400" as="sourcePoint"/>
+                        <mxPoint x="839.5699999999999" y="439.9999999999999" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="44" value="End" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="1000" y="360" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1079.57" y="320" as="sourcePoint"/>
+                        <mxPoint x="1079.57" y="359.9999999999999" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="46" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="839.5699999999999" y="479.9999999999999" as="sourcePoint"/>
+                        <mxPoint x="839.5699999999999" y="519.9999999999999" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="47" value="End" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="760" y="520" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="Is the message image?" style="rhombus;whiteSpace=wrap;html=1;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="520" y="360" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="520" y="380" as="sourcePoint"/>
+                        <mxPoint x="440" y="380" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="53" value="No" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#990000;" vertex="1" parent="1">
+                    <mxGeometry x="450" y="360" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="Yes" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#990000;" vertex="1" parent="1">
+                    <mxGeometry x="610" y="410" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="599.1300000000001" y="400" as="sourcePoint"/>
+                        <mxPoint x="599.1300000000001" y="440" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="56" value="Does the message match a pattern?" style="rhombus;whiteSpace=wrap;html=1;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="280" y="360" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="Add the image to the database" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="520" y="520" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="599.1300000000001" y="480" as="sourcePoint"/>
+                        <mxPoint x="599.1300000000001" y="520" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="59" value="&quot;Thank you for uploading the image.&quot;&amp;nbsp;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=Helvetica;fontSize=12;fontColor=#000099;align=center;strokeColor=#666666;fillColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="520" y="600" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="599.1300000000001" y="560" as="sourcePoint"/>
+                        <mxPoint x="599.1300000000001" y="600" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="61" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="599.5699999999997" y="640" as="sourcePoint"/>
+                        <mxPoint x="599.5699999999997" y="680" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="62" value="End" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="520" y="680" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="help" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#990000;" vertex="1" parent="1">
+                    <mxGeometry x="370.87" y="410" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="360.0000000000001" y="400" as="sourcePoint"/>
+                        <mxPoint x="360.0000000000001" y="440" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="65" value="Send instruction message" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=Helvetica;fontSize=12;fontColor=#000099;align=center;strokeColor=#666666;fillColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="280" y="440" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="359.5699999999997" y="480" as="sourcePoint"/>
+                        <mxPoint x="359.5699999999997" y="520" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="67" value="End" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="280" y="520" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" value="Retrieve sender's phone number" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="520" y="200" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="280" y="380" as="sourcePoint"/>
+                        <mxPoint x="120" y="440" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="120" y="380"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="70" value="menu" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#990000;" vertex="1" parent="1">
+                    <mxGeometry x="170" y="360" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="74" value="Send menu message" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=Helvetica;fontSize=12;fontColor=#000099;align=center;strokeColor=#666666;fillColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="440" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="119.56999999999971" y="480" as="sourcePoint"/>
+                        <mxPoint x="119.56999999999971" y="520" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="76" value="End" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="520" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="77" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="240" y="380" as="sourcePoint"/>
+                        <mxPoint x="240" y="600" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="240" y="480"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="78" value="menu" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#990000;" vertex="1" parent="1">
+                    <mxGeometry x="290" y="520" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="79" value="&quot;Please send an image, 'menu' or 'help'.&quot;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=Helvetica;fontSize=12;fontColor=#000099;align=center;strokeColor=#666666;fillColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="600" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="80" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="239.5699999999997" y="640" as="sourcePoint"/>
+                        <mxPoint x="239.5699999999997" y="680" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="81" value="End" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;strokeColor=#666666;fontColor=#000099;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="680" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="none" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#990000;" vertex="1" parent="1">
+                    <mxGeometry x="250" y="410" width="60" height="20" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -1,0 +1,25 @@
+BEGIN TRY
+
+BEGIN TRAN;
+
+-- DropIndex
+ALTER TABLE [dbo].[User] DROP CONSTRAINT [User_phoneNumber_key];
+
+-- AlterTable
+ALTER TABLE [dbo].[User] ALTER COLUMN [phoneNumber] NVARCHAR(1000) NULL;
+
+-- CreateIndex
+ALTER TABLE [dbo].[User] ADD CONSTRAINT [User_phoneNumber_key] UNIQUE NONCLUSTERED ([phoneNumber]);
+
+COMMIT TRAN;
+
+END TRY
+BEGIN CATCH
+
+IF @@TRANCOUNT > 0
+BEGIN
+    ROLLBACK TRAN;
+END;
+THROW
+
+END CATCH
