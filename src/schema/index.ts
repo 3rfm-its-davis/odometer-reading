@@ -2,7 +2,7 @@ import { generateAllCrud } from "./generated/autocrud";
 import { builder } from "./builder";
 
 generateAllCrud();
-builder.queryType({ description: "Root query type" });
-builder.mutationType({ description: "Root mutation type" });
+builder.queryType();
+builder.mutationType();
 
 export const schema = builder.toSchema({});
