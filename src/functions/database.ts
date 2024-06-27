@@ -8,5 +8,7 @@ const server = new ApolloServer({
 });
 
 app.http("graphql", {
+  methods: ["POST"],
+  authLevel: "anonymous",
   handler: v4.startServerAndCreateHandler(server),
 });
