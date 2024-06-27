@@ -11,12 +11,10 @@
     "start": "func start",
     "test": "echo \"No tests yet...\""
   },
-  "dependencies": {
+  "devDependencies": {
     "@as-integrations/azure-functions": "^0.2.0",
     "@azure-rest/ai-vision-image-analysis": "^1.0.0-beta.2",
-    "@azure/functions": "^4.5.0"
-  },
-  "devDependencies": {
+    "@azure/functions": "^4.5.0",
     "@apollo/client": "^3.10.6",
     "@apollo/server": "^4.10.4",
     "@azure-rest/communication-messages": "^1.0.1",
