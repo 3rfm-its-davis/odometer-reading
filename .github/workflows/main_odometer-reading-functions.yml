@@ -44,7 +44,7 @@ jobs:
           path: release.zip
 
   deploy:
-    runs-on: windows-latest
+    runs-on: linux-latest
     needs: build
     environment:
       name: "Production"
