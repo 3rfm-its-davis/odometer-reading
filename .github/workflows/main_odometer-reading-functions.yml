@@ -35,7 +35,7 @@ jobs:
           popd
 
       - name: compress artifact for deployment
-        run: Compress-Archive -Path * -Destination release.zip
+        run: Compress-Archive -Path . -Destination release.zip
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -59,7 +59,7 @@ jobs:
           name: node-app
 
       - name: uncompress artifact for deployment
-        run: Expand-Archive -Path release.zip -DestinationPath *
+        run: Expand-Archive -Path release.zip -DestinationPath .
 
       - name: Login to Azure
         uses: azure/login@v1
