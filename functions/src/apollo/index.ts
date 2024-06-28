@@ -2,9 +2,10 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 require("dotenv").config();
 
-const PRISMA_ENDPOINT = process.env.PRISMA_ENDPOINT;
-
 export const client = new ApolloClient({
-  uri: PRISMA_ENDPOINT,
+  uri:
+    process.env.NODE_ENV || "development" === "development"
+      ? process.env.PRISMA_ENDPOINT_DEV
+      : process.env.PRISMA_ENDPOINT,
   cache: new InMemoryCache(),
 });

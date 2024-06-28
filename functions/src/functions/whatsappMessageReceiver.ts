@@ -8,6 +8,7 @@ import axios from "axios";
 import { client } from "../apollo";
 import { gql } from "@apollo/client";
 import { handleRegistration } from "./handleRegistration";
+
 require("dotenv").config();
 
 export async function whatsappMessageReceiver(
@@ -75,16 +76,21 @@ export async function whatsappMessageReceiver(
     })
   ).data.url;
 
-  const imageBuffer = Buffer.from(
-    (
-      await axios.get(imageUrl, {
-        headers: {
-          Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
-        },
-        responseType: "arraybuffer",
-      })
-    ).data
-  );
+  const imageBuffer: number[] = [
+    ...Buffer.from(
+      (
+        await axios.get(imageUrl, {
+          headers: {
+            Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
+          },
+          responseType: "text",
+        })
+      ).data
+    ),
+  ];
+
+  // log Apollo client endpoint
+  context.log("Apollo client endpoint: ", client.link);
 
   // register image buffer to the database
   client
@@ -101,9 +107,7 @@ export async function whatsappMessageReceiver(
           image: imageBuffer,
           postStatus: {
             connect: {
-              type: {
-                equals: "submitted",
-              },
+              id: "bb896484-abb3-44f0-ae0a-cfce6c7a4d20",
             },
           },
           postedBy: {

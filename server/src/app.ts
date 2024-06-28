@@ -16,7 +16,11 @@ const main = async () => {
 
   await server.start();
 
-  app.use("/graphql", express.json(), expressMiddleware(server));
+  app.use(
+    "/graphql",
+    express.json({ limit: "50mb" }),
+    expressMiddleware(server)
+  );
 
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: process.env.PORT || 4000 }, resolve)
