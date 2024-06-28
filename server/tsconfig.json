@@ -4,6 +4,7 @@
     "target": "es2022",
     "lib": ["es2022"],
     "outDir": "./dist",
+    "types": ["node"],
     "rootDir": ".",
     "sourceMap": true,
     "strict": true,
