@@ -6,6 +6,7 @@
     "dev": "ts-node-dev --transpile-only --no-notify src/app.ts",
     "seed": "ts-node prisma/seed.ts"
   },
+  "main": "dist/src/app.js",
   "devDependencies": {
     "@apollo/server": "^4.10.4",
     "@pothos/core": "^3.41.1",
