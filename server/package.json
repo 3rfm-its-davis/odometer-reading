@@ -2,7 +2,7 @@
   "name": "server",
   "version": "0.1.0",
   "scripts": {
-    "start": "ts-node src/app.ts",
+    "build": "tsc",
     "dev": "ts-node-dev --transpile-only --no-notify src/app.ts",
     "seed": "ts-node prisma/seed.ts"
   },
