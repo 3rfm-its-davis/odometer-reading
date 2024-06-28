@@ -25,7 +25,7 @@ export async function whatsappMessageReceiver(
   const str = await request.text();
   const body: WhatsappMessageRequest = JSON.parse(str);
 
-  context.log("Body: ", body);
+  context.log("Body: ", JSON.stringify(body));
 
   let senderPhoneNumber: string = "";
   try {

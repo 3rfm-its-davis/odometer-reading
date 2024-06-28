@@ -2,7 +2,9 @@ import { PrismaClient } from "@prisma/client";
 require("dotenv").config();
 
 const accessCodes: string[] =
-  process.env.NODE_ENV === "development" ? require("./accessCodes.json") : [];
+  process.env.NODE_ENV === "development"
+    ? require("./seedValues/accessCodes.json")
+    : [];
 
 const prisma = new PrismaClient();
 const statusArray = [
