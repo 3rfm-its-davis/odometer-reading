@@ -8,8 +8,10 @@ CREATE TABLE [dbo].[User] (
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [User_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [updatedAt] DATETIME2 NOT NULL,
     [name] NVARCHAR(1000),
+    [phoneNumber] NVARCHAR(1000) NOT NULL,
     [accessCode] NVARCHAR(1000) NOT NULL,
     CONSTRAINT [User_pkey] PRIMARY KEY CLUSTERED ([id]),
+    CONSTRAINT [User_phoneNumber_key] UNIQUE NONCLUSTERED ([phoneNumber]),
     CONSTRAINT [User_accessCode_key] UNIQUE NONCLUSTERED ([accessCode])
 );
 
@@ -17,9 +19,9 @@ CREATE TABLE [dbo].[User] (
 CREATE TABLE [dbo].[Post] (
     [id] NVARCHAR(1000) NOT NULL,
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [Post_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
-    [image] NVARCHAR(1000) NOT NULL,
-    [reading] NVARCHAR(1000) NOT NULL,
-    [statusId] NVARCHAR(1000) NOT NULL,
+    [image] VARBINARY(max) NOT NULL,
+    [reading] FLOAT(53),
+    [postStatusId] NVARCHAR(1000) NOT NULL,
     [postedById] NVARCHAR(1000) NOT NULL,
     CONSTRAINT [Post_pkey] PRIMARY KEY CLUSTERED ([id])
 );
@@ -52,7 +54,7 @@ CREATE TABLE [dbo].[IncentiveTable] (
 );
 
 -- CreateIndex
-CREATE NONCLUSTERED INDEX [Post_statusId_idx] ON [dbo].[Post]([statusId]);
+CREATE NONCLUSTERED INDEX [Post_postStatusId_idx] ON [dbo].[Post]([postStatusId]);
 
 -- CreateIndex
 CREATE NONCLUSTERED INDEX [Post_postedById_idx] ON [dbo].[Post]([postedById]);

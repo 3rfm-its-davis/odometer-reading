@@ -96,7 +96,7 @@ export const UserWhereInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFilter}),
   updatedAt: t.field({"required":false,"type":DateTimeFilter}),
   name: t.field({"required":false,"type":StringNullableFilter}),
-  phoneNumber: t.field({"required":false,"type":StringNullableFilter}),
+  phoneNumber: t.field({"required":false,"type":StringFilter}),
   accessCode: t.field({"required":false,"type":StringFilter}),
   posts: t.field({"required":false,"type":PostListRelationFilter}),
   participation: t.field({"required":false,"type":ParticipationWhereInput}),
@@ -159,7 +159,7 @@ export const UserScalarWhereWithAggregatesInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
   updatedAt: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
   name: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
-  phoneNumber: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
+  phoneNumber: t.field({"required":false,"type":StringWithAggregatesFilter}),
   accessCode: t.field({"required":false,"type":StringWithAggregatesFilter}),
 });
 export const UserScalarWhereWithAggregatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserScalarWhereWithAggregatesInput>, false>('UserScalarWhereWithAggregatesInput').implement({
@@ -456,7 +456,7 @@ export const UserUpdateInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   name: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  phoneNumber: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  phoneNumber: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   accessCode: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   posts: t.field({"required":false,"type":PostUpdateManyWithoutPostedByNestedInput}),
   participation: t.field({"required":false,"type":ParticipationUpdateOneWithoutUserNestedInput}),
@@ -482,7 +482,7 @@ export const UserUpdateManyMutationInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   name: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  phoneNumber: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  phoneNumber: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   accessCode: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
 });
 export const UserUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateManyMutationInput>, false>('UserUpdateManyMutationInput').implement({
@@ -1757,7 +1757,7 @@ export const UserUpdateWithoutPostsInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   name: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  phoneNumber: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  phoneNumber: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   accessCode: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   participation: t.field({"required":false,"type":ParticipationUpdateOneWithoutUserNestedInput}),
 });
@@ -1859,7 +1859,7 @@ export const UserUpdateWithoutParticipationInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   name: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  phoneNumber: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  phoneNumber: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   accessCode: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   posts: t.field({"required":false,"type":PostUpdateManyWithoutPostedByNestedInput}),
 });

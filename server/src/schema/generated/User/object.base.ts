@@ -54,7 +54,7 @@ export const UserNameFieldObject = defineFieldObject('User', {
 export const UserPhoneNumberFieldObject = defineFieldObject('User', {
   type: "String",
   description: undefined,
-  nullable: true,
+  nullable: false,
   resolve: (parent) => parent.phoneNumber,
 });
 

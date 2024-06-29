@@ -68,6 +68,11 @@ export async function whatsappMessageReceiver(
     return { body: "No image found", status: 200 };
   }
 
+  if (imageId === undefined) {
+    context.log("No image found");
+    return { body: "No image found", status: 200 };
+  }
+
   const imageUrl = (
     await axios.get(`https://graph.facebook.com/v19.0/${imageId}`, {
       headers: {

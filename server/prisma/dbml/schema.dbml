@@ -7,7 +7,7 @@ Table User {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   name String
-  phoneNumber String [unique]
+  phoneNumber String [unique, not null]
   accessCode String [unique, not null]
   posts Post [not null]
   participation Participation

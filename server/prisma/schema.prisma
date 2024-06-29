@@ -35,7 +35,7 @@ model User {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   name          String?
-  phoneNumber   String?        @unique
+  phoneNumber   String         @unique @default(uuid())
   accessCode    String         @unique
   posts         Post[]
   participation Participation?
