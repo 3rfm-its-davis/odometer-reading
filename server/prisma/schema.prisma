@@ -56,9 +56,8 @@ model Post {
 }
 
 model PostStatus {
-  id        String   @id @default(uuid())
+  id        String   @id
   createdAt DateTime @default(now())
-  type      String
   Post      Post[]
 }
 

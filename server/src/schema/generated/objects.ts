@@ -69,7 +69,6 @@ export {
   PostStatusObject,
   PostStatusIdFieldObject,
   PostStatusCreatedAtFieldObject,
-  PostStatusTypeFieldObject,
   PostStatusPostFieldObject,
   createManyPostStatusMutation,
   createOnePostStatusMutation,

@@ -20,7 +20,7 @@ async function main() {
   statusArray.forEach(async (status) => {
     const result = await prisma.postStatus.create({
       data: {
-        type: status,
+        id: status,
       },
     });
     console.log(result);

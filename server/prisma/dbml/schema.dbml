@@ -27,7 +27,6 @@ Table Post {
 Table PostStatus {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
-  type String [not null]
   Post Post [not null]
 }
 

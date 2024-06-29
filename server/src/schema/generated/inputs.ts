@@ -69,7 +69,7 @@ export const PostScalarFieldEnum = builder.enumType('PostScalarFieldEnum', {
 });
 
 export const PostStatusScalarFieldEnum = builder.enumType('PostStatusScalarFieldEnum', {
-  values: ["id","createdAt","type"] as const,
+  values: ["id","createdAt"] as const,
 });
 
 export const ParticipationScalarFieldEnum = builder.enumType('ParticipationScalarFieldEnum', {
@@ -252,7 +252,6 @@ export const PostStatusWhereInputFields = (t: any) => ({
   NOT: t.field({"required":false,"type":[PostStatusWhereInput]}),
   id: t.field({"required":false,"type":StringFilter}),
   createdAt: t.field({"required":false,"type":DateTimeFilter}),
-  type: t.field({"required":false,"type":StringFilter}),
   Post: t.field({"required":false,"type":PostListRelationFilter}),
 });
 export const PostStatusWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostStatusWhereInput>, false>('PostStatusWhereInput').implement({
@@ -262,7 +261,6 @@ export const PostStatusWhereInput = builder.inputRef<PrismaUpdateOperationsInput
 export const PostStatusOrderByWithRelationInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   createdAt: t.field({"required":false,"type":SortOrder}),
-  type: t.field({"required":false,"type":SortOrder}),
   Post: t.field({"required":false,"type":PostOrderByRelationAggregateInput}),
 });
 export const PostStatusOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostStatusOrderByWithRelationInput>, false>('PostStatusOrderByWithRelationInput').implement({
@@ -275,7 +273,6 @@ export const PostStatusWhereUniqueInputFields = (t: any) => ({
   OR: t.field({"required":false,"type":[PostStatusWhereInput]}),
   NOT: t.field({"required":false,"type":[PostStatusWhereInput]}),
   createdAt: t.field({"required":false,"type":DateTimeFilter}),
-  type: t.field({"required":false,"type":StringFilter}),
   Post: t.field({"required":false,"type":PostListRelationFilter}),
 });
 export const PostStatusWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostStatusWhereUniqueInput>, false>('PostStatusWhereUniqueInput').implement({
@@ -285,7 +282,6 @@ export const PostStatusWhereUniqueInput = builder.inputRef<PrismaUpdateOperation
 export const PostStatusOrderByWithAggregationInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   createdAt: t.field({"required":false,"type":SortOrder}),
-  type: t.field({"required":false,"type":SortOrder}),
   _count: t.field({"required":false,"type":PostStatusCountOrderByAggregateInput}),
   _max: t.field({"required":false,"type":PostStatusMaxOrderByAggregateInput}),
   _min: t.field({"required":false,"type":PostStatusMinOrderByAggregateInput}),
@@ -300,7 +296,6 @@ export const PostStatusScalarWhereWithAggregatesInputFields = (t: any) => ({
   NOT: t.field({"required":false,"type":[PostStatusScalarWhereWithAggregatesInput]}),
   id: t.field({"required":false,"type":StringWithAggregatesFilter}),
   createdAt: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
-  type: t.field({"required":false,"type":StringWithAggregatesFilter}),
 });
 export const PostStatusScalarWhereWithAggregatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostStatusScalarWhereWithAggregatesInput>, false>('PostStatusScalarWhereWithAggregatesInput').implement({
   fields: PostStatusScalarWhereWithAggregatesInputFields,
@@ -536,9 +531,8 @@ export const PostUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperatio
 });
 
 export const PostStatusCreateInputFields = (t: any) => ({
-  id: t.string({"required":false}),
+  id: t.string({"required":true}),
   createdAt: t.field({"required":false,"type":DateTime}),
-  type: t.string({"required":true}),
   Post: t.field({"required":false,"type":PostCreateNestedManyWithoutPostStatusInput}),
 });
 export const PostStatusCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostStatusCreateInput>, false>('PostStatusCreateInput').implement({
@@ -548,7 +542,6 @@ export const PostStatusCreateInput = builder.inputRef<PrismaUpdateOperationsInpu
 export const PostStatusUpdateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
-  type: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   Post: t.field({"required":false,"type":PostUpdateManyWithoutPostStatusNestedInput}),
 });
 export const PostStatusUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostStatusUpdateInput>, false>('PostStatusUpdateInput').implement({
@@ -556,9 +549,8 @@ export const PostStatusUpdateInput = builder.inputRef<PrismaUpdateOperationsInpu
 });
 
 export const PostStatusCreateManyInputFields = (t: any) => ({
-  id: t.string({"required":false}),
+  id: t.string({"required":true}),
   createdAt: t.field({"required":false,"type":DateTime}),
-  type: t.string({"required":true}),
 });
 export const PostStatusCreateManyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostStatusCreateManyInput>, false>('PostStatusCreateManyInput').implement({
   fields: PostStatusCreateManyInputFields,
@@ -567,7 +559,6 @@ export const PostStatusCreateManyInput = builder.inputRef<PrismaUpdateOperations
 export const PostStatusUpdateManyMutationInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
-  type: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
 });
 export const PostStatusUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostStatusUpdateManyMutationInput>, false>('PostStatusUpdateManyMutationInput').implement({
   fields: PostStatusUpdateManyMutationInputFields,
@@ -942,7 +933,6 @@ export const FloatNullableWithAggregatesFilter = builder.inputRef<PrismaUpdateOp
 export const PostStatusCountOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   createdAt: t.field({"required":false,"type":SortOrder}),
-  type: t.field({"required":false,"type":SortOrder}),
 });
 export const PostStatusCountOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostStatusCountOrderByAggregateInput>, false>('PostStatusCountOrderByAggregateInput').implement({
   fields: PostStatusCountOrderByAggregateInputFields,
@@ -951,7 +941,6 @@ export const PostStatusCountOrderByAggregateInput = builder.inputRef<PrismaUpdat
 export const PostStatusMaxOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   createdAt: t.field({"required":false,"type":SortOrder}),
-  type: t.field({"required":false,"type":SortOrder}),
 });
 export const PostStatusMaxOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostStatusMaxOrderByAggregateInput>, false>('PostStatusMaxOrderByAggregateInput').implement({
   fields: PostStatusMaxOrderByAggregateInputFields,
@@ -960,7 +949,6 @@ export const PostStatusMaxOrderByAggregateInput = builder.inputRef<PrismaUpdateO
 export const PostStatusMinOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   createdAt: t.field({"required":false,"type":SortOrder}),
-  type: t.field({"required":false,"type":SortOrder}),
 });
 export const PostStatusMinOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostStatusMinOrderByAggregateInput>, false>('PostStatusMinOrderByAggregateInput').implement({
   fields: PostStatusMinOrderByAggregateInputFields,
@@ -1672,9 +1660,8 @@ export const ParticipationUpdateWithoutUserInput = builder.inputRef<PrismaUpdate
 });
 
 export const PostStatusCreateWithoutPostInputFields = (t: any) => ({
-  id: t.string({"required":false}),
+  id: t.string({"required":true}),
   createdAt: t.field({"required":false,"type":DateTime}),
-  type: t.string({"required":true}),
 });
 export const PostStatusCreateWithoutPostInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostStatusCreateWithoutPostInput>, false>('PostStatusCreateWithoutPostInput').implement({
   fields: PostStatusCreateWithoutPostInputFields,
@@ -1729,7 +1716,6 @@ export const PostStatusUpdateToOneWithWhereWithoutPostInput = builder.inputRef<P
 export const PostStatusUpdateWithoutPostInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
-  type: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
 });
 export const PostStatusUpdateWithoutPostInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostStatusUpdateWithoutPostInput>, false>('PostStatusUpdateWithoutPostInput').implement({
   fields: PostStatusUpdateWithoutPostInputFields,

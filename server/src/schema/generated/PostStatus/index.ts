@@ -2,7 +2,6 @@ export {
   PostStatusObject,
   PostStatusIdFieldObject,
   PostStatusCreatedAtFieldObject,
-  PostStatusTypeFieldObject,
   PostStatusPostFieldObject
 } from './object.base';
 export {

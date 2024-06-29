@@ -14,7 +14,6 @@ export const PostStatusObject = definePrismaObject('PostStatus', {
   fields: (t) => ({
     id: t.field(PostStatusIdFieldObject),
     createdAt: t.field(PostStatusCreatedAtFieldObject),
-    type: t.field(PostStatusTypeFieldObject),
     Post: t.relation('Post', PostStatusPostFieldObject(t)),
   }),
 });
@@ -31,13 +30,6 @@ export const PostStatusCreatedAtFieldObject = defineFieldObject('PostStatus', {
   description: undefined,
   nullable: false,
   resolve: (parent) => parent.createdAt,
-});
-
-export const PostStatusTypeFieldObject = defineFieldObject('PostStatus', {
-  type: "String",
-  description: undefined,
-  nullable: false,
-  resolve: (parent) => parent.type,
 });
 
 export const PostStatusPostFieldArgs = builder.args((t) => ({

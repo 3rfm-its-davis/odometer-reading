@@ -112,7 +112,7 @@ export async function whatsappMessageReceiver(
           image: imageBuffer,
           postStatus: {
             connect: {
-              id: "bb896484-abb3-44f0-ae0a-cfce6c7a4d20",
+              id: "submitted",
             },
           },
           postedBy: {
