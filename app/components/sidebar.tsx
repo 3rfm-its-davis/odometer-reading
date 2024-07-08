@@ -7,7 +7,7 @@ type SidebarProps = {
 export default function Sidebar(props: SidebarProps) {
   return (
     <>
-      <div className="flex flex-col w-64 h-screen bg-gray-800">
+      <div className="flex flex-col flex-none w-64 h-screen bg-gray-800">
         <div className="flex items-center justify-center h-20 border-b border-gray-700">
           <h1 className="text-white text-2xl">Users</h1>
         </div>
@@ -15,7 +15,7 @@ export default function Sidebar(props: SidebarProps) {
           {props.users
             ? props.users.map((user) => (
                 <button className="text-white w-full bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                  {user!.phoneNumber}
+                  <a href={`/home/${user!.phoneNumber}`}>{user!.phoneNumber}</a>
                 </button>
               ))
             : null}

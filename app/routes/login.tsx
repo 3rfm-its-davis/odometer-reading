@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Form } from "../components/form";
+import { LoginForm } from "../components/loginForm";
 import {
   ActionFunction,
   LoaderFunction,
@@ -90,7 +90,7 @@ export default function Login() {
           {formError}
         </div>
 
-        <Form
+        <LoginForm
           htmlFor="email"
           type="text"
           label="email"
@@ -99,7 +99,7 @@ export default function Login() {
           error={errors?.email}
         />
 
-        <Form
+        <LoginForm
           htmlFor="password"
           type="password"
           label="password"

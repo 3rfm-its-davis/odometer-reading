@@ -13,7 +13,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Home() {
   const users = useLoaderData<typeof loader>();
   return (
-    <div className="h-full flex">
+    <div className="h-full flex-auto flex">
       <Sidebar users={users} />
       <Outlet />
     </div>

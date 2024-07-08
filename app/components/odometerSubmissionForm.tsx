@@ -1,45 +1,39 @@
 import { useState, useEffect } from "react";
 
-type FormProps = {
+type OdometerSubmissionFormProps = {
   htmlFor: string;
-  label: string;
-  type?: string;
-  value: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
 };
 
-export function Form({
+export function OdometerSubmissionForm({
   htmlFor,
-  label,
-  type = "text",
-  value,
   onChange,
   error = "",
-}: FormProps) {
+}: OdometerSubmissionFormProps) {
   const [formError, setFormError] = useState(error);
-
   useEffect(() => {
     setFormError(error);
   }, [error]);
-
   return (
-    <div className="flex flex-col w-full">
-      <label htmlFor={htmlFor} className="text-gray-800 font-semibold">
-        {label}
-      </label>
+    <div className="flex">
       <input
-        type={type}
+        type="number"
         id={htmlFor}
         name={htmlFor}
-        value={value}
+        value={0}
         onChange={(e) => {
           onChange?.(e);
           setFormError("");
         }}
-        className="w-full p-2 my-2"
+        className="w-full p-2 bg-slate-100 border-slate-300 border-2"
       />
-      {formError && <p className="text-red-500">{formError}</p>}
+      <button
+        type="submit"
+        className="w-24 p-2 bg-slate-300 hover:bg-slate-500 transition duration-300 ease-in-out "
+      >
+        Submit
+      </button>
     </div>
   );
 }
