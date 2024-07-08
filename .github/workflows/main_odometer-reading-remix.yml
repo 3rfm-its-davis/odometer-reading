@@ -49,6 +49,12 @@ jobs:
         with:
           name: node-app
 
+      - name: Unzip artifact for deployment
+        run: unzip release.zip
+
+      - name: Remove zip file
+        run: rm release.zip
+
       - name: "Deploy to Azure Web App"
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
@@ -56,4 +62,3 @@ jobs:
           app-name: "odometer-reading-remix"
           slot-name: "Production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_986791073EA04897A3D63D2375A3ACAD }}
-          package: "release.zip"
