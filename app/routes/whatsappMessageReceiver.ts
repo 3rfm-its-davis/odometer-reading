@@ -1,8 +1,13 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
-  if (params["hub.mode"] !== "subscribe") {
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const url = new URL(request.url);
+  const mode = url.searchParams.get("hub.mode");
+  const token = url.searchParams.get("hub.verify_token");
+  const challenge = url.searchParams.get("hub.challenge");
+
+  if (mode === "subscribe") {
     if (request.method !== "POST") {
       return json({ message: "Method not allowed" }, 405);
     }
@@ -16,13 +21,13 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     if (!request.body) {
       return json({ message: "No body provided" }, 400);
     }
-    const verifyToken = params["hub.verify_token"];
+    const verifyToken = token;
 
     if (secret !== verifyToken) {
       return json({ message: "Verify token mismatch" }, 401);
     }
 
-    return json({ body: params["hub.challenge"] }, 200);
+    return json(challenge, 200);
   }
   return json({ message: "Invalid request" }, 400);
 };
