@@ -20,7 +20,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       return json({ message: "Verify token mismatch" }, 401);
     }
 
-    return json(challenge, 200);
+    return json(Number(challenge), 200);
   }
   return json({ message: "Invalid request" }, 400);
 };
