@@ -6,9 +6,10 @@ import { OdometerSubmissionForm } from "~/components/odometerSubmissionForm";
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await prisma.user.findUniqueOrThrow({
     where: {
-      phoneNumber: params.userId,
+      id: params.userId,
     },
   });
+
   const posts = await prisma.post.findMany({
     where: {
       postedById: user.id,
@@ -42,10 +43,11 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function User() {
   const { user, posts } = useLoaderData<typeof loader>();
+
   return (
     <div className="flex flex-col flex-auto p-6 divide-y  overflow-scroll">
       <div className="text-3xl pb-6">
-        <h1>User: {user.phoneNumber}</h1>
+        <h1>User: {user.id}</h1>
       </div>
       <div className="flex flex-col gap-y-4 py-4">
         <h2 className="text-2xl">Submitted</h2>

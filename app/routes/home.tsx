@@ -12,7 +12,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
         lt: "20000000000",
       },
     },
+    include: {
+      posts: {
+        where: {
+          postStatusId: "submitted",
+        },
+      },
+    },
   });
+
   return users;
 }
 
