@@ -3,11 +3,14 @@ export {
   UserIdFieldObject,
   UserCreatedAtFieldObject,
   UserUpdatedAtFieldObject,
-  UserNameFieldObject,
+  UserActivatedAtFieldObject,
+  UserDeletedAtFieldObject,
   UserPhoneNumberFieldObject,
   UserAccessCodeFieldObject,
   UserPostsFieldObject,
-  UserParticipationFieldObject
+  UserParticipationFieldObject,
+  UserUserStatusFieldObject,
+  UserUserStatusIdFieldObject
 } from './object.base';
 export {
   createManyUserMutation,

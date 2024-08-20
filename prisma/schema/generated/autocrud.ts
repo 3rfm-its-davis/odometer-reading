@@ -1,4 +1,5 @@
 import * as User from './User';
+import * as UserStatus from './UserStatus';
 import * as Admin from './Admin';
 import * as Post from './Post';
 import * as PostStatus from './PostStatus';
@@ -33,6 +34,24 @@ export const Cruds: Record<
       updateMany: User.updateManyUserMutationObject,
       updateOne: User.updateOneUserMutationObject,
       upsertOne: User.upsertOneUserMutationObject,
+    },
+  },
+  UserStatus: {
+    Object: UserStatus.UserStatusObject,
+    queries: {
+      findFirst: UserStatus.findFirstUserStatusQueryObject,
+      findMany: UserStatus.findManyUserStatusQueryObject,
+      count: UserStatus.countUserStatusQueryObject,
+      findUnique: UserStatus.findUniqueUserStatusQueryObject,
+    },
+    mutations: {
+      createMany: UserStatus.createManyUserStatusMutationObject,
+      createOne: UserStatus.createOneUserStatusMutationObject,
+      deleteMany: UserStatus.deleteManyUserStatusMutationObject,
+      deleteOne: UserStatus.deleteOneUserStatusMutationObject,
+      updateMany: UserStatus.updateManyUserStatusMutationObject,
+      updateOne: UserStatus.updateOneUserStatusMutationObject,
+      upsertOne: UserStatus.upsertOneUserStatusMutationObject,
     },
   },
   Admin: {

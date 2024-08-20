@@ -1,42 +1,39 @@
 import { PrismaClient } from "@prisma/client";
-require("dotenv").config();
+import dotenv from "dotenv";
+import accessCodes from "./seedValues/accessCodes.json";
 
-const accessCodes: string[] =
-  process.env.NODE_ENV === "development"
-    ? require("./seedValues/accessCodes.json")
-    : [];
+dotenv.config();
+
+const accessCodeArray: string[] =
+  process.env.NODE_ENV === "development" ? accessCodes : [];
 
 const prisma = new PrismaClient();
-const statusArray = [
-  "submitted",
-  "confirmedBySender",
-  "confirmedByDev",
+const postStatusArray = ["submitted", "confirmed", "rejected", "cancelled"];
+const userStatusArray = [
+  "initialized",
+  "activated",
+  "suspended",
+  "closed",
+  "stopping",
+  "deleted",
   "completed",
-  "cancelled",
 ];
 
 async function main() {
   await prisma.postStatus.deleteMany({});
-  statusArray.forEach(async (status) => {
-    const result = await prisma.postStatus.create({
-      data: {
-        id: status,
-      },
-    });
-    console.log(result);
+  await prisma.postStatus.createMany({
+    data: postStatusArray.map((item) => ({ id: item })),
   });
 
-  accessCodes.forEach(async (accessCode) => {
-    const result = await prisma.user.upsert({
-      where: {
-        accessCode: accessCode,
-      },
-      update: {},
-      create: {
-        accessCode: accessCode,
-      },
-    });
-    console.log(result);
+  await prisma.userStatus.deleteMany({});
+  await prisma.userStatus.createMany({
+    data: userStatusArray.map((item) => ({ id: item })),
+  });
+
+  await prisma.user.createMany({
+    data: accessCodeArray.map((item) => ({
+      accessCode: item,
+    })),
   });
 }
 

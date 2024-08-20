@@ -29,11 +29,22 @@ model User {
   id            String         @id @default(uuid())
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  name          String?
+  activatedAt   DateTime?
+  deletedAt     DateTime?
   phoneNumber   String         @unique @default(uuid())
   accessCode    String         @unique
   posts         Post[]
   participation Participation?
+  userStatus    UserStatus     @relation(fields: [userStatusId], references: [id])
+  userStatusId  String         @default("initialized")
+
+  @@index([userStatusId])
+}
+
+model UserStatus {
+  id        String   @id
+  createdAt DateTime @default(now())
+  User      User[]
 }
 
 model Admin {
@@ -44,6 +55,7 @@ model Admin {
 
 model Post {
   id           String     @id @default(uuid())
+  name         Int        @default(autoincrement())
   createdAt    DateTime   @default(now())
   image        Bytes
   reading      Float?
@@ -51,6 +63,8 @@ model Post {
   postStatusId String
   postedBy     User       @relation(fields: [postedById], references: [id])
   postedById   String
+  notes        String?
+  size         Float      @default(0)
 
   @@index([postStatusId])
   @@index([postedById])

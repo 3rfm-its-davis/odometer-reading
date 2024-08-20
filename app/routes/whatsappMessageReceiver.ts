@@ -1,9 +1,17 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import type {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  TypedResponse,
+} from "@remix-run/node";
 import { json } from "@remix-run/node";
-import axios from "axios";
-import { request } from "express";
 import { prisma } from "~/server/prisma.server";
-import { handleRegistration } from "~/server/user.server";
+import {
+  handleDelete,
+  handleRegistration,
+  handleStop,
+} from "~/server/handleRequests.server.";
+import { HandleRequestPayload } from "~/server/types.server";
+import { postImage } from "~/server/postImage.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -29,111 +37,128 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ message: "Invalid request" }, 400);
 };
 
+const getBody = async (request: Request) => {
+  const body = JSON.parse(await request.text());
+
+  console.log("Body: ", JSON.stringify(body));
+
+  return body;
+};
+
+const getPhoneNumber = async (body: any) => {
+  let phoneNumber: string | null = null;
+  try {
+    phoneNumber = body.entry[0].changes[0].value.contacts[0].wa_id;
+  } catch (error) {
+    return phoneNumber;
+  }
+
+  return phoneNumber;
+};
+
+const getOurPhoneNumber = async (body: any) => {
+  let phoneNumber: string | null = null;
+  try {
+    phoneNumber = body.entry[0].changes[0].value.metadata.phone_number_id;
+  } catch (error) {
+    return phoneNumber;
+  }
+
+  return phoneNumber;
+};
+
+const getUser = async (phoneNumber: string) => {
+  const userId = await prisma.user.findUnique({
+    where: {
+      phoneNumber: phoneNumber,
+    },
+  });
+
+  return userId;
+};
+
+const getImageId = async (body: any) => {
+  let imageId: string | null = null;
+  try {
+    imageId = body.entry[0].changes[0].value.messages[0].image?.id;
+  } catch (error) {
+    return imageId;
+  }
+
+  return imageId;
+};
+
 export const action = async ({ request }: ActionFunctionArgs) => {
   if (request.method !== "POST") {
     return json({ message: "Invalid request method" }, 400);
   }
-
-  const body = JSON.parse(await request.text());
+  const body = await getBody(request);
 
   if (!body) {
     return json({ message: "Invalid request body" }, 400);
   }
 
-  console.log("Body: ", JSON.stringify(body));
+  const phoneNumber = await getPhoneNumber(body);
+  const ourPhoneNumber = await getOurPhoneNumber(body);
 
-  let senderPhoneNumber: string = "";
-  try {
-    senderPhoneNumber = body.entry[0].changes[0].value.contacts[0].wa_id;
-  } catch (error) {
-    console.log("No sender found");
-    return { body: "No sender found", status: 400 };
+  if (!phoneNumber) {
+    return json({ message: "Invalid phone number" }, 400);
   }
 
-  const userId = (
-    await prisma.user.findUnique({
-      where: {
-        phoneNumber: senderPhoneNumber,
-      },
-    })
-  )?.id;
-
-  console.log("userId: ", userId);
-
-  if (userId === undefined) {
-    console.log("User not found");
-    return await handleRegistration(body, senderPhoneNumber);
+  if (!ourPhoneNumber) {
+    return json({ message: "The system is temporarily unavailable" }, 503);
   }
 
-  let imageId;
-  try {
-    imageId = body.entry[0].changes[0].value.messages[0].image?.id;
-  } catch (error) {
-    console.log("No image found");
-    return { body: "No image found", status: 200 };
+  const user = await getUser(phoneNumber);
+
+  console.log("userId: ", user?.id);
+
+  const message = body.entry[0].changes[0].value.messages[0].text?.body;
+  const messageType = (message || "").split(" ")[0];
+
+  const imageId = await getImageId(body);
+
+  const payload: HandleRequestPayload = {
+    user,
+    imageId,
+    message,
+    phoneNumber,
+    ourPhoneNumber,
+  };
+
+  if (!user) {
+    if (messageType == "REGISTER") {
+      handleRegistration(payload);
+    } else {
+      return json({ body: "No user", status: 403 });
+    }
   }
 
-  if (imageId === undefined) {
-    console.log("No image found");
-    return { body: "No image found", status: 200 };
+  if (imageId && user) {
+    await postImage(imageId, message, user, phoneNumber, ourPhoneNumber);
+    return json({ body: "OK", status: 200 });
   }
 
-  const imageUrl = (
-    await axios.get(`https://graph.facebook.com/v19.0/${imageId}`, {
-      headers: {
-        Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
-      },
-    })
-  ).data.url;
-
-  const imageBuffer = Buffer.from(
-    (
-      await axios.get(imageUrl, {
-        headers: {
-          Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
-        },
-        responseType: "arraybuffer",
-      })
-    ).data
-  );
-  // register image buffer to the database
-  prisma.post
-    .create({
-      data: {
-        image: imageBuffer,
-        postStatus: {
-          connect: {
-            id: "submitted",
-          },
-        },
-        postedBy: {
-          connect: {
-            id: userId,
-          },
-        },
-      },
-    })
-    .then((response) => {
-      console.log("Post created", response);
-      // reply to the user for confirmation
-      axios.post(
-        `https://graph.facebook.com/v19.0/${body.entry[0].changes[0].value.metadata.phone_number_id}/messages`,
-        {
-          messaging_product: "whatsapp",
-          to: senderPhoneNumber,
-          type: "text",
-          text: {
-            body: "Your image has been received. We will confirm your submission shortly.",
-          },
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    });
-
-  return { body: "OK", status: 200 };
+  switch (messageType) {
+    case "DELETE":
+      // deleting images
+      return await handleDelete(payload);
+    case "STOP":
+      // do some branching in this
+      // 1. out-put stop
+      // 2. full stop with all the images deleted "STOP {access code}"
+      return await handleStop(payload);
+      // deleting user
+      return { body: "OK", status: 200 };
+    // case "GRIEVANCE":
+    //   // complaint string
+    //   // stack it to the grievance table
+    //   return { body: "OK", status: 200 };
+    case "HELP":
+      // give user a list of commands
+      return { body: "OK", status: 200 };
+    default:
+      // return user to submit something else
+      return { body: "OK", status: 200 };
+  }
 };

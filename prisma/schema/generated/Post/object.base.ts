@@ -13,6 +13,7 @@ export const PostObject = definePrismaObject('Post', {
   findUnique: ({ id }) => ({ id }),
   fields: (t) => ({
     id: t.field(PostIdFieldObject),
+    name: t.field(PostNameFieldObject),
     createdAt: t.field(PostCreatedAtFieldObject),
     image: t.field(PostImageFieldObject),
     reading: t.field(PostReadingFieldObject),
@@ -20,6 +21,8 @@ export const PostObject = definePrismaObject('Post', {
     postStatusId: t.field(PostPostStatusIdFieldObject),
     postedBy: t.relation('postedBy', PostPostedByFieldObject),
     postedById: t.field(PostPostedByIdFieldObject),
+    notes: t.field(PostNotesFieldObject),
+    size: t.field(PostSizeFieldObject),
   }),
 });
 
@@ -28,6 +31,13 @@ export const PostIdFieldObject = defineFieldObject('Post', {
   description: undefined,
   nullable: false,
   resolve: (parent) => String(parent.id),
+});
+
+export const PostNameFieldObject = defineFieldObject('Post', {
+  type: "Int",
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.name,
 });
 
 export const PostCreatedAtFieldObject = defineFieldObject('Post', {
@@ -77,4 +87,18 @@ export const PostPostedByIdFieldObject = defineFieldObject('Post', {
   description: undefined,
   nullable: false,
   resolve: (parent) => parent.postedById,
+});
+
+export const PostNotesFieldObject = defineFieldObject('Post', {
+  type: "String",
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.notes,
+});
+
+export const PostSizeFieldObject = defineFieldObject('Post', {
+  type: "Float",
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.size,
 });

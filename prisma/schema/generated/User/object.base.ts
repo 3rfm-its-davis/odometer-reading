@@ -15,11 +15,14 @@ export const UserObject = definePrismaObject('User', {
     id: t.field(UserIdFieldObject),
     createdAt: t.field(UserCreatedAtFieldObject),
     updatedAt: t.field(UserUpdatedAtFieldObject),
-    name: t.field(UserNameFieldObject),
+    activatedAt: t.field(UserActivatedAtFieldObject),
+    deletedAt: t.field(UserDeletedAtFieldObject),
     phoneNumber: t.field(UserPhoneNumberFieldObject),
     accessCode: t.field(UserAccessCodeFieldObject),
     posts: t.relation('posts', UserPostsFieldObject(t)),
     participation: t.relation('participation', UserParticipationFieldObject),
+    userStatus: t.relation('userStatus', UserUserStatusFieldObject),
+    userStatusId: t.field(UserUserStatusIdFieldObject),
   }),
 });
 
@@ -44,11 +47,18 @@ export const UserUpdatedAtFieldObject = defineFieldObject('User', {
   resolve: (parent) => parent.updatedAt,
 });
 
-export const UserNameFieldObject = defineFieldObject('User', {
-  type: "String",
+export const UserActivatedAtFieldObject = defineFieldObject('User', {
+  type: Inputs.DateTime,
   description: undefined,
   nullable: true,
-  resolve: (parent) => parent.name,
+  resolve: (parent) => parent.activatedAt,
+});
+
+export const UserDeletedAtFieldObject = defineFieldObject('User', {
+  type: Inputs.DateTime,
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.deletedAt,
 });
 
 export const UserPhoneNumberFieldObject = defineFieldObject('User', {
@@ -95,4 +105,18 @@ export const UserParticipationFieldObject = defineRelationObject('User', 'partic
   nullable: true,
   args: undefined,
   query: undefined,
+});
+
+export const UserUserStatusFieldObject = defineRelationObject('User', 'userStatus', {
+  description: undefined,
+  nullable: false,
+  args: undefined,
+  query: undefined,
+});
+
+export const UserUserStatusIdFieldObject = defineFieldObject('User', {
+  type: "String",
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.userStatusId,
 });

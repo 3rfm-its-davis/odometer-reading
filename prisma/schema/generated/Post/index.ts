@@ -1,13 +1,16 @@
 export {
   PostObject,
   PostIdFieldObject,
+  PostNameFieldObject,
   PostCreatedAtFieldObject,
   PostImageFieldObject,
   PostReadingFieldObject,
   PostPostStatusFieldObject,
   PostPostStatusIdFieldObject,
   PostPostedByFieldObject,
-  PostPostedByIdFieldObject
+  PostPostedByIdFieldObject,
+  PostNotesFieldObject,
+  PostSizeFieldObject
 } from './object.base';
 export {
   createManyPostMutation,
