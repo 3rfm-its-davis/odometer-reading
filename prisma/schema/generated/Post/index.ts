@@ -7,6 +7,8 @@ export {
   PostReadingFieldObject,
   PostPostStatusFieldObject,
   PostPostStatusIdFieldObject,
+  PostStatusChangedByFieldObject,
+  PostStatusChangedByIdFieldObject,
   PostPostedByFieldObject,
   PostPostedByIdFieldObject,
   PostNotesFieldObject,

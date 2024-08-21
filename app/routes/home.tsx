@@ -10,6 +10,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     where: {
       phoneNumber: {
         lt: "20000000000",
+        gt: "10000000000",
       },
     },
     include: {

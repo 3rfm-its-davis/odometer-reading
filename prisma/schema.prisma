@@ -51,23 +51,27 @@ model Admin {
   id       String @id @default(uuid())
   email    String @unique
   password String
+  Post     Post[]
 }
 
 model Post {
-  id           String     @id @default(uuid())
-  name         Int        @default(autoincrement())
-  createdAt    DateTime   @default(now())
-  image        Bytes
-  reading      Float?
-  postStatus   PostStatus @relation(fields: [postStatusId], references: [id])
-  postStatusId String
-  postedBy     User       @relation(fields: [postedById], references: [id])
-  postedById   String
-  notes        String?
-  size         Float      @default(0)
+  id                String     @id @default(uuid())
+  name              Int        @default(autoincrement())
+  createdAt         DateTime   @default(now())
+  image             Bytes
+  reading           Float      @default(0)
+  postStatus        PostStatus @relation(fields: [postStatusId], references: [id])
+  postStatusId      String
+  statusChangedBy   Admin?     @relation(fields: [statusChangedById], references: [id])
+  statusChangedById String?
+  postedBy          User       @relation(fields: [postedById], references: [id])
+  postedById        String
+  notes             String?
+  size              Float      @default(0)
 
   @@index([postStatusId])
   @@index([postedById])
+  @@index([statusChangedById])
 }
 
 model PostStatus {

@@ -27,13 +27,6 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
   console.log("userIdByPhoneNumber:", userIdByPhoneNumber);
 
   if (userIdByAccessCode !== undefined) {
-    // check if the user's phone number is number or string
-    // if it is string
-    // check if the sender's phone number already exists
-    //// if yes, reply "the phone number is already used" message
-    //// if not, update the user's phone number and reply success message
-    // if not string, reply "the access code is already used" message
-
     if (userIdByPhoneNumber !== undefined) {
       const message = "You have already signed up with this phone number.";
 
@@ -68,7 +61,7 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
     }
   } else {
     // ask the sender to sign up by access code
-    const message = `Please use the command "REGISTER {access code}", replacing {access code} with your unique access code in the invitation letter, to register.
+    const message = `Please use the command "REGISTER {access code}", replacing {access code} with the unique access code sent in your invitation email.
 Please note that the command is case-sensitive.`;
 
     sendWhatsAppMessageText(
@@ -144,7 +137,7 @@ If you delete all the image data, you will no longer be eligible to redeem gift 
     );
 
     return { body: "OK", status: 200 };
-  } else if (payload.user?.userStatusId === "stopped") {
+  } else if (payload.user?.userStatusId === "stopping") {
     if (payload.message === "STOP CONFIRM") {
       await prisma.user.update({
         where: {

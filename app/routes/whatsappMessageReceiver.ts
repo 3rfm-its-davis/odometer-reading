@@ -7,6 +7,7 @@ import { json } from "@remix-run/node";
 import { prisma } from "~/server/prisma.server";
 import {
   handleDelete,
+  handleHelp,
   handleRegistration,
   handleStop,
 } from "~/server/handleRequests.server.";
@@ -155,8 +156,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     //   // stack it to the grievance table
     //   return { body: "OK", status: 200 };
     case "HELP":
-      // give user a list of commands
-      return { body: "OK", status: 200 };
+      return await handleHelp(payload);
     default:
       // return user to submit something else
       return { body: "OK", status: 200 };

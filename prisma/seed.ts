@@ -8,7 +8,13 @@ const accessCodeArray: string[] =
   process.env.NODE_ENV === "development" ? accessCodes : [];
 
 const prisma = new PrismaClient();
-const postStatusArray = ["submitted", "confirmed", "rejected", "cancelled"];
+const postStatusArray = [
+  "submitted",
+  "read",
+  "approved",
+  "rejected",
+  "cancelled",
+];
 const userStatusArray = [
   "initialized",
   "activated",

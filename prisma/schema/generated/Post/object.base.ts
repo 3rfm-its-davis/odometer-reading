@@ -19,6 +19,8 @@ export const PostObject = definePrismaObject('Post', {
     reading: t.field(PostReadingFieldObject),
     postStatus: t.relation('postStatus', PostPostStatusFieldObject),
     postStatusId: t.field(PostPostStatusIdFieldObject),
+    statusChangedBy: t.relation('statusChangedBy', PostStatusChangedByFieldObject),
+    statusChangedById: t.field(PostStatusChangedByIdFieldObject),
     postedBy: t.relation('postedBy', PostPostedByFieldObject),
     postedById: t.field(PostPostedByIdFieldObject),
     notes: t.field(PostNotesFieldObject),
@@ -57,7 +59,7 @@ export const PostImageFieldObject = defineFieldObject('Post', {
 export const PostReadingFieldObject = defineFieldObject('Post', {
   type: "Float",
   description: undefined,
-  nullable: true,
+  nullable: false,
   resolve: (parent) => parent.reading,
 });
 
@@ -73,6 +75,20 @@ export const PostPostStatusIdFieldObject = defineFieldObject('Post', {
   description: undefined,
   nullable: false,
   resolve: (parent) => parent.postStatusId,
+});
+
+export const PostStatusChangedByFieldObject = defineRelationObject('Post', 'statusChangedBy', {
+  description: undefined,
+  nullable: true,
+  args: undefined,
+  query: undefined,
+});
+
+export const PostStatusChangedByIdFieldObject = defineFieldObject('Post', {
+  type: "String",
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.statusChangedById,
 });
 
 export const PostPostedByFieldObject = defineRelationObject('Post', 'postedBy', {

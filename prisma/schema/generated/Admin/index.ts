@@ -2,7 +2,8 @@ export {
   AdminObject,
   AdminIdFieldObject,
   AdminEmailFieldObject,
-  AdminPasswordFieldObject
+  AdminPasswordFieldObject,
+  AdminPostFieldObject
 } from './object.base';
 export {
   createManyAdminMutation,

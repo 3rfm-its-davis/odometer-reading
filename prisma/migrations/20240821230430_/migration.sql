@@ -9,9 +9,9 @@ CREATE TABLE [dbo].[User] (
     [updatedAt] DATETIME2 NOT NULL,
     [activatedAt] DATETIME2,
     [deletedAt] DATETIME2,
-    [phoneNumber] NVARCHAR(1000) NOT NULL CONSTRAINT [User_phoneNumber_df] DEFAULT '',
+    [phoneNumber] NVARCHAR(1000) NOT NULL,
     [accessCode] NVARCHAR(1000) NOT NULL,
-    [userStatusId] NVARCHAR(1000) NOT NULL,
+    [userStatusId] NVARCHAR(1000) NOT NULL CONSTRAINT [User_userStatusId_df] DEFAULT 'initialized',
     CONSTRAINT [User_pkey] PRIMARY KEY CLUSTERED ([id]),
     CONSTRAINT [User_phoneNumber_key] UNIQUE NONCLUSTERED ([phoneNumber]),
     CONSTRAINT [User_accessCode_key] UNIQUE NONCLUSTERED ([accessCode])
@@ -36,11 +36,12 @@ CREATE TABLE [dbo].[Admin] (
 -- CreateTable
 CREATE TABLE [dbo].[Post] (
     [id] NVARCHAR(1000) NOT NULL,
-    [name] NVARCHAR(1000) NOT NULL,
+    [name] INT NOT NULL IDENTITY(1,1),
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [Post_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [image] VARBINARY(max) NOT NULL,
-    [reading] FLOAT(53),
+    [reading] FLOAT(53) NOT NULL CONSTRAINT [Post_reading_df] DEFAULT 0,
     [postStatusId] NVARCHAR(1000) NOT NULL,
+    [statusChangedById] NVARCHAR(1000),
     [postedById] NVARCHAR(1000) NOT NULL,
     [notes] NVARCHAR(1000),
     [size] FLOAT(53) NOT NULL CONSTRAINT [Post_size_df] DEFAULT 0,
@@ -81,6 +82,9 @@ CREATE NONCLUSTERED INDEX [Post_postStatusId_idx] ON [dbo].[Post]([postStatusId]
 
 -- CreateIndex
 CREATE NONCLUSTERED INDEX [Post_postedById_idx] ON [dbo].[Post]([postedById]);
+
+-- CreateIndex
+CREATE NONCLUSTERED INDEX [Post_statusChangedById_idx] ON [dbo].[Post]([statusChangedById]);
 
 -- CreateIndex
 CREATE NONCLUSTERED INDEX [Participation_userId_idx] ON [dbo].[Participation]([userId]);
