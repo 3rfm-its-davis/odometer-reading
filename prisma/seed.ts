@@ -20,21 +20,20 @@ const userStatusArray = [
   "activated",
   "suspended",
   "closed",
-  "stopping",
   "deleted",
   "completed",
 ];
 
 async function main() {
-  await prisma.postStatus.deleteMany({});
-  await prisma.postStatus.createMany({
-    data: postStatusArray.map((item) => ({ id: item })),
-  });
+  // await prisma.postStatus.deleteMany({});
+  // await prisma.postStatus.createMany({
+  //   data: postStatusArray.map((item) => ({ id: item })),
+  // });
 
-  await prisma.userStatus.deleteMany({});
-  await prisma.userStatus.createMany({
-    data: userStatusArray.map((item) => ({ id: item })),
-  });
+  // await prisma.userStatus.deleteMany({});
+  // await prisma.userStatus.createMany({
+  //   data: userStatusArray.map((item) => ({ id: item })),
+  // });
 
   await prisma.user.createMany({
     data: accessCodeArray.map((item) => ({

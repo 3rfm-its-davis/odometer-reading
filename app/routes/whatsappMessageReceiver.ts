@@ -9,10 +9,12 @@ import {
   handleDelete,
   handleHelp,
   handleRegistration,
+  handleReset,
   handleStop,
 } from "~/server/handleRequests.server.";
 import { HandleRequestPayload } from "~/server/types.server";
 import { postImage } from "~/server/postImage.server";
+import { sendWhatsAppMessageText } from "~/utils/sendWhatsAppMessage";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -127,6 +129,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     ourPhoneNumber,
   };
 
+  if (user?.userStatusId === "closed" || user?.userStatusId === "deleted") {
+    sendWhatsAppMessageText(
+      payload.ourPhoneNumber,
+      payload.phoneNumber,
+      "You have already closed your account."
+    );
+
+    return { body: "OK", status: 200 };
+  }
+
   if (!user) {
     if (messageType == "REGISTER") {
       handleRegistration(payload);
@@ -149,14 +161,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       // 1. out-put stop
       // 2. full stop with all the images deleted "STOP {access code}"
       return await handleStop(payload);
-      // deleting user
-      return { body: "OK", status: 200 };
     // case "GRIEVANCE":
     //   // complaint string
     //   // stack it to the grievance table
     //   return { body: "OK", status: 200 };
     case "HELP":
       return await handleHelp(payload);
+    case "RESET":
+      return await handleReset(payload);
     default:
       // return user to submit something else
       return { body: "OK", status: 200 };

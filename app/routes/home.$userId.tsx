@@ -72,7 +72,7 @@ export default function User() {
                   <img src={`data:image/jpg;base64,${imageBase64}`} />
                   <form method="post">
                     <OdometerSubmissionForm
-                      enabled={true}
+                      enabled
                       htmlFor={post.id}
                       currentStatus={post.postStatusId}
                     />
@@ -97,7 +97,7 @@ export default function User() {
                   <p>Read by: {post.statusChangedBy!.email}</p>
                   <form method="post">
                     <OdometerSubmissionForm
-                      enabled={post.statusChangedBy?.id !== adminId}
+                      // enabled={post.statusChangedBy?.id !== adminId}
                       htmlFor={post.id}
                       initialValue={post.reading || undefined}
                       currentStatus={post.postStatusId}
@@ -123,6 +123,7 @@ export default function User() {
                   <p>Approved by: {post.statusChangedBy!.email}</p>
                   <form method="post">
                     <OdometerSubmissionForm
+                      // enabled={post.statusChangedBy?.id !== adminId}
                       enabled={true}
                       htmlFor={post.id}
                       initialValue={post.reading || undefined}
@@ -149,6 +150,7 @@ export default function User() {
                   <p>Rejected by: {post.statusChangedBy!.email}</p>
                   <form method="post">
                     <OdometerSubmissionForm
+                      // enabled={post.statusChangedBy?.id !== adminId}
                       enabled={true}
                       htmlFor={post.id}
                       initialValue={post.reading || undefined}

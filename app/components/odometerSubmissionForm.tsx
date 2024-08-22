@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 type OdometerSubmissionFormProps = {
-  enabled: boolean;
+  enabled?: boolean;
   htmlFor: string;
   initialValue?: number;
   currentStatus: string;

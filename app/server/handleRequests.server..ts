@@ -2,6 +2,8 @@ import axios from "axios";
 import { prisma } from "./prisma.server";
 import { HandleRequestPayload } from "./types.server";
 import { sendWhatsAppMessageText } from "~/utils/sendWhatsAppMessage";
+import { json } from "@remix-run/node";
+import { v4 } from "uuid";
 
 export const handleRegistration = async (payload: HandleRequestPayload) => {
   // check if the sent message matches the access code in the database
@@ -47,7 +49,6 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
           userStatusId: "activated",
         },
       });
-      console.log("Updated user phone number");
 
       const message =
         "You have successfully signed up. Please send your odometer reading.";
@@ -76,17 +77,26 @@ Please note that the command is case-sensitive.`;
 };
 
 export const handleDelete = async (payload: HandleRequestPayload) => {
-  const imageIds = payload
-    .message!.replace("DELETE ", "")
-    .split(",")
-    .map((item) => Number(item));
+  const imageId = payload.message!.replace("DELETE ", "");
+
+  if (isNaN(Number(imageId))) {
+    const message = `Invalid image name has been entered. Please check the image name and try it again.`;
+
+    sendWhatsAppMessageText(
+      payload.ourPhoneNumber,
+      payload.phoneNumber,
+      message
+    );
+
+    return { body: "OK", status: 200 };
+  }
 
   const count = await prisma.post.updateMany({
     where: {
       AND: [
         {
           name: {
-            in: imageIds,
+            equals: Number(imageId),
           },
         },
         {
@@ -96,39 +106,21 @@ export const handleDelete = async (payload: HandleRequestPayload) => {
             },
           },
         },
+        {
+          size: {
+            gt: 0,
+          },
+        },
       ],
     },
     data: {
       image: Buffer.from(""),
+      size: 0,
     },
   });
 
-  const message = `Thank you, we have successfully deleted ${count.count} images.`;
-
-  sendWhatsAppMessageText(payload.ourPhoneNumber, payload.phoneNumber, message);
-
-  return { body: "OK", status: 200 };
-};
-
-export const handleStop = async (payload: HandleRequestPayload) => {
-  if (payload.user?.userStatusId === "activated") {
-    await prisma.user.update({
-      where: {
-        id: payload.user.id,
-      },
-      data: {
-        userStatusId: "stopping",
-      },
-    });
-
-    const message = `You are going to cancel your participation in our study.
-Please use one of the command to proceed:
-1. "STOP CONFIRM" to confirm cancellation.
-2. "STOP {access code}", replacing {access code} with your unique access code in the invitation letter, to confirm cancellation and delete all the image data uploaded to our system.
-3. "STOP BACK" to undo this action and stay in our study.
-
-**Cancellation of participation cannot be undone**, meaning that you will never be able to come back again to our study.
-If you delete all the image data, you will no longer be eligible to redeem gift card balance that are not paid out yet.`;
+  if (count.count === 0) {
+    const message = `No image has been deleted. This could be because you already deleted the image or you entered a wrong image name.`;
 
     sendWhatsAppMessageText(
       payload.ourPhoneNumber,
@@ -137,8 +129,22 @@ If you delete all the image data, you will no longer be eligible to redeem gift 
     );
 
     return { body: "OK", status: 200 };
-  } else if (payload.user?.userStatusId === "stopping") {
-    if (payload.message === "STOP CONFIRM") {
+  } else {
+    const message = `Thank you, we have successfully deleted image "${imageId}".`;
+
+    sendWhatsAppMessageText(
+      payload.ourPhoneNumber,
+      payload.phoneNumber,
+      message
+    );
+
+    return { body: "OK", status: 200 };
+  }
+};
+
+export const handleStop = async (payload: HandleRequestPayload) => {
+  if (payload.user?.userStatusId === "activated") {
+    if (payload.message === `STOP ${payload.user.accessCode}`) {
       await prisma.user.update({
         where: {
           id: payload.user.id,
@@ -157,7 +163,9 @@ If you delete all the image data, you will no longer be eligible to redeem gift 
       );
 
       return { body: "OK", status: 200 };
-    } else if (payload.message === `STOP ${payload.user.accessCode}`) {
+    } else if (
+      payload.message === `STOP AND DELETE ${payload.user.accessCode}`
+    ) {
       await prisma.user.update({
         where: {
           id: payload.user.id,
@@ -186,36 +194,56 @@ If you delete all the image data, you will no longer be eligible to redeem gift 
       );
 
       return { body: "OK", status: 200 };
-    } else if (payload.message === "STOP BACK") {
-      await prisma.user.update({
-        where: {
-          id: payload.user.id,
-        },
-        data: {
-          userStatusId: "activated",
-        },
-      });
-
-      const message = `Thank you, we have put you back in our study now.`;
-
-      sendWhatsAppMessageText(
-        payload.ourPhoneNumber,
-        payload.phoneNumber,
-        message
-      );
-
-      return { body: "OK", status: 200 };
     }
+  } else {
+    const message = `Please use one of the two commands to close your account, replacing {access code} with the unique access code sent in your invitation email:
+
+1. "STOP {access code}" to close your account.
+2. "STOP AND DELETE {access code}" to close your account and delete all image data.
+
+Please note that *closing your account cannot be undone*.`;
+
+    sendWhatsAppMessageText(
+      payload.ourPhoneNumber,
+      payload.phoneNumber,
+      message
+    );
+
+    return { body: "OK", status: 200 };
   }
 };
 
 export const handleHelp = async (payload: HandleRequestPayload) => {
   const message = `You can submit a photo image of your odometer by attaching it directly to this chat.
 For other actions, please use one of the following commands:
+
 1. DELETE - To delete image(s) that you already submitted.
 2. STOP - To stop participating in this survey.`;
 
   sendWhatsAppMessageText(payload.ourPhoneNumber, payload.phoneNumber, message);
 
   return { body: "OK", status: 200 };
+};
+
+export const handleReset = async (payload: HandleRequestPayload) => {
+  if (!payload.user) {
+    return json({ body: "No user found", status: 400 });
+  }
+
+  await prisma.user.update({
+    where: {
+      id: payload.user.id,
+    },
+    data: {
+      userStatusId: "initialized",
+      phoneNumber: v4(),
+    },
+  });
+
+  const message =
+    "Admin command of resetting the user has been executed. You can now use your phone number again.";
+
+  sendWhatsAppMessageText(payload.ourPhoneNumber, payload.phoneNumber, message);
+
+  return json({ body: "OK", status: 200 });
 };

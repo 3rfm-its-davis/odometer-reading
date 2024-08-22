@@ -52,6 +52,8 @@ export const postImage = async (
     ).data
   );
 
+  const randomNumber = Math.random();
+
   // register image buffer to the database
   prisma.post
     .create({
@@ -59,7 +61,14 @@ export const postImage = async (
         image: imageBuffer,
         postStatus: {
           connect: {
-            id: "submitted",
+            id:
+              randomNumber < 0.4
+                ? "submitted"
+                : randomNumber < 0.6
+                ? "read"
+                : randomNumber < 0.8
+                ? "approved"
+                : "rejected",
           },
         },
         postedBy: {
@@ -67,6 +76,7 @@ export const postImage = async (
             id: user.id,
           },
         },
+        size: imageBuffer.length,
         notes: message,
       },
     })
