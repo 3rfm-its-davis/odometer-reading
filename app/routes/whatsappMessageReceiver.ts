@@ -129,13 +129,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     ourPhoneNumber,
   };
 
-  if (user?.userStatusId === "closed" || user?.userStatusId === "deleted") {
-    sendWhatsAppMessageText(
-      payload.ourPhoneNumber,
-      payload.phoneNumber,
-      "You have already closed your account."
-    );
+  if (messageType === "RESET") {
+    return await handleReset(payload);
+  }
 
+  if (user?.userStatusId === "closed" || user?.userStatusId === "deleted") {
     return { body: "OK", status: 200 };
   }
 
@@ -167,8 +165,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     //   return { body: "OK", status: 200 };
     case "HELP":
       return await handleHelp(payload);
-    case "RESET":
-      return await handleReset(payload);
     default:
       // return user to submit something else
       return { body: "OK", status: 200 };
