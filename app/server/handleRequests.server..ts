@@ -194,22 +194,22 @@ export const handleStop = async (payload: HandleRequestPayload) => {
       );
 
       return { body: "OK", status: 200 };
+    } else {
+      const message = `Please use one of the two commands to close your account, replacing {access code} with the unique access code sent in your invitation email:
+  
+  1. "STOP {access code}" to close your account.
+  2. "STOP AND DELETE {access code}" to close your account and delete all image data.
+  
+  Please note that *closing your account cannot be undone*.`;
+
+      sendWhatsAppMessageText(
+        payload.ourPhoneNumber,
+        payload.phoneNumber,
+        message
+      );
+
+      return { body: "OK", status: 200 };
     }
-  } else {
-    const message = `Please use one of the two commands to close your account, replacing {access code} with the unique access code sent in your invitation email:
-
-1. "STOP {access code}" to close your account.
-2. "STOP AND DELETE {access code}" to close your account and delete all image data.
-
-Please note that *closing your account cannot be undone*.`;
-
-    sendWhatsAppMessageText(
-      payload.ourPhoneNumber,
-      payload.phoneNumber,
-      message
-    );
-
-    return { body: "OK", status: 200 };
   }
 };
 
