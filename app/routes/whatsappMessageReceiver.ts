@@ -139,7 +139,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (!user) {
     if (messageType == "REGISTER") {
-      handleRegistration(payload);
+      return await handleRegistration(payload);
     } else {
       return json({ body: "No user", status: 403 });
     }
@@ -151,6 +151,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   switch (messageType) {
+    case "REGISTER":
+      // deleting images
+      return await handleRegistration(payload);
     case "DELETE":
       // deleting images
       return await handleDelete(payload);
