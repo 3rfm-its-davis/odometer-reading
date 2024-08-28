@@ -10,5 +10,4 @@ export type HandleRequestPayload = {
   imageId: string | null;
   message: string | null;
   phoneNumber: string;
-  ourPhoneNumber: string;
 };

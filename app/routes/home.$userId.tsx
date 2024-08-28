@@ -94,7 +94,7 @@ export default function User() {
               return (
                 <div className="flex flex-col w-full gap-y-1">
                   <img src={`data:image/jpg;base64,${imageBase64}`} />
-                  <p>Read by: {post.statusChangedBy!.email}</p>
+                  <p>Read by: {post.statusChangedBy?.email || "System"}</p>
                   <form method="post">
                     <OdometerSubmissionForm
                       // enabled={post.statusChangedBy?.id !== adminId}
@@ -120,7 +120,7 @@ export default function User() {
               return (
                 <div className="flex flex-col w-full gap-y-1">
                   <img src={`data:image/jpg;base64,${imageBase64}`} />
-                  <p>Approved by: {post.statusChangedBy!.email}</p>
+                  <p>Approved by: {post.statusChangedBy?.email || "System"}</p>
                   <form method="post">
                     <OdometerSubmissionForm
                       // enabled={post.statusChangedBy?.id !== adminId}
@@ -147,7 +147,7 @@ export default function User() {
               return (
                 <div className="flex flex-col w-full gap-y-1">
                   <img src={`data:image/jpg;base64,${imageBase64}`} />
-                  <p>Rejected by: {post.statusChangedBy!.email}</p>
+                  <p>Rejected by: {post.statusChangedBy?.email || "System"}</p>
                   <form method="post">
                     <OdometerSubmissionForm
                       // enabled={post.statusChangedBy?.id !== adminId}

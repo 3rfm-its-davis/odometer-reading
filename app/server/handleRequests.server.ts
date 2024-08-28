@@ -30,11 +30,7 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
     // ask the sender to sign up by access code
     const message = `Please use the command "REGISTER {access code}", replacing {access code} with the unique access code sent in your invitation email.`;
 
-    sendWhatsAppMessageText(
-      payload.ourPhoneNumber,
-      payload.phoneNumber,
-      message
-    );
+    sendWhatsAppMessageText(payload.phoneNumber, message);
 
     console.log("Sent sign up message");
     return { body: "OK", status: 200 };
@@ -57,11 +53,7 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
   if (userIdByPhoneNumber !== undefined) {
     const message = "You have already signed up with this phone number.";
 
-    sendWhatsAppMessageText(
-      payload.ourPhoneNumber,
-      payload.phoneNumber,
-      message
-    );
+    sendWhatsAppMessageText(payload.phoneNumber, message);
 
     return { body: "OK", status: 200 };
   } else {
@@ -79,11 +71,7 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
     const message =
       "You have successfully signed up. Please send your odometer reading.";
 
-    sendWhatsAppMessageText(
-      payload.ourPhoneNumber,
-      payload.phoneNumber,
-      message
-    );
+    sendWhatsAppMessageText(payload.phoneNumber, message);
     return { body: "OK", status: 200 };
   }
 };
@@ -100,11 +88,7 @@ export const handleDelete = async (payload: HandleRequestPayload) => {
   if (isNaN(Number(imageId))) {
     const message = `Invalid image name has been entered. Please check the image name and try it again.`;
 
-    sendWhatsAppMessageText(
-      payload.ourPhoneNumber,
-      payload.phoneNumber,
-      message
-    );
+    sendWhatsAppMessageText(payload.phoneNumber, message);
 
     return { body: "Bad image id", status: 400 };
   }
@@ -140,21 +124,13 @@ export const handleDelete = async (payload: HandleRequestPayload) => {
   if (count.count === 0) {
     const message = `No image has been deleted. This could be because you already deleted the image or you entered a wrong image name.`;
 
-    sendWhatsAppMessageText(
-      payload.ourPhoneNumber,
-      payload.phoneNumber,
-      message
-    );
+    sendWhatsAppMessageText(payload.phoneNumber, message);
 
     return { body: "OK", status: 200 };
   } else {
     const message = `Thank you, we have successfully deleted image "${imageId}".`;
 
-    sendWhatsAppMessageText(
-      payload.ourPhoneNumber,
-      payload.phoneNumber,
-      message
-    );
+    sendWhatsAppMessageText(payload.phoneNumber, message);
 
     return { body: "OK", status: 200 };
   }
@@ -175,11 +151,7 @@ export const handleStop = async (payload: HandleRequestPayload) => {
 
       const message = `We have successfully closed your account. Thank you so much for your participation in our study.`;
 
-      sendWhatsAppMessageText(
-        payload.ourPhoneNumber,
-        payload.phoneNumber,
-        message
-      );
+      sendWhatsAppMessageText(payload.phoneNumber, message);
 
       return { body: "OK", status: 200 };
     } else if (
@@ -206,11 +178,7 @@ export const handleStop = async (payload: HandleRequestPayload) => {
 
       const message = `We have successfully closed your account and deleted all the image data submitted by you. Thank you so much for your participation in our study.`;
 
-      sendWhatsAppMessageText(
-        payload.ourPhoneNumber,
-        payload.phoneNumber,
-        message
-      );
+      sendWhatsAppMessageText(payload.phoneNumber, message);
 
       return { body: "OK", status: 200 };
     } else {
@@ -222,11 +190,7 @@ Please use one of the two commands to close your account, replacing {access code
 
 Please note that *closing your account cannot be undone*.`;
 
-      sendWhatsAppMessageText(
-        payload.ourPhoneNumber,
-        payload.phoneNumber,
-        message
-      );
+      sendWhatsAppMessageText(payload.phoneNumber, message);
 
       return { body: "OK", status: 200 };
     }
@@ -242,7 +206,7 @@ For other actions, please use one of the following commands:
 2. STOP - To stop participating in this survey.
 3. STOP AND DELETE - To stop participating in this survey and delete all the image data that you have submitted.`;
 
-  sendWhatsAppMessageText(payload.ourPhoneNumber, payload.phoneNumber, message);
+  sendWhatsAppMessageText(payload.phoneNumber, message);
 
   return { body: "OK", status: 200 };
 };
@@ -265,7 +229,7 @@ export const handleReset = async (payload: HandleRequestPayload) => {
   const message =
     "Admin command of resetting the user has been executed. You can now use your phone number again.";
 
-  sendWhatsAppMessageText(payload.ourPhoneNumber, payload.phoneNumber, message);
+  sendWhatsAppMessageText(payload.phoneNumber, message);
 
   return json({ body: "OK", status: 200 });
 };

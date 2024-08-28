@@ -1,12 +1,10 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import EmailInvitationDataGrid from "~/components/emailInvitationDataGrid";
-import ReadingReminderDataGrid from "~/components/readingReminderDataGrid";
+import UserDataGrid from "~/components/userDataGrid";
 import { requireAdminId } from "~/server/auth.server";
-import { decipherEmail } from "~/server/decipherEmail.server";
 import { prisma } from "~/server/prisma.server";
-import { sendEmail } from "~/server/sendEmail";
+import { sendReminder } from "~/server/sendReminder";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireAdminId(request);
@@ -39,46 +37,32 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const intent = form.get("intent");
 
-  if (intent === "decipher") {
-    if (!form.get("key")) {
-      return { message: "key missing", status: 400, newUsers: null };
-    }
-
-    const decipheredUsers = users.map((user) => ({
-      ...user,
-      email: decipherEmail(user.email, form.get("key")!.toString()),
-    })) as {
-      id: string;
-      email: string;
-    }[];
-
-    return { message: "deciphered", status: 200, newUsers: decipheredUsers };
-  } else if (intent === "sendEmail") {
+  if (intent === "sendReminder") {
     if (!form.get("selectedUserIds")) {
       return { message: "no users selected", status: 400, newUsers: null };
     }
     const selectedUserIds = JSON.parse(form.get("selectedUserIds")!.toString());
-    const usersToEmail = users.filter((user) =>
+    const usersToRemind = users.filter((user) =>
       selectedUserIds.includes(user.id)
     );
     const adminId = await requireAdminId(request);
 
-    const userWithEmailSent = await sendEmail(usersToEmail, adminId);
+    const userWithReminderSent = await sendReminder(usersToRemind, adminId);
     const newUsers = users.map(
-      (user) => userWithEmailSent.find((item) => item.id === user.id) || user
+      (user) => userWithReminderSent.find((item) => item.id === user.id) || user
     );
 
-    return { message: "email sent", status: 200, newUsers };
-  } else if (intent === "filterNoInvitation") {
+    return { message: "reminder sent", status: 200, newUsers };
+  } else if (intent === "filterNoPost") {
     const newUsers = users.map((user) => ({
       ...user,
-      visible: user.invitationCount === 0,
+      visible: user.postCount === 0,
     }));
     return { message: "filtered", status: 200, newUsers };
-  } else if (intent === "filterWithInvitation") {
+  } else if (intent === "filterWithPost") {
     const newUsers = users.map((user) => ({
       ...user,
-      visible: user.invitationCount > 0,
+      visible: user.postCount > 0,
     }));
     return { message: "filtered", status: 200, newUsers };
   }
@@ -95,8 +79,15 @@ export default function ReadingReminder() {
     return {
       ...item,
       posts: null,
-      lastPostSubmittedAt: item.posts[0] ? item.posts[0].createdAt : null,
-      postCount: item.posts ? item.posts.length : 0,
+      postCount: item.posts?.length || 0,
+      lastActivityAt: [
+        item.posts?.[0]?.createdAt,
+        item.updatedAt,
+        item.createdAt,
+      ]
+        .filter(Boolean)
+        .sort()
+        .reverse()[0],
       visible: true,
     };
   });
@@ -114,9 +105,8 @@ export default function ReadingReminder() {
           if (newUser) {
             return {
               ...user,
-              email: newUser.email,
-              lastInvitationSentAt: newUser.lastInvitationSentAt,
-              invitationCount: newUser.invitationCount,
+              updatedAt: newUser.updatedAt,
+              lastActivityAt: newUser.lastActivityAt,
               visible: newUser.visible,
             };
           }
@@ -134,7 +124,7 @@ export default function ReadingReminder() {
           <button
             type="submit"
             name="intent"
-            value="filterNoInvitation"
+            value="filterNoPost"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             No Invitation Sent
@@ -142,7 +132,7 @@ export default function ReadingReminder() {
           <button
             type="submit"
             name="intent"
-            value="filterWithInvitation"
+            value="filterWithPost"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Invitation Sent
@@ -159,22 +149,14 @@ export default function ReadingReminder() {
           <button
             type="submit"
             name="intent"
-            value="decipher"
+            value="sendReminder"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
-            Decipher
-          </button>
-          <button
-            type="submit"
-            name="intent"
-            value="sendEmail"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Send Invitation Email
+            Send Reminder
           </button>
         </div>
       </div>
-      <ReadingReminderDataGrid _users={currentUsers} />
+      <UserDataGrid _users={currentUsers} />
     </Form>
   );
 }

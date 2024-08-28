@@ -126,7 +126,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     imageId,
     message,
     phoneNumber,
-    ourPhoneNumber,
   };
 
   if (messageType === "RESET") {
@@ -137,7 +136,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const message = `Your account is closed or deleted.`;
 
     sendWhatsAppMessageText(
-      payload.ourPhoneNumber,
       payload.phoneNumber,
       message
     );

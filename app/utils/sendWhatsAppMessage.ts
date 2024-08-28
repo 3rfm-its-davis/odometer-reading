@@ -1,10 +1,10 @@
 import axios from "axios";
 
 export const sendWhatsAppMessageText = async (
-  ourPhoneNumber: string,
   phoneNumber: string,
   message: string
 ) => {
+  const ourPhoneNumber = process.env.OUR_PHONE_NUMBER;
   return await axios.post(
     `https://graph.facebook.com/v19.0/${ourPhoneNumber}/messages`,
     {

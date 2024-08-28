@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import "@glideapps/glide-data-grid/dist/index.css";
 import { ClientOnly } from "remix-utils/client-only";
 
-export default function EmailInvitationDataGrid({ _users }: { _users: any[] }) {
+export default function UserDataGrid({ _users }: { _users: any[] }) {
   const users = _users.filter((user) => user.visible);
   const [selectedUserIds, setSelectedUserIds] = useState("");
   const [selection, setSelection] = useState<GridSelection>();
@@ -35,7 +35,9 @@ export default function EmailInvitationDataGrid({ _users }: { _users: any[] }) {
   }
 
   const columns = Object.keys(users[0])
-    .filter((item) => item !== "invitations" && item !== "visible")
+    .filter(
+      (item) => item !== "invitations" && item !== "posts" && item !== "visible"
+    )
     .map((key) => ({
       title: key,
       id: key,

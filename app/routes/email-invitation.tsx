@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import EmailInvitationDataGrid from "~/components/emailInvitationDataGrid";
+import UserDataGrid from "~/components/userDataGrid";
 import { requireAdminId } from "~/server/auth.server";
 import { decipherEmail } from "~/server/decipherEmail.server";
 import { prisma } from "~/server/prisma.server";
@@ -191,7 +191,7 @@ export default function EmailInvitation() {
           </button>
         </div>
       </div>
-      <EmailInvitationDataGrid _users={currentUsers} />
+      <UserDataGrid _users={currentUsers} />
     </Form>
   );
 }
