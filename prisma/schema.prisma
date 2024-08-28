@@ -27,6 +27,7 @@ generator pothosCrud {
 
 model User {
   id            String         @id @default(uuid())
+  email         String?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   activatedAt   DateTime?
@@ -37,6 +38,7 @@ model User {
   participation Participation?
   userStatus    UserStatus     @relation(fields: [userStatusId], references: [id])
   userStatusId  String         @default("initialized")
+  invitations   Invitation[]
 
   @@index([userStatusId])
 }
@@ -48,10 +50,11 @@ model UserStatus {
 }
 
 model Admin {
-  id       String @id @default(uuid())
-  email    String @unique
-  password String
-  Post     Post[]
+  id         String       @id @default(uuid())
+  email      String       @unique
+  password   String
+  post       Post[]
+  invitation Invitation[]
 }
 
 model Post {
@@ -95,4 +98,16 @@ model IncentiveTable {
   id        String @id @default(uuid())
   index     Int
   incentive Float
+}
+
+model Invitation {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  sentBy    Admin    @relation(fields: [sentById], references: [id])
+  sentById  String
+  sentTo    User     @relation(fields: [sentToId], references: [id])
+  sentToId  String
+
+  @@index([sentById])
+  @@index([sentToId])
 }

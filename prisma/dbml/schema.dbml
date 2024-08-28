@@ -4,6 +4,7 @@
 
 Table User {
   id String [pk]
+  email String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   activatedAt DateTime
@@ -14,6 +15,7 @@ Table User {
   participation Participation
   userStatus UserStatus [not null]
   userStatusId String [not null, default: 'initialized']
+  invitations Invitation [not null]
 }
 
 Table UserStatus {
@@ -26,7 +28,8 @@ Table Admin {
   id String [pk]
   email String [unique, not null]
   password String [not null]
-  Post Post [not null]
+  post Post [not null]
+  invitation Invitation [not null]
 }
 
 Table Post {
@@ -66,6 +69,15 @@ Table IncentiveTable {
   incentive Float [not null]
 }
 
+Table Invitation {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  sentBy Admin [not null]
+  sentById String [not null]
+  sentTo User [not null]
+  sentToId String [not null]
+}
+
 Ref: User.userStatusId > UserStatus.id
 
 Ref: Post.postStatusId > PostStatus.id
@@ -75,3 +87,7 @@ Ref: Post.statusChangedById > Admin.id
 Ref: Post.postedById > User.id
 
 Ref: Participation.userId - User.id
+
+Ref: Invitation.sentById > Admin.id
+
+Ref: Invitation.sentToId > User.id

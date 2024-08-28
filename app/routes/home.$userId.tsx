@@ -51,7 +51,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function User() {
-  const { user, posts, adminId } = useLoaderData<typeof loader>();
+  const { user, posts } = useLoaderData<typeof loader>();
 
   return (
     <div className="flex flex-col flex-auto p-6 divide-y  overflow-scroll">

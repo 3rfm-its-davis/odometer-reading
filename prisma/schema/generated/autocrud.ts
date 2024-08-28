@@ -5,6 +5,7 @@ import * as Post from './Post';
 import * as PostStatus from './PostStatus';
 import * as Participation from './Participation';
 import * as IncentiveTable from './IncentiveTable';
+import * as Invitation from './Invitation';
 import { builder } from '../builder';
 import * as Objects from './objects';
 
@@ -142,6 +143,24 @@ export const Cruds: Record<
       updateMany: IncentiveTable.updateManyIncentiveTableMutationObject,
       updateOne: IncentiveTable.updateOneIncentiveTableMutationObject,
       upsertOne: IncentiveTable.upsertOneIncentiveTableMutationObject,
+    },
+  },
+  Invitation: {
+    Object: Invitation.InvitationObject,
+    queries: {
+      findFirst: Invitation.findFirstInvitationQueryObject,
+      findMany: Invitation.findManyInvitationQueryObject,
+      count: Invitation.countInvitationQueryObject,
+      findUnique: Invitation.findUniqueInvitationQueryObject,
+    },
+    mutations: {
+      createMany: Invitation.createManyInvitationMutationObject,
+      createOne: Invitation.createOneInvitationMutationObject,
+      deleteMany: Invitation.deleteManyInvitationMutationObject,
+      deleteOne: Invitation.deleteOneInvitationMutationObject,
+      updateMany: Invitation.updateManyInvitationMutationObject,
+      updateOne: Invitation.updateOneInvitationMutationObject,
+      upsertOne: Invitation.upsertOneInvitationMutationObject,
     },
   },
 };

@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 export {
   UserObject,
   UserIdFieldObject,
+  UserEmailFieldObject,
   UserCreatedAtFieldObject,
   UserUpdatedAtFieldObject,
   UserActivatedAtFieldObject,
@@ -12,6 +13,7 @@ export {
   UserParticipationFieldObject,
   UserUserStatusFieldObject,
   UserUserStatusIdFieldObject,
+  UserInvitationsFieldObject,
   createManyUserMutation,
   createOneUserMutation,
   deleteManyUserMutation,
@@ -69,6 +71,7 @@ export {
   AdminEmailFieldObject,
   AdminPasswordFieldObject,
   AdminPostFieldObject,
+  AdminInvitationFieldObject,
   createManyAdminMutation,
   createOneAdminMutation,
   deleteManyAdminMutation,
@@ -217,6 +220,37 @@ export {
   countIncentiveTableQueryObject,
   findUniqueIncentiveTableQueryObject
 } from './IncentiveTable';
+export {
+  InvitationObject,
+  InvitationIdFieldObject,
+  InvitationCreatedAtFieldObject,
+  InvitationSentByFieldObject,
+  InvitationSentByIdFieldObject,
+  InvitationSentToFieldObject,
+  InvitationSentToIdFieldObject,
+  createManyInvitationMutation,
+  createOneInvitationMutation,
+  deleteManyInvitationMutation,
+  deleteOneInvitationMutation,
+  updateManyInvitationMutation,
+  updateOneInvitationMutation,
+  upsertOneInvitationMutation,
+  createManyInvitationMutationObject,
+  createOneInvitationMutationObject,
+  deleteManyInvitationMutationObject,
+  deleteOneInvitationMutationObject,
+  updateManyInvitationMutationObject,
+  updateOneInvitationMutationObject,
+  upsertOneInvitationMutationObject,
+  findFirstInvitationQuery,
+  findManyInvitationQuery,
+  countInvitationQuery,
+  findUniqueInvitationQuery,
+  findFirstInvitationQueryObject,
+  findManyInvitationQueryObject,
+  countInvitationQueryObject,
+  findUniqueInvitationQueryObject
+} from './Invitation';
 import { builder } from '../builder';
 
 export const BatchPayload = builder.objectType(builder.objectRef<Prisma.BatchPayload>('BatchPayload'), {
@@ -234,6 +268,7 @@ export const modelNames = [
   'PostStatus',
   'Participation',
   'IncentiveTable',
+  'Invitation',
 ] as const;
 
 export type Model = typeof modelNames[number];

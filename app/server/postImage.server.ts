@@ -20,7 +20,7 @@ export const postImage = async (
         to: phoneNumber,
         type: "text",
         text: {
-          body: "We are sorry, but you are not eligible to submit images.",
+          body: "Your account has been suspended by the admin. No further image submission allowed.",
         },
       },
       {
@@ -52,6 +52,9 @@ export const postImage = async (
     ).data
   );
 
+  // _todo validate it is an image format
+  // _todo validate image size is not more than 10mb(environment variable)
+
   const randomNumber = Math.random();
 
   // register image buffer to the database
@@ -81,6 +84,7 @@ export const postImage = async (
       },
     })
     .then((response) => {
+      // _todo: pad "IMG" instead of 0 filling
       const name = String(response.name).padStart(4, "0");
       console.log("Post created", response);
       // reply to the user for confirmation
@@ -92,8 +96,9 @@ export const postImage = async (
           type: "text",
           text: {
             body: `Thank you, the image ID "${name}" has been received.
-Please use the command "DELETE ${name}" if you want to delete this image.
-Rewards, if applicable, will be processed after image verification.`,
+Rewards, if applicable, will be processed after the project is complete.
+
+If you want to delete this image please use the command "DELETE ${name}".`,
           },
         },
         {

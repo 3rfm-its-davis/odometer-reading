@@ -11,7 +11,7 @@ import {
   handleRegistration,
   handleReset,
   handleStop,
-} from "~/server/handleRequests.server.";
+} from "~/server/handleRequests.server";
 import { HandleRequestPayload } from "~/server/types.server";
 import { postImage } from "~/server/postImage.server";
 import { sendWhatsAppMessageText } from "~/utils/sendWhatsAppMessage";
@@ -116,8 +116,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   console.log("userId: ", user?.id);
 
-  const message = body.entry[0].changes[0].value.messages[0].text?.body;
-  const messageType = (message || "").split(" ")[0];
+  const message = body.entry[0].changes[0].value.messages[0].text?.body.trim();
+  const messageType = String((message || "").split(" ")[0]).toUpperCase();
 
   const imageId = await getImageId(body);
 
@@ -134,7 +134,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   if (user?.userStatusId === "closed" || user?.userStatusId === "deleted") {
-    return { body: "OK", status: 200 };
+    const message = `Your account is closed or deleted.`;
+
+    sendWhatsAppMessageText(
+      payload.ourPhoneNumber,
+      payload.phoneNumber,
+      message
+    );
+    return { body: "User closed or deleted", status: 403 };
   }
 
   if (!user) {

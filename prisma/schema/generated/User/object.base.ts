@@ -13,6 +13,7 @@ export const UserObject = definePrismaObject('User', {
   findUnique: ({ id }) => ({ id }),
   fields: (t) => ({
     id: t.field(UserIdFieldObject),
+    email: t.field(UserEmailFieldObject),
     createdAt: t.field(UserCreatedAtFieldObject),
     updatedAt: t.field(UserUpdatedAtFieldObject),
     activatedAt: t.field(UserActivatedAtFieldObject),
@@ -23,6 +24,7 @@ export const UserObject = definePrismaObject('User', {
     participation: t.relation('participation', UserParticipationFieldObject),
     userStatus: t.relation('userStatus', UserUserStatusFieldObject),
     userStatusId: t.field(UserUserStatusIdFieldObject),
+    invitations: t.relation('invitations', UserInvitationsFieldObject(t)),
   }),
 });
 
@@ -31,6 +33,13 @@ export const UserIdFieldObject = defineFieldObject('User', {
   description: undefined,
   nullable: false,
   resolve: (parent) => String(parent.id),
+});
+
+export const UserEmailFieldObject = defineFieldObject('User', {
+  type: "String",
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.email,
 });
 
 export const UserCreatedAtFieldObject = defineFieldObject('User', {
@@ -120,3 +129,28 @@ export const UserUserStatusIdFieldObject = defineFieldObject('User', {
   nullable: false,
   resolve: (parent) => parent.userStatusId,
 });
+
+export const UserInvitationsFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.InvitationWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.InvitationOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.InvitationWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.InvitationScalarFieldEnum], required: false }),
+}))
+
+export const UserInvitationsFieldObject = defineRelationFunction('User', (t) =>
+  defineRelationObject('User', 'invitations', {
+    description: undefined,
+    nullable: false,
+    args: UserInvitationsFieldArgs,
+    query: (args) => ({
+      where: args.where || undefined,
+      cursor: args.cursor || undefined,
+      take: args.take || undefined,
+      distinct: args.distinct || undefined,
+      skip: args.skip || undefined,
+      orderBy: args.orderBy || undefined,
+    }),
+  }),
+);

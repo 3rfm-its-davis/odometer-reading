@@ -5,9 +5,12 @@ import { sendWhatsAppMessageText } from "~/utils/sendWhatsAppMessage";
 import { json } from "@remix-run/node";
 import { v4 } from "uuid";
 
+// log <Whatsappid>:<function name>:<msg>
+
 export const handleRegistration = async (payload: HandleRequestPayload) => {
   // check if the sent message matches the access code in the database
-  const accessCode = payload.message!.replace("REGISTER ", "");
+  // _todo: change this to something with split()
+  const accessCode = payload.message!.split(" ").slice(1).join(" ");
   const userIdByAccessCode = (
     await prisma.user.findUnique({
       where: {
@@ -16,7 +19,30 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
     })
   )?.id;
 
-  console.log("userIdByAccessCode:", userIdByAccessCode);
+  console.log(
+    "handleRegistration: AccessCode: ",
+    accessCode,
+    " Related User: ",
+    userIdByAccessCode
+  );
+
+  if (userIdByAccessCode === undefined) {
+    // ask the sender to sign up by access code
+    const message = `Please use the command "REGISTER {access code}", replacing {access code} with the unique access code sent in your invitation email.`;
+
+    sendWhatsAppMessageText(
+      payload.ourPhoneNumber,
+      payload.phoneNumber,
+      message
+    );
+
+    console.log("Sent sign up message");
+    return { body: "OK", status: 200 };
+  }
+
+  // _todo if no user found return error message
+  // _todo: validated if user found. user phone number same as current phone number : msg: You are already registered
+  // user object phone number exists but different from current -> msg - access code has already been claimed
 
   const userIdByPhoneNumber = (
     await prisma.user.findUnique({
@@ -28,42 +54,8 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
 
   console.log("userIdByPhoneNumber:", userIdByPhoneNumber);
 
-  if (userIdByAccessCode !== undefined) {
-    if (userIdByPhoneNumber !== undefined) {
-      const message = "You have already signed up with this phone number.";
-
-      sendWhatsAppMessageText(
-        payload.ourPhoneNumber,
-        payload.phoneNumber,
-        message
-      );
-
-      return { body: "OK", status: 200 };
-    } else {
-      await prisma.user.update({
-        where: {
-          id: userIdByAccessCode,
-        },
-        data: {
-          phoneNumber: payload.phoneNumber,
-          userStatusId: "activated",
-        },
-      });
-
-      const message =
-        "You have successfully signed up. Please send your odometer reading.";
-
-      sendWhatsAppMessageText(
-        payload.ourPhoneNumber,
-        payload.phoneNumber,
-        message
-      );
-      return { body: "OK", status: 200 };
-    }
-  } else {
-    // ask the sender to sign up by access code
-    const message = `Please use the command "REGISTER {access code}", replacing {access code} with the unique access code sent in your invitation email.
-Please note that the command is case-sensitive.`;
+  if (userIdByPhoneNumber !== undefined) {
+    const message = "You have already signed up with this phone number.";
 
     sendWhatsAppMessageText(
       payload.ourPhoneNumber,
@@ -71,13 +63,39 @@ Please note that the command is case-sensitive.`;
       message
     );
 
-    console.log("Sent sign up message");
+    return { body: "OK", status: 200 };
+  } else {
+    await prisma.user.update({
+      where: {
+        id: userIdByAccessCode,
+      },
+      data: {
+        phoneNumber: payload.phoneNumber,
+        userStatusId: "activated",
+        activatedAt: new Date(),
+      },
+    });
+
+    const message =
+      "You have successfully signed up. Please send your odometer reading.";
+
+    sendWhatsAppMessageText(
+      payload.ourPhoneNumber,
+      payload.phoneNumber,
+      message
+    );
     return { body: "OK", status: 200 };
   }
 };
 
 export const handleDelete = async (payload: HandleRequestPayload) => {
-  const imageId = payload.message!.replace("DELETE ", "");
+  // _todo: change this to something with split()
+  // remove preceding "IMG"
+  const imageId = payload
+    .message!.split(" ")
+    .slice(1)
+    .join(" ")
+    .replace(/^IMG/g, "");
 
   if (isNaN(Number(imageId))) {
     const message = `Invalid image name has been entered. Please check the image name and try it again.`;
@@ -88,7 +106,7 @@ export const handleDelete = async (payload: HandleRequestPayload) => {
       message
     );
 
-    return { body: "OK", status: 200 };
+    return { body: "Bad image id", status: 400 };
   }
 
   const count = await prisma.post.updateMany({
@@ -143,6 +161,7 @@ export const handleDelete = async (payload: HandleRequestPayload) => {
 };
 
 export const handleStop = async (payload: HandleRequestPayload) => {
+  // _todo: change this to something with split()
   if (payload.user?.userStatusId === "activated") {
     if (payload.message === `STOP ${payload.user.accessCode}`) {
       await prisma.user.update({
@@ -195,12 +214,13 @@ export const handleStop = async (payload: HandleRequestPayload) => {
 
       return { body: "OK", status: 200 };
     } else {
-      const message = `Please use one of the two commands to close your account, replacing {access code} with the unique access code sent in your invitation email:
-  
-  1. "STOP {access code}" to close your account.
-  2. "STOP AND DELETE {access code}" to close your account and delete all image data.
-  
-  Please note that *closing your account cannot be undone*.`;
+      const message = `Invalid command or access code has been entered.
+Please use one of the two commands to close your account, replacing {access code} with the unique access code sent in your invitation email:
+
+1. "STOP {access code}" to close your account.
+2. "STOP AND DELETE {access code}" to close your account and delete all image data.
+
+Please note that *closing your account cannot be undone*.`;
 
       sendWhatsAppMessageText(
         payload.ourPhoneNumber,
@@ -214,11 +234,13 @@ export const handleStop = async (payload: HandleRequestPayload) => {
 };
 
 export const handleHelp = async (payload: HandleRequestPayload) => {
+  // _todo: change this to something with split()
   const message = `You can submit a photo image of your odometer by attaching it directly to this chat.
 For other actions, please use one of the following commands:
 
 1. DELETE - To delete image(s) that you already submitted.
-2. STOP - To stop participating in this survey.`;
+2. STOP - To stop participating in this survey.
+3. STOP AND DELETE - To stop participating in this survey and delete all the image data that you have submitted.`;
 
   sendWhatsAppMessageText(payload.ourPhoneNumber, payload.phoneNumber, message);
 

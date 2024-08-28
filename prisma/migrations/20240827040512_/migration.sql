@@ -5,6 +5,7 @@ BEGIN TRAN;
 -- CreateTable
 CREATE TABLE [dbo].[User] (
     [id] NVARCHAR(1000) NOT NULL,
+    [email] NVARCHAR(1000),
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [User_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [updatedAt] DATETIME2 NOT NULL,
     [activatedAt] DATETIME2,
@@ -74,6 +75,15 @@ CREATE TABLE [dbo].[IncentiveTable] (
     CONSTRAINT [IncentiveTable_pkey] PRIMARY KEY CLUSTERED ([id])
 );
 
+-- CreateTable
+CREATE TABLE [dbo].[Invitation] (
+    [id] NVARCHAR(1000) NOT NULL,
+    [createdAt] DATETIME2 NOT NULL CONSTRAINT [Invitation_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
+    [sentById] NVARCHAR(1000) NOT NULL,
+    [sentToId] NVARCHAR(1000) NOT NULL,
+    CONSTRAINT [Invitation_pkey] PRIMARY KEY CLUSTERED ([id])
+);
+
 -- CreateIndex
 CREATE NONCLUSTERED INDEX [User_userStatusId_idx] ON [dbo].[User]([userStatusId]);
 
@@ -88,6 +98,12 @@ CREATE NONCLUSTERED INDEX [Post_statusChangedById_idx] ON [dbo].[Post]([statusCh
 
 -- CreateIndex
 CREATE NONCLUSTERED INDEX [Participation_userId_idx] ON [dbo].[Participation]([userId]);
+
+-- CreateIndex
+CREATE NONCLUSTERED INDEX [Invitation_sentById_idx] ON [dbo].[Invitation]([sentById]);
+
+-- CreateIndex
+CREATE NONCLUSTERED INDEX [Invitation_sentToId_idx] ON [dbo].[Invitation]([sentToId]);
 
 COMMIT TRAN;
 

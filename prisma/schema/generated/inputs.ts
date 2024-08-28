@@ -61,7 +61,7 @@ export const TransactionIsolationLevel = builder.enumType('TransactionIsolationL
 });
 
 export const UserScalarFieldEnum = builder.enumType('UserScalarFieldEnum', {
-  values: ["id","createdAt","updatedAt","activatedAt","deletedAt","phoneNumber","accessCode","userStatusId"] as const,
+  values: ["id","email","createdAt","updatedAt","activatedAt","deletedAt","phoneNumber","accessCode","userStatusId"] as const,
 });
 
 export const UserStatusScalarFieldEnum = builder.enumType('UserStatusScalarFieldEnum', {
@@ -88,6 +88,10 @@ export const IncentiveTableScalarFieldEnum = builder.enumType('IncentiveTableSca
   values: ["id","index","incentive"] as const,
 });
 
+export const InvitationScalarFieldEnum = builder.enumType('InvitationScalarFieldEnum', {
+  values: ["id","createdAt","sentById","sentToId"] as const,
+});
+
 export const SortOrder = builder.enumType('SortOrder', {
   values: ["asc","desc"] as const,
 });
@@ -101,6 +105,7 @@ export const UserWhereInputFields = (t: any) => ({
   OR: t.field({"required":false,"type":[UserWhereInput]}),
   NOT: t.field({"required":false,"type":[UserWhereInput]}),
   id: t.field({"required":false,"type":StringFilter}),
+  email: t.field({"required":false,"type":StringNullableFilter}),
   createdAt: t.field({"required":false,"type":DateTimeFilter}),
   updatedAt: t.field({"required":false,"type":DateTimeFilter}),
   activatedAt: t.field({"required":false,"type":DateTimeNullableFilter}),
@@ -111,6 +116,7 @@ export const UserWhereInputFields = (t: any) => ({
   posts: t.field({"required":false,"type":PostListRelationFilter}),
   participation: t.field({"required":false,"type":ParticipationWhereInput}),
   userStatus: t.field({"required":false,"type":UserStatusWhereInput}),
+  invitations: t.field({"required":false,"type":InvitationListRelationFilter}),
 });
 export const UserWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserWhereInput>, false>('UserWhereInput').implement({
   fields: UserWhereInputFields,
@@ -118,6 +124,7 @@ export const UserWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter
 
 export const UserOrderByWithRelationInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
+  email: t.field({"required":false,"type":SortOrder}),
   createdAt: t.field({"required":false,"type":SortOrder}),
   updatedAt: t.field({"required":false,"type":SortOrder}),
   activatedAt: t.field({"required":false,"type":SortOrder}),
@@ -128,6 +135,7 @@ export const UserOrderByWithRelationInputFields = (t: any) => ({
   posts: t.field({"required":false,"type":PostOrderByRelationAggregateInput}),
   participation: t.field({"required":false,"type":ParticipationOrderByWithRelationInput}),
   userStatus: t.field({"required":false,"type":UserStatusOrderByWithRelationInput}),
+  invitations: t.field({"required":false,"type":InvitationOrderByRelationAggregateInput}),
 });
 export const UserOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserOrderByWithRelationInput>, false>('UserOrderByWithRelationInput').implement({
   fields: UserOrderByWithRelationInputFields,
@@ -140,6 +148,7 @@ export const UserWhereUniqueInputFields = (t: any) => ({
   AND: t.field({"required":false,"type":[UserWhereInput]}),
   OR: t.field({"required":false,"type":[UserWhereInput]}),
   NOT: t.field({"required":false,"type":[UserWhereInput]}),
+  email: t.field({"required":false,"type":StringNullableFilter}),
   createdAt: t.field({"required":false,"type":DateTimeFilter}),
   updatedAt: t.field({"required":false,"type":DateTimeFilter}),
   activatedAt: t.field({"required":false,"type":DateTimeNullableFilter}),
@@ -148,6 +157,7 @@ export const UserWhereUniqueInputFields = (t: any) => ({
   posts: t.field({"required":false,"type":PostListRelationFilter}),
   participation: t.field({"required":false,"type":ParticipationWhereInput}),
   userStatus: t.field({"required":false,"type":UserStatusWhereInput}),
+  invitations: t.field({"required":false,"type":InvitationListRelationFilter}),
 });
 export const UserWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserWhereUniqueInput>, false>('UserWhereUniqueInput').implement({
   fields: UserWhereUniqueInputFields,
@@ -155,6 +165,7 @@ export const UserWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInput
 
 export const UserOrderByWithAggregationInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
+  email: t.field({"required":false,"type":SortOrder}),
   createdAt: t.field({"required":false,"type":SortOrder}),
   updatedAt: t.field({"required":false,"type":SortOrder}),
   activatedAt: t.field({"required":false,"type":SortOrder}),
@@ -175,6 +186,7 @@ export const UserScalarWhereWithAggregatesInputFields = (t: any) => ({
   OR: t.field({"required":false,"type":[UserScalarWhereWithAggregatesInput]}),
   NOT: t.field({"required":false,"type":[UserScalarWhereWithAggregatesInput]}),
   id: t.field({"required":false,"type":StringWithAggregatesFilter}),
+  email: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
   createdAt: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
   updatedAt: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
   activatedAt: t.field({"required":false,"type":DateTimeNullableWithAggregatesFilter}),
@@ -249,7 +261,8 @@ export const AdminWhereInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFilter}),
   email: t.field({"required":false,"type":StringFilter}),
   password: t.field({"required":false,"type":StringFilter}),
-  Post: t.field({"required":false,"type":PostListRelationFilter}),
+  post: t.field({"required":false,"type":PostListRelationFilter}),
+  invitation: t.field({"required":false,"type":InvitationListRelationFilter}),
 });
 export const AdminWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminWhereInput>, false>('AdminWhereInput').implement({
   fields: AdminWhereInputFields,
@@ -259,7 +272,8 @@ export const AdminOrderByWithRelationInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   email: t.field({"required":false,"type":SortOrder}),
   password: t.field({"required":false,"type":SortOrder}),
-  Post: t.field({"required":false,"type":PostOrderByRelationAggregateInput}),
+  post: t.field({"required":false,"type":PostOrderByRelationAggregateInput}),
+  invitation: t.field({"required":false,"type":InvitationOrderByRelationAggregateInput}),
 });
 export const AdminOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminOrderByWithRelationInput>, false>('AdminOrderByWithRelationInput').implement({
   fields: AdminOrderByWithRelationInputFields,
@@ -272,7 +286,8 @@ export const AdminWhereUniqueInputFields = (t: any) => ({
   OR: t.field({"required":false,"type":[AdminWhereInput]}),
   NOT: t.field({"required":false,"type":[AdminWhereInput]}),
   password: t.field({"required":false,"type":StringFilter}),
-  Post: t.field({"required":false,"type":PostListRelationFilter}),
+  post: t.field({"required":false,"type":PostListRelationFilter}),
+  invitation: t.field({"required":false,"type":InvitationListRelationFilter}),
 });
 export const AdminWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminWhereUniqueInput>, false>('AdminWhereUniqueInput').implement({
   fields: AdminWhereUniqueInputFields,
@@ -591,8 +606,77 @@ export const IncentiveTableScalarWhereWithAggregatesInput = builder.inputRef<Pri
   fields: IncentiveTableScalarWhereWithAggregatesInputFields,
 });
 
+export const InvitationWhereInputFields = (t: any) => ({
+  AND: t.field({"required":false,"type":[InvitationWhereInput]}),
+  OR: t.field({"required":false,"type":[InvitationWhereInput]}),
+  NOT: t.field({"required":false,"type":[InvitationWhereInput]}),
+  id: t.field({"required":false,"type":StringFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  sentById: t.field({"required":false,"type":StringFilter}),
+  sentToId: t.field({"required":false,"type":StringFilter}),
+  sentBy: t.field({"required":false,"type":AdminWhereInput}),
+  sentTo: t.field({"required":false,"type":UserWhereInput}),
+});
+export const InvitationWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationWhereInput>, false>('InvitationWhereInput').implement({
+  fields: InvitationWhereInputFields,
+});
+
+export const InvitationOrderByWithRelationInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  sentById: t.field({"required":false,"type":SortOrder}),
+  sentToId: t.field({"required":false,"type":SortOrder}),
+  sentBy: t.field({"required":false,"type":AdminOrderByWithRelationInput}),
+  sentTo: t.field({"required":false,"type":UserOrderByWithRelationInput}),
+});
+export const InvitationOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationOrderByWithRelationInput>, false>('InvitationOrderByWithRelationInput').implement({
+  fields: InvitationOrderByWithRelationInputFields,
+});
+
+export const InvitationWhereUniqueInputFields = (t: any) => ({
+  id: t.string({"required":false}),
+  AND: t.field({"required":false,"type":[InvitationWhereInput]}),
+  OR: t.field({"required":false,"type":[InvitationWhereInput]}),
+  NOT: t.field({"required":false,"type":[InvitationWhereInput]}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  sentById: t.field({"required":false,"type":StringFilter}),
+  sentToId: t.field({"required":false,"type":StringFilter}),
+  sentBy: t.field({"required":false,"type":AdminWhereInput}),
+  sentTo: t.field({"required":false,"type":UserWhereInput}),
+});
+export const InvitationWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationWhereUniqueInput>, false>('InvitationWhereUniqueInput').implement({
+  fields: InvitationWhereUniqueInputFields,
+});
+
+export const InvitationOrderByWithAggregationInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  sentById: t.field({"required":false,"type":SortOrder}),
+  sentToId: t.field({"required":false,"type":SortOrder}),
+  _count: t.field({"required":false,"type":InvitationCountOrderByAggregateInput}),
+  _max: t.field({"required":false,"type":InvitationMaxOrderByAggregateInput}),
+  _min: t.field({"required":false,"type":InvitationMinOrderByAggregateInput}),
+});
+export const InvitationOrderByWithAggregationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationOrderByWithAggregationInput>, false>('InvitationOrderByWithAggregationInput').implement({
+  fields: InvitationOrderByWithAggregationInputFields,
+});
+
+export const InvitationScalarWhereWithAggregatesInputFields = (t: any) => ({
+  AND: t.field({"required":false,"type":[InvitationScalarWhereWithAggregatesInput]}),
+  OR: t.field({"required":false,"type":[InvitationScalarWhereWithAggregatesInput]}),
+  NOT: t.field({"required":false,"type":[InvitationScalarWhereWithAggregatesInput]}),
+  id: t.field({"required":false,"type":StringWithAggregatesFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
+  sentById: t.field({"required":false,"type":StringWithAggregatesFilter}),
+  sentToId: t.field({"required":false,"type":StringWithAggregatesFilter}),
+});
+export const InvitationScalarWhereWithAggregatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationScalarWhereWithAggregatesInput>, false>('InvitationScalarWhereWithAggregatesInput').implement({
+  fields: InvitationScalarWhereWithAggregatesInputFields,
+});
+
 export const UserCreateInputFields = (t: any) => ({
   id: t.string({"required":false}),
+  email: t.string({"required":false}),
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   activatedAt: t.field({"required":false,"type":DateTime}),
@@ -602,6 +686,7 @@ export const UserCreateInputFields = (t: any) => ({
   posts: t.field({"required":false,"type":PostCreateNestedManyWithoutPostedByInput}),
   participation: t.field({"required":false,"type":ParticipationCreateNestedOneWithoutUserInput}),
   userStatus: t.field({"required":false,"type":UserStatusCreateNestedOneWithoutUserInput}),
+  invitations: t.field({"required":false,"type":InvitationCreateNestedManyWithoutSentToInput}),
 });
 export const UserCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserCreateInput>, false>('UserCreateInput').implement({
   fields: UserCreateInputFields,
@@ -609,6 +694,7 @@ export const UserCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilte
 
 export const UserUpdateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  email: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   activatedAt: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
@@ -618,6 +704,7 @@ export const UserUpdateInputFields = (t: any) => ({
   posts: t.field({"required":false,"type":PostUpdateManyWithoutPostedByNestedInput}),
   participation: t.field({"required":false,"type":ParticipationUpdateOneWithoutUserNestedInput}),
   userStatus: t.field({"required":false,"type":UserStatusUpdateOneRequiredWithoutUserNestedInput}),
+  invitations: t.field({"required":false,"type":InvitationUpdateManyWithoutSentToNestedInput}),
 });
 export const UserUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateInput>, false>('UserUpdateInput').implement({
   fields: UserUpdateInputFields,
@@ -625,6 +712,7 @@ export const UserUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilte
 
 export const UserCreateManyInputFields = (t: any) => ({
   id: t.string({"required":false}),
+  email: t.string({"required":false}),
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   activatedAt: t.field({"required":false,"type":DateTime}),
@@ -639,6 +727,7 @@ export const UserCreateManyInput = builder.inputRef<PrismaUpdateOperationsInputF
 
 export const UserUpdateManyMutationInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  email: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   activatedAt: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
@@ -688,7 +777,8 @@ export const AdminCreateInputFields = (t: any) => ({
   id: t.string({"required":false}),
   email: t.string({"required":true}),
   password: t.string({"required":true}),
-  Post: t.field({"required":false,"type":PostCreateNestedManyWithoutStatusChangedByInput}),
+  post: t.field({"required":false,"type":PostCreateNestedManyWithoutStatusChangedByInput}),
+  invitation: t.field({"required":false,"type":InvitationCreateNestedManyWithoutSentByInput}),
 });
 export const AdminCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminCreateInput>, false>('AdminCreateInput').implement({
   fields: AdminCreateInputFields,
@@ -698,7 +788,8 @@ export const AdminUpdateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   email: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   password: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  Post: t.field({"required":false,"type":PostUpdateManyWithoutStatusChangedByNestedInput}),
+  post: t.field({"required":false,"type":PostUpdateManyWithoutStatusChangedByNestedInput}),
+  invitation: t.field({"required":false,"type":InvitationUpdateManyWithoutSentByNestedInput}),
 });
 export const AdminUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminUpdateInput>, false>('AdminUpdateInput').implement({
   fields: AdminUpdateInputFields,
@@ -895,6 +986,44 @@ export const IncentiveTableUpdateManyMutationInput = builder.inputRef<PrismaUpda
   fields: IncentiveTableUpdateManyMutationInputFields,
 });
 
+export const InvitationCreateInputFields = (t: any) => ({
+  id: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  sentBy: t.field({"required":true,"type":AdminCreateNestedOneWithoutInvitationInput}),
+  sentTo: t.field({"required":true,"type":UserCreateNestedOneWithoutInvitationsInput}),
+});
+export const InvitationCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCreateInput>, false>('InvitationCreateInput').implement({
+  fields: InvitationCreateInputFields,
+});
+
+export const InvitationUpdateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  sentBy: t.field({"required":false,"type":AdminUpdateOneRequiredWithoutInvitationNestedInput}),
+  sentTo: t.field({"required":false,"type":UserUpdateOneRequiredWithoutInvitationsNestedInput}),
+});
+export const InvitationUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationUpdateInput>, false>('InvitationUpdateInput').implement({
+  fields: InvitationUpdateInputFields,
+});
+
+export const InvitationCreateManyInputFields = (t: any) => ({
+  id: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  sentById: t.string({"required":true}),
+  sentToId: t.string({"required":true}),
+});
+export const InvitationCreateManyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCreateManyInput>, false>('InvitationCreateManyInput').implement({
+  fields: InvitationCreateManyInputFields,
+});
+
+export const InvitationUpdateManyMutationInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+});
+export const InvitationUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationUpdateManyMutationInput>, false>('InvitationUpdateManyMutationInput').implement({
+  fields: InvitationUpdateManyMutationInputFields,
+});
+
 export const StringFilterFields = (t: any) => ({
   equals: t.string({"required":false}),
   in: t.stringList({"required":false}),
@@ -910,6 +1039,23 @@ export const StringFilterFields = (t: any) => ({
 });
 export const StringFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StringFilter>, false>('StringFilter').implement({
   fields: StringFilterFields,
+});
+
+export const StringNullableFilterFields = (t: any) => ({
+  equals: t.string({"required":false}),
+  in: t.stringList({"required":false}),
+  notIn: t.stringList({"required":false}),
+  lt: t.string({"required":false}),
+  lte: t.string({"required":false}),
+  gt: t.string({"required":false}),
+  gte: t.string({"required":false}),
+  contains: t.string({"required":false}),
+  startsWith: t.string({"required":false}),
+  endsWith: t.string({"required":false}),
+  not: t.field({"required":false,"type":NestedStringNullableFilter}),
+});
+export const StringNullableFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StringNullableFilter>, false>('StringNullableFilter').implement({
+  fields: StringNullableFilterFields,
 });
 
 export const DateTimeFilterFields = (t: any) => ({
@@ -965,6 +1111,15 @@ export const UserStatusRelationFilter = builder.inputRef<PrismaUpdateOperationsI
   fields: UserStatusRelationFilterFields,
 });
 
+export const InvitationListRelationFilterFields = (t: any) => ({
+  every: t.field({"required":false,"type":InvitationWhereInput}),
+  some: t.field({"required":false,"type":InvitationWhereInput}),
+  none: t.field({"required":false,"type":InvitationWhereInput}),
+});
+export const InvitationListRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationListRelationFilter>, false>('InvitationListRelationFilter').implement({
+  fields: InvitationListRelationFilterFields,
+});
+
 export const PostOrderByRelationAggregateInputFields = (t: any) => ({
   _count: t.field({"required":false,"type":SortOrder}),
 });
@@ -972,8 +1127,16 @@ export const PostOrderByRelationAggregateInput = builder.inputRef<PrismaUpdateOp
   fields: PostOrderByRelationAggregateInputFields,
 });
 
+export const InvitationOrderByRelationAggregateInputFields = (t: any) => ({
+  _count: t.field({"required":false,"type":SortOrder}),
+});
+export const InvitationOrderByRelationAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationOrderByRelationAggregateInput>, false>('InvitationOrderByRelationAggregateInput').implement({
+  fields: InvitationOrderByRelationAggregateInputFields,
+});
+
 export const UserCountOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
+  email: t.field({"required":false,"type":SortOrder}),
   createdAt: t.field({"required":false,"type":SortOrder}),
   updatedAt: t.field({"required":false,"type":SortOrder}),
   activatedAt: t.field({"required":false,"type":SortOrder}),
@@ -988,6 +1151,7 @@ export const UserCountOrderByAggregateInput = builder.inputRef<PrismaUpdateOpera
 
 export const UserMaxOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
+  email: t.field({"required":false,"type":SortOrder}),
   createdAt: t.field({"required":false,"type":SortOrder}),
   updatedAt: t.field({"required":false,"type":SortOrder}),
   activatedAt: t.field({"required":false,"type":SortOrder}),
@@ -1002,6 +1166,7 @@ export const UserMaxOrderByAggregateInput = builder.inputRef<PrismaUpdateOperati
 
 export const UserMinOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
+  email: t.field({"required":false,"type":SortOrder}),
   createdAt: t.field({"required":false,"type":SortOrder}),
   updatedAt: t.field({"required":false,"type":SortOrder}),
   activatedAt: t.field({"required":false,"type":SortOrder}),
@@ -1032,6 +1197,26 @@ export const StringWithAggregatesFilterFields = (t: any) => ({
 });
 export const StringWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StringWithAggregatesFilter>, false>('StringWithAggregatesFilter').implement({
   fields: StringWithAggregatesFilterFields,
+});
+
+export const StringNullableWithAggregatesFilterFields = (t: any) => ({
+  equals: t.string({"required":false}),
+  in: t.stringList({"required":false}),
+  notIn: t.stringList({"required":false}),
+  lt: t.string({"required":false}),
+  lte: t.string({"required":false}),
+  gt: t.string({"required":false}),
+  gte: t.string({"required":false}),
+  contains: t.string({"required":false}),
+  startsWith: t.string({"required":false}),
+  endsWith: t.string({"required":false}),
+  not: t.field({"required":false,"type":NestedStringNullableWithAggregatesFilter}),
+  _count: t.field({"required":false,"type":NestedIntNullableFilter}),
+  _min: t.field({"required":false,"type":NestedStringNullableFilter}),
+  _max: t.field({"required":false,"type":NestedStringNullableFilter}),
+});
+export const StringNullableWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StringNullableWithAggregatesFilter>, false>('StringNullableWithAggregatesFilter').implement({
+  fields: StringNullableWithAggregatesFilterFields,
 });
 
 export const DateTimeWithAggregatesFilterFields = (t: any) => ({
@@ -1171,23 +1356,6 @@ export const FloatFilterFields = (t: any) => ({
 });
 export const FloatFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.FloatFilter>, false>('FloatFilter').implement({
   fields: FloatFilterFields,
-});
-
-export const StringNullableFilterFields = (t: any) => ({
-  equals: t.string({"required":false}),
-  in: t.stringList({"required":false}),
-  notIn: t.stringList({"required":false}),
-  lt: t.string({"required":false}),
-  lte: t.string({"required":false}),
-  gt: t.string({"required":false}),
-  gte: t.string({"required":false}),
-  contains: t.string({"required":false}),
-  startsWith: t.string({"required":false}),
-  endsWith: t.string({"required":false}),
-  not: t.field({"required":false,"type":NestedStringNullableFilter}),
-});
-export const StringNullableFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StringNullableFilter>, false>('StringNullableFilter').implement({
-  fields: StringNullableFilterFields,
 });
 
 export const PostStatusRelationFilterFields = (t: any) => ({
@@ -1331,26 +1499,6 @@ export const FloatWithAggregatesFilter = builder.inputRef<PrismaUpdateOperations
   fields: FloatWithAggregatesFilterFields,
 });
 
-export const StringNullableWithAggregatesFilterFields = (t: any) => ({
-  equals: t.string({"required":false}),
-  in: t.stringList({"required":false}),
-  notIn: t.stringList({"required":false}),
-  lt: t.string({"required":false}),
-  lte: t.string({"required":false}),
-  gt: t.string({"required":false}),
-  gte: t.string({"required":false}),
-  contains: t.string({"required":false}),
-  startsWith: t.string({"required":false}),
-  endsWith: t.string({"required":false}),
-  not: t.field({"required":false,"type":NestedStringNullableWithAggregatesFilter}),
-  _count: t.field({"required":false,"type":NestedIntNullableFilter}),
-  _min: t.field({"required":false,"type":NestedStringNullableFilter}),
-  _max: t.field({"required":false,"type":NestedStringNullableFilter}),
-});
-export const StringNullableWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StringNullableWithAggregatesFilter>, false>('StringNullableWithAggregatesFilter').implement({
-  fields: StringNullableWithAggregatesFilterFields,
-});
-
 export const PostStatusCountOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   createdAt: t.field({"required":false,"type":SortOrder}),
@@ -1465,6 +1613,44 @@ export const IncentiveTableSumOrderByAggregateInput = builder.inputRef<PrismaUpd
   fields: IncentiveTableSumOrderByAggregateInputFields,
 });
 
+export const AdminRelationFilterFields = (t: any) => ({
+  is: t.field({"required":false,"type":AdminWhereInput}),
+  isNot: t.field({"required":false,"type":AdminWhereInput}),
+});
+export const AdminRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminRelationFilter>, false>('AdminRelationFilter').implement({
+  fields: AdminRelationFilterFields,
+});
+
+export const InvitationCountOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  sentById: t.field({"required":false,"type":SortOrder}),
+  sentToId: t.field({"required":false,"type":SortOrder}),
+});
+export const InvitationCountOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCountOrderByAggregateInput>, false>('InvitationCountOrderByAggregateInput').implement({
+  fields: InvitationCountOrderByAggregateInputFields,
+});
+
+export const InvitationMaxOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  sentById: t.field({"required":false,"type":SortOrder}),
+  sentToId: t.field({"required":false,"type":SortOrder}),
+});
+export const InvitationMaxOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationMaxOrderByAggregateInput>, false>('InvitationMaxOrderByAggregateInput').implement({
+  fields: InvitationMaxOrderByAggregateInputFields,
+});
+
+export const InvitationMinOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  sentById: t.field({"required":false,"type":SortOrder}),
+  sentToId: t.field({"required":false,"type":SortOrder}),
+});
+export const InvitationMinOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationMinOrderByAggregateInput>, false>('InvitationMinOrderByAggregateInput').implement({
+  fields: InvitationMinOrderByAggregateInputFields,
+});
+
 export const PostCreateNestedManyWithoutPostedByInputFields = (t: any) => ({
   create: t.field({"required":false,"type":[PostCreateWithoutPostedByInput]}),
   connectOrCreate: t.field({"required":false,"type":[PostCreateOrConnectWithoutPostedByInput]}),
@@ -1493,11 +1679,28 @@ export const UserStatusCreateNestedOneWithoutUserInput = builder.inputRef<Prisma
   fields: UserStatusCreateNestedOneWithoutUserInputFields,
 });
 
+export const InvitationCreateNestedManyWithoutSentToInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[InvitationCreateWithoutSentToInput]}),
+  connectOrCreate: t.field({"required":false,"type":[InvitationCreateOrConnectWithoutSentToInput]}),
+  createMany: t.field({"required":false,"type":InvitationCreateManySentToInputEnvelope}),
+  connect: t.field({"required":false,"type":[InvitationWhereUniqueInput]}),
+});
+export const InvitationCreateNestedManyWithoutSentToInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCreateNestedManyWithoutSentToInput>, false>('InvitationCreateNestedManyWithoutSentToInput').implement({
+  fields: InvitationCreateNestedManyWithoutSentToInputFields,
+});
+
 export const StringFieldUpdateOperationsInputFields = (t: any) => ({
   set: t.string({"required":false}),
 });
 export const StringFieldUpdateOperationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StringFieldUpdateOperationsInput>, false>('StringFieldUpdateOperationsInput').implement({
   fields: StringFieldUpdateOperationsInputFields,
+});
+
+export const NullableStringFieldUpdateOperationsInputFields = (t: any) => ({
+  set: t.string({"required":false}),
+});
+export const NullableStringFieldUpdateOperationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NullableStringFieldUpdateOperationsInput>, false>('NullableStringFieldUpdateOperationsInput').implement({
+  fields: NullableStringFieldUpdateOperationsInputFields,
 });
 
 export const DateTimeFieldUpdateOperationsInputFields = (t: any) => ({
@@ -1555,6 +1758,23 @@ export const UserStatusUpdateOneRequiredWithoutUserNestedInput = builder.inputRe
   fields: UserStatusUpdateOneRequiredWithoutUserNestedInputFields,
 });
 
+export const InvitationUpdateManyWithoutSentToNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[InvitationCreateWithoutSentToInput]}),
+  connectOrCreate: t.field({"required":false,"type":[InvitationCreateOrConnectWithoutSentToInput]}),
+  upsert: t.field({"required":false,"type":[InvitationUpsertWithWhereUniqueWithoutSentToInput]}),
+  createMany: t.field({"required":false,"type":InvitationCreateManySentToInputEnvelope}),
+  set: t.field({"required":false,"type":[InvitationWhereUniqueInput]}),
+  disconnect: t.field({"required":false,"type":[InvitationWhereUniqueInput]}),
+  delete: t.field({"required":false,"type":[InvitationWhereUniqueInput]}),
+  connect: t.field({"required":false,"type":[InvitationWhereUniqueInput]}),
+  update: t.field({"required":false,"type":[InvitationUpdateWithWhereUniqueWithoutSentToInput]}),
+  updateMany: t.field({"required":false,"type":[InvitationUpdateManyWithWhereWithoutSentToInput]}),
+  deleteMany: t.field({"required":false,"type":[InvitationScalarWhereInput]}),
+});
+export const InvitationUpdateManyWithoutSentToNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationUpdateManyWithoutSentToNestedInput>, false>('InvitationUpdateManyWithoutSentToNestedInput').implement({
+  fields: InvitationUpdateManyWithoutSentToNestedInputFields,
+});
+
 export const UserCreateNestedManyWithoutUserStatusInputFields = (t: any) => ({
   create: t.field({"required":false,"type":[UserCreateWithoutUserStatusInput]}),
   connectOrCreate: t.field({"required":false,"type":[UserCreateOrConnectWithoutUserStatusInput]}),
@@ -1592,6 +1812,16 @@ export const PostCreateNestedManyWithoutStatusChangedByInput = builder.inputRef<
   fields: PostCreateNestedManyWithoutStatusChangedByInputFields,
 });
 
+export const InvitationCreateNestedManyWithoutSentByInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[InvitationCreateWithoutSentByInput]}),
+  connectOrCreate: t.field({"required":false,"type":[InvitationCreateOrConnectWithoutSentByInput]}),
+  createMany: t.field({"required":false,"type":InvitationCreateManySentByInputEnvelope}),
+  connect: t.field({"required":false,"type":[InvitationWhereUniqueInput]}),
+});
+export const InvitationCreateNestedManyWithoutSentByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCreateNestedManyWithoutSentByInput>, false>('InvitationCreateNestedManyWithoutSentByInput').implement({
+  fields: InvitationCreateNestedManyWithoutSentByInputFields,
+});
+
 export const PostUpdateManyWithoutStatusChangedByNestedInputFields = (t: any) => ({
   create: t.field({"required":false,"type":[PostCreateWithoutStatusChangedByInput]}),
   connectOrCreate: t.field({"required":false,"type":[PostCreateOrConnectWithoutStatusChangedByInput]}),
@@ -1607,6 +1837,23 @@ export const PostUpdateManyWithoutStatusChangedByNestedInputFields = (t: any) =>
 });
 export const PostUpdateManyWithoutStatusChangedByNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateManyWithoutStatusChangedByNestedInput>, false>('PostUpdateManyWithoutStatusChangedByNestedInput').implement({
   fields: PostUpdateManyWithoutStatusChangedByNestedInputFields,
+});
+
+export const InvitationUpdateManyWithoutSentByNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[InvitationCreateWithoutSentByInput]}),
+  connectOrCreate: t.field({"required":false,"type":[InvitationCreateOrConnectWithoutSentByInput]}),
+  upsert: t.field({"required":false,"type":[InvitationUpsertWithWhereUniqueWithoutSentByInput]}),
+  createMany: t.field({"required":false,"type":InvitationCreateManySentByInputEnvelope}),
+  set: t.field({"required":false,"type":[InvitationWhereUniqueInput]}),
+  disconnect: t.field({"required":false,"type":[InvitationWhereUniqueInput]}),
+  delete: t.field({"required":false,"type":[InvitationWhereUniqueInput]}),
+  connect: t.field({"required":false,"type":[InvitationWhereUniqueInput]}),
+  update: t.field({"required":false,"type":[InvitationUpdateWithWhereUniqueWithoutSentByInput]}),
+  updateMany: t.field({"required":false,"type":[InvitationUpdateManyWithWhereWithoutSentByInput]}),
+  deleteMany: t.field({"required":false,"type":[InvitationScalarWhereInput]}),
+});
+export const InvitationUpdateManyWithoutSentByNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationUpdateManyWithoutSentByNestedInput>, false>('InvitationUpdateManyWithoutSentByNestedInput').implement({
+  fields: InvitationUpdateManyWithoutSentByNestedInputFields,
 });
 
 export const PostStatusCreateNestedOneWithoutPostInputFields = (t: any) => ({
@@ -1663,13 +1910,6 @@ export const FloatFieldUpdateOperationsInputFields = (t: any) => ({
 });
 export const FloatFieldUpdateOperationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.FloatFieldUpdateOperationsInput>, false>('FloatFieldUpdateOperationsInput').implement({
   fields: FloatFieldUpdateOperationsInputFields,
-});
-
-export const NullableStringFieldUpdateOperationsInputFields = (t: any) => ({
-  set: t.string({"required":false}),
-});
-export const NullableStringFieldUpdateOperationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NullableStringFieldUpdateOperationsInput>, false>('NullableStringFieldUpdateOperationsInput').implement({
-  fields: NullableStringFieldUpdateOperationsInputFields,
 });
 
 export const PostStatusUpdateOneRequiredWithoutPostNestedInputFields = (t: any) => ({
@@ -1754,6 +1994,46 @@ export const UserUpdateOneRequiredWithoutParticipationNestedInput = builder.inpu
   fields: UserUpdateOneRequiredWithoutParticipationNestedInputFields,
 });
 
+export const AdminCreateNestedOneWithoutInvitationInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":AdminCreateWithoutInvitationInput}),
+  connectOrCreate: t.field({"required":false,"type":AdminCreateOrConnectWithoutInvitationInput}),
+  connect: t.field({"required":false,"type":AdminWhereUniqueInput}),
+});
+export const AdminCreateNestedOneWithoutInvitationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminCreateNestedOneWithoutInvitationInput>, false>('AdminCreateNestedOneWithoutInvitationInput').implement({
+  fields: AdminCreateNestedOneWithoutInvitationInputFields,
+});
+
+export const UserCreateNestedOneWithoutInvitationsInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":UserCreateWithoutInvitationsInput}),
+  connectOrCreate: t.field({"required":false,"type":UserCreateOrConnectWithoutInvitationsInput}),
+  connect: t.field({"required":false,"type":UserWhereUniqueInput}),
+});
+export const UserCreateNestedOneWithoutInvitationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserCreateNestedOneWithoutInvitationsInput>, false>('UserCreateNestedOneWithoutInvitationsInput').implement({
+  fields: UserCreateNestedOneWithoutInvitationsInputFields,
+});
+
+export const AdminUpdateOneRequiredWithoutInvitationNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":AdminCreateWithoutInvitationInput}),
+  connectOrCreate: t.field({"required":false,"type":AdminCreateOrConnectWithoutInvitationInput}),
+  upsert: t.field({"required":false,"type":AdminUpsertWithoutInvitationInput}),
+  connect: t.field({"required":false,"type":AdminWhereUniqueInput}),
+  update: t.field({"required":false,"type":AdminUpdateToOneWithWhereWithoutInvitationInput}),
+});
+export const AdminUpdateOneRequiredWithoutInvitationNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminUpdateOneRequiredWithoutInvitationNestedInput>, false>('AdminUpdateOneRequiredWithoutInvitationNestedInput').implement({
+  fields: AdminUpdateOneRequiredWithoutInvitationNestedInputFields,
+});
+
+export const UserUpdateOneRequiredWithoutInvitationsNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":UserCreateWithoutInvitationsInput}),
+  connectOrCreate: t.field({"required":false,"type":UserCreateOrConnectWithoutInvitationsInput}),
+  upsert: t.field({"required":false,"type":UserUpsertWithoutInvitationsInput}),
+  connect: t.field({"required":false,"type":UserWhereUniqueInput}),
+  update: t.field({"required":false,"type":UserUpdateToOneWithWhereWithoutInvitationsInput}),
+});
+export const UserUpdateOneRequiredWithoutInvitationsNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateOneRequiredWithoutInvitationsNestedInput>, false>('UserUpdateOneRequiredWithoutInvitationsNestedInput').implement({
+  fields: UserUpdateOneRequiredWithoutInvitationsNestedInputFields,
+});
+
 export const NestedStringFilterFields = (t: any) => ({
   equals: t.string({"required":false}),
   in: t.stringList({"required":false}),
@@ -1769,6 +2049,23 @@ export const NestedStringFilterFields = (t: any) => ({
 });
 export const NestedStringFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedStringFilter>, false>('NestedStringFilter').implement({
   fields: NestedStringFilterFields,
+});
+
+export const NestedStringNullableFilterFields = (t: any) => ({
+  equals: t.string({"required":false}),
+  in: t.stringList({"required":false}),
+  notIn: t.stringList({"required":false}),
+  lt: t.string({"required":false}),
+  lte: t.string({"required":false}),
+  gt: t.string({"required":false}),
+  gte: t.string({"required":false}),
+  contains: t.string({"required":false}),
+  startsWith: t.string({"required":false}),
+  endsWith: t.string({"required":false}),
+  not: t.field({"required":false,"type":NestedStringNullableFilter}),
+});
+export const NestedStringNullableFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedStringNullableFilter>, false>('NestedStringNullableFilter').implement({
+  fields: NestedStringNullableFilterFields,
 });
 
 export const NestedDateTimeFilterFields = (t: any) => ({
@@ -1833,6 +2130,40 @@ export const NestedIntFilter = builder.inputRef<PrismaUpdateOperationsInputFilte
   fields: NestedIntFilterFields,
 });
 
+export const NestedStringNullableWithAggregatesFilterFields = (t: any) => ({
+  equals: t.string({"required":false}),
+  in: t.stringList({"required":false}),
+  notIn: t.stringList({"required":false}),
+  lt: t.string({"required":false}),
+  lte: t.string({"required":false}),
+  gt: t.string({"required":false}),
+  gte: t.string({"required":false}),
+  contains: t.string({"required":false}),
+  startsWith: t.string({"required":false}),
+  endsWith: t.string({"required":false}),
+  not: t.field({"required":false,"type":NestedStringNullableWithAggregatesFilter}),
+  _count: t.field({"required":false,"type":NestedIntNullableFilter}),
+  _min: t.field({"required":false,"type":NestedStringNullableFilter}),
+  _max: t.field({"required":false,"type":NestedStringNullableFilter}),
+});
+export const NestedStringNullableWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedStringNullableWithAggregatesFilter>, false>('NestedStringNullableWithAggregatesFilter').implement({
+  fields: NestedStringNullableWithAggregatesFilterFields,
+});
+
+export const NestedIntNullableFilterFields = (t: any) => ({
+  equals: t.int({"required":false}),
+  in: t.intList({"required":false}),
+  notIn: t.intList({"required":false}),
+  lt: t.int({"required":false}),
+  lte: t.int({"required":false}),
+  gt: t.int({"required":false}),
+  gte: t.int({"required":false}),
+  not: t.field({"required":false,"type":NestedIntNullableFilter}),
+});
+export const NestedIntNullableFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedIntNullableFilter>, false>('NestedIntNullableFilter').implement({
+  fields: NestedIntNullableFilterFields,
+});
+
 export const NestedDateTimeWithAggregatesFilterFields = (t: any) => ({
   equals: t.field({"required":false,"type":DateTime}),
   in: t.field({"required":false,"type":[DateTime]}),
@@ -1867,20 +2198,6 @@ export const NestedDateTimeNullableWithAggregatesFilter = builder.inputRef<Prism
   fields: NestedDateTimeNullableWithAggregatesFilterFields,
 });
 
-export const NestedIntNullableFilterFields = (t: any) => ({
-  equals: t.int({"required":false}),
-  in: t.intList({"required":false}),
-  notIn: t.intList({"required":false}),
-  lt: t.int({"required":false}),
-  lte: t.int({"required":false}),
-  gt: t.int({"required":false}),
-  gte: t.int({"required":false}),
-  not: t.field({"required":false,"type":NestedIntNullableFilter}),
-});
-export const NestedIntNullableFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedIntNullableFilter>, false>('NestedIntNullableFilter').implement({
-  fields: NestedIntNullableFilterFields,
-});
-
 export const NestedBytesFilterFields = (t: any) => ({
   equals: t.field({"required":false,"type":Bytes}),
   in: t.field({"required":false,"type":[Bytes]}),
@@ -1903,23 +2220,6 @@ export const NestedFloatFilterFields = (t: any) => ({
 });
 export const NestedFloatFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedFloatFilter>, false>('NestedFloatFilter').implement({
   fields: NestedFloatFilterFields,
-});
-
-export const NestedStringNullableFilterFields = (t: any) => ({
-  equals: t.string({"required":false}),
-  in: t.stringList({"required":false}),
-  notIn: t.stringList({"required":false}),
-  lt: t.string({"required":false}),
-  lte: t.string({"required":false}),
-  gt: t.string({"required":false}),
-  gte: t.string({"required":false}),
-  contains: t.string({"required":false}),
-  startsWith: t.string({"required":false}),
-  endsWith: t.string({"required":false}),
-  not: t.field({"required":false,"type":NestedStringNullableFilter}),
-});
-export const NestedStringNullableFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedStringNullableFilter>, false>('NestedStringNullableFilter').implement({
-  fields: NestedStringNullableFilterFields,
 });
 
 export const NestedIntWithAggregatesFilterFields = (t: any) => ({
@@ -1971,26 +2271,6 @@ export const NestedFloatWithAggregatesFilterFields = (t: any) => ({
 });
 export const NestedFloatWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedFloatWithAggregatesFilter>, false>('NestedFloatWithAggregatesFilter').implement({
   fields: NestedFloatWithAggregatesFilterFields,
-});
-
-export const NestedStringNullableWithAggregatesFilterFields = (t: any) => ({
-  equals: t.string({"required":false}),
-  in: t.stringList({"required":false}),
-  notIn: t.stringList({"required":false}),
-  lt: t.string({"required":false}),
-  lte: t.string({"required":false}),
-  gt: t.string({"required":false}),
-  gte: t.string({"required":false}),
-  contains: t.string({"required":false}),
-  startsWith: t.string({"required":false}),
-  endsWith: t.string({"required":false}),
-  not: t.field({"required":false,"type":NestedStringNullableWithAggregatesFilter}),
-  _count: t.field({"required":false,"type":NestedIntNullableFilter}),
-  _min: t.field({"required":false,"type":NestedStringNullableFilter}),
-  _max: t.field({"required":false,"type":NestedStringNullableFilter}),
-});
-export const NestedStringNullableWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedStringNullableWithAggregatesFilter>, false>('NestedStringNullableWithAggregatesFilter').implement({
-  fields: NestedStringNullableWithAggregatesFilterFields,
 });
 
 export const PostCreateWithoutPostedByInputFields = (t: any) => ({
@@ -2055,6 +2335,30 @@ export const UserStatusCreateOrConnectWithoutUserInputFields = (t: any) => ({
 });
 export const UserStatusCreateOrConnectWithoutUserInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserStatusCreateOrConnectWithoutUserInput>, false>('UserStatusCreateOrConnectWithoutUserInput').implement({
   fields: UserStatusCreateOrConnectWithoutUserInputFields,
+});
+
+export const InvitationCreateWithoutSentToInputFields = (t: any) => ({
+  id: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  sentBy: t.field({"required":true,"type":AdminCreateNestedOneWithoutInvitationInput}),
+});
+export const InvitationCreateWithoutSentToInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCreateWithoutSentToInput>, false>('InvitationCreateWithoutSentToInput').implement({
+  fields: InvitationCreateWithoutSentToInputFields,
+});
+
+export const InvitationCreateOrConnectWithoutSentToInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":InvitationWhereUniqueInput}),
+  create: t.field({"required":true,"type":InvitationCreateWithoutSentToInput}),
+});
+export const InvitationCreateOrConnectWithoutSentToInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCreateOrConnectWithoutSentToInput>, false>('InvitationCreateOrConnectWithoutSentToInput').implement({
+  fields: InvitationCreateOrConnectWithoutSentToInputFields,
+});
+
+export const InvitationCreateManySentToInputEnvelopeFields = (t: any) => ({
+  data: t.field({"required":true,"type":[InvitationCreateManySentToInput]}),
+});
+export const InvitationCreateManySentToInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCreateManySentToInputEnvelope>, false>('InvitationCreateManySentToInputEnvelope').implement({
+  fields: InvitationCreateManySentToInputEnvelopeFields,
 });
 
 export const PostUpsertWithWhereUniqueWithoutPostedByInputFields = (t: any) => ({
@@ -2153,8 +2457,47 @@ export const UserStatusUpdateWithoutUserInput = builder.inputRef<PrismaUpdateOpe
   fields: UserStatusUpdateWithoutUserInputFields,
 });
 
+export const InvitationUpsertWithWhereUniqueWithoutSentToInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":InvitationWhereUniqueInput}),
+  update: t.field({"required":true,"type":InvitationUpdateWithoutSentToInput}),
+  create: t.field({"required":true,"type":InvitationCreateWithoutSentToInput}),
+});
+export const InvitationUpsertWithWhereUniqueWithoutSentToInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationUpsertWithWhereUniqueWithoutSentToInput>, false>('InvitationUpsertWithWhereUniqueWithoutSentToInput').implement({
+  fields: InvitationUpsertWithWhereUniqueWithoutSentToInputFields,
+});
+
+export const InvitationUpdateWithWhereUniqueWithoutSentToInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":InvitationWhereUniqueInput}),
+  data: t.field({"required":true,"type":InvitationUpdateWithoutSentToInput}),
+});
+export const InvitationUpdateWithWhereUniqueWithoutSentToInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationUpdateWithWhereUniqueWithoutSentToInput>, false>('InvitationUpdateWithWhereUniqueWithoutSentToInput').implement({
+  fields: InvitationUpdateWithWhereUniqueWithoutSentToInputFields,
+});
+
+export const InvitationUpdateManyWithWhereWithoutSentToInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":InvitationScalarWhereInput}),
+  data: t.field({"required":true,"type":InvitationUpdateManyMutationInput}),
+});
+export const InvitationUpdateManyWithWhereWithoutSentToInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationUpdateManyWithWhereWithoutSentToInput>, false>('InvitationUpdateManyWithWhereWithoutSentToInput').implement({
+  fields: InvitationUpdateManyWithWhereWithoutSentToInputFields,
+});
+
+export const InvitationScalarWhereInputFields = (t: any) => ({
+  AND: t.field({"required":false,"type":[InvitationScalarWhereInput]}),
+  OR: t.field({"required":false,"type":[InvitationScalarWhereInput]}),
+  NOT: t.field({"required":false,"type":[InvitationScalarWhereInput]}),
+  id: t.field({"required":false,"type":StringFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  sentById: t.field({"required":false,"type":StringFilter}),
+  sentToId: t.field({"required":false,"type":StringFilter}),
+});
+export const InvitationScalarWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationScalarWhereInput>, false>('InvitationScalarWhereInput').implement({
+  fields: InvitationScalarWhereInputFields,
+});
+
 export const UserCreateWithoutUserStatusInputFields = (t: any) => ({
   id: t.string({"required":false}),
+  email: t.string({"required":false}),
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   activatedAt: t.field({"required":false,"type":DateTime}),
@@ -2163,6 +2506,7 @@ export const UserCreateWithoutUserStatusInputFields = (t: any) => ({
   accessCode: t.string({"required":true}),
   posts: t.field({"required":false,"type":PostCreateNestedManyWithoutPostedByInput}),
   participation: t.field({"required":false,"type":ParticipationCreateNestedOneWithoutUserInput}),
+  invitations: t.field({"required":false,"type":InvitationCreateNestedManyWithoutSentToInput}),
 });
 export const UserCreateWithoutUserStatusInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserCreateWithoutUserStatusInput>, false>('UserCreateWithoutUserStatusInput').implement({
   fields: UserCreateWithoutUserStatusInputFields,
@@ -2213,6 +2557,7 @@ export const UserScalarWhereInputFields = (t: any) => ({
   OR: t.field({"required":false,"type":[UserScalarWhereInput]}),
   NOT: t.field({"required":false,"type":[UserScalarWhereInput]}),
   id: t.field({"required":false,"type":StringFilter}),
+  email: t.field({"required":false,"type":StringNullableFilter}),
   createdAt: t.field({"required":false,"type":DateTimeFilter}),
   updatedAt: t.field({"required":false,"type":DateTimeFilter}),
   activatedAt: t.field({"required":false,"type":DateTimeNullableFilter}),
@@ -2255,6 +2600,30 @@ export const PostCreateManyStatusChangedByInputEnvelope = builder.inputRef<Prism
   fields: PostCreateManyStatusChangedByInputEnvelopeFields,
 });
 
+export const InvitationCreateWithoutSentByInputFields = (t: any) => ({
+  id: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  sentTo: t.field({"required":true,"type":UserCreateNestedOneWithoutInvitationsInput}),
+});
+export const InvitationCreateWithoutSentByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCreateWithoutSentByInput>, false>('InvitationCreateWithoutSentByInput').implement({
+  fields: InvitationCreateWithoutSentByInputFields,
+});
+
+export const InvitationCreateOrConnectWithoutSentByInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":InvitationWhereUniqueInput}),
+  create: t.field({"required":true,"type":InvitationCreateWithoutSentByInput}),
+});
+export const InvitationCreateOrConnectWithoutSentByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCreateOrConnectWithoutSentByInput>, false>('InvitationCreateOrConnectWithoutSentByInput').implement({
+  fields: InvitationCreateOrConnectWithoutSentByInputFields,
+});
+
+export const InvitationCreateManySentByInputEnvelopeFields = (t: any) => ({
+  data: t.field({"required":true,"type":[InvitationCreateManySentByInput]}),
+});
+export const InvitationCreateManySentByInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCreateManySentByInputEnvelope>, false>('InvitationCreateManySentByInputEnvelope').implement({
+  fields: InvitationCreateManySentByInputEnvelopeFields,
+});
+
 export const PostUpsertWithWhereUniqueWithoutStatusChangedByInputFields = (t: any) => ({
   where: t.field({"required":true,"type":PostWhereUniqueInput}),
   update: t.field({"required":true,"type":PostUpdateWithoutStatusChangedByInput}),
@@ -2280,6 +2649,31 @@ export const PostUpdateManyWithWhereWithoutStatusChangedByInput = builder.inputR
   fields: PostUpdateManyWithWhereWithoutStatusChangedByInputFields,
 });
 
+export const InvitationUpsertWithWhereUniqueWithoutSentByInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":InvitationWhereUniqueInput}),
+  update: t.field({"required":true,"type":InvitationUpdateWithoutSentByInput}),
+  create: t.field({"required":true,"type":InvitationCreateWithoutSentByInput}),
+});
+export const InvitationUpsertWithWhereUniqueWithoutSentByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationUpsertWithWhereUniqueWithoutSentByInput>, false>('InvitationUpsertWithWhereUniqueWithoutSentByInput').implement({
+  fields: InvitationUpsertWithWhereUniqueWithoutSentByInputFields,
+});
+
+export const InvitationUpdateWithWhereUniqueWithoutSentByInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":InvitationWhereUniqueInput}),
+  data: t.field({"required":true,"type":InvitationUpdateWithoutSentByInput}),
+});
+export const InvitationUpdateWithWhereUniqueWithoutSentByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationUpdateWithWhereUniqueWithoutSentByInput>, false>('InvitationUpdateWithWhereUniqueWithoutSentByInput').implement({
+  fields: InvitationUpdateWithWhereUniqueWithoutSentByInputFields,
+});
+
+export const InvitationUpdateManyWithWhereWithoutSentByInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":InvitationScalarWhereInput}),
+  data: t.field({"required":true,"type":InvitationUpdateManyMutationInput}),
+});
+export const InvitationUpdateManyWithWhereWithoutSentByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationUpdateManyWithWhereWithoutSentByInput>, false>('InvitationUpdateManyWithWhereWithoutSentByInput').implement({
+  fields: InvitationUpdateManyWithWhereWithoutSentByInputFields,
+});
+
 export const PostStatusCreateWithoutPostInputFields = (t: any) => ({
   id: t.string({"required":true}),
   createdAt: t.field({"required":false,"type":DateTime}),
@@ -2300,6 +2694,7 @@ export const AdminCreateWithoutPostInputFields = (t: any) => ({
   id: t.string({"required":false}),
   email: t.string({"required":true}),
   password: t.string({"required":true}),
+  invitation: t.field({"required":false,"type":InvitationCreateNestedManyWithoutSentByInput}),
 });
 export const AdminCreateWithoutPostInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminCreateWithoutPostInput>, false>('AdminCreateWithoutPostInput').implement({
   fields: AdminCreateWithoutPostInputFields,
@@ -2315,6 +2710,7 @@ export const AdminCreateOrConnectWithoutPostInput = builder.inputRef<PrismaUpdat
 
 export const UserCreateWithoutPostsInputFields = (t: any) => ({
   id: t.string({"required":false}),
+  email: t.string({"required":false}),
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   activatedAt: t.field({"required":false,"type":DateTime}),
@@ -2323,6 +2719,7 @@ export const UserCreateWithoutPostsInputFields = (t: any) => ({
   accessCode: t.string({"required":true}),
   participation: t.field({"required":false,"type":ParticipationCreateNestedOneWithoutUserInput}),
   userStatus: t.field({"required":false,"type":UserStatusCreateNestedOneWithoutUserInput}),
+  invitations: t.field({"required":false,"type":InvitationCreateNestedManyWithoutSentToInput}),
 });
 export const UserCreateWithoutPostsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserCreateWithoutPostsInput>, false>('UserCreateWithoutPostsInput').implement({
   fields: UserCreateWithoutPostsInputFields,
@@ -2382,6 +2779,7 @@ export const AdminUpdateWithoutPostInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   email: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   password: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  invitation: t.field({"required":false,"type":InvitationUpdateManyWithoutSentByNestedInput}),
 });
 export const AdminUpdateWithoutPostInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminUpdateWithoutPostInput>, false>('AdminUpdateWithoutPostInput').implement({
   fields: AdminUpdateWithoutPostInputFields,
@@ -2406,6 +2804,7 @@ export const UserUpdateToOneWithWhereWithoutPostsInput = builder.inputRef<Prisma
 
 export const UserUpdateWithoutPostsInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  email: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   activatedAt: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
@@ -2414,6 +2813,7 @@ export const UserUpdateWithoutPostsInputFields = (t: any) => ({
   accessCode: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   participation: t.field({"required":false,"type":ParticipationUpdateOneWithoutUserNestedInput}),
   userStatus: t.field({"required":false,"type":UserStatusUpdateOneRequiredWithoutUserNestedInput}),
+  invitations: t.field({"required":false,"type":InvitationUpdateManyWithoutSentToNestedInput}),
 });
 export const UserUpdateWithoutPostsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateWithoutPostsInput>, false>('UserUpdateWithoutPostsInput').implement({
   fields: UserUpdateWithoutPostsInputFields,
@@ -2476,6 +2876,7 @@ export const PostUpdateManyWithWhereWithoutPostStatusInput = builder.inputRef<Pr
 
 export const UserCreateWithoutParticipationInputFields = (t: any) => ({
   id: t.string({"required":false}),
+  email: t.string({"required":false}),
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   activatedAt: t.field({"required":false,"type":DateTime}),
@@ -2484,6 +2885,7 @@ export const UserCreateWithoutParticipationInputFields = (t: any) => ({
   accessCode: t.string({"required":true}),
   posts: t.field({"required":false,"type":PostCreateNestedManyWithoutPostedByInput}),
   userStatus: t.field({"required":false,"type":UserStatusCreateNestedOneWithoutUserInput}),
+  invitations: t.field({"required":false,"type":InvitationCreateNestedManyWithoutSentToInput}),
 });
 export const UserCreateWithoutParticipationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserCreateWithoutParticipationInput>, false>('UserCreateWithoutParticipationInput').implement({
   fields: UserCreateWithoutParticipationInputFields,
@@ -2516,6 +2918,7 @@ export const UserUpdateToOneWithWhereWithoutParticipationInput = builder.inputRe
 
 export const UserUpdateWithoutParticipationInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  email: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   activatedAt: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
@@ -2524,9 +2927,114 @@ export const UserUpdateWithoutParticipationInputFields = (t: any) => ({
   accessCode: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   posts: t.field({"required":false,"type":PostUpdateManyWithoutPostedByNestedInput}),
   userStatus: t.field({"required":false,"type":UserStatusUpdateOneRequiredWithoutUserNestedInput}),
+  invitations: t.field({"required":false,"type":InvitationUpdateManyWithoutSentToNestedInput}),
 });
 export const UserUpdateWithoutParticipationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateWithoutParticipationInput>, false>('UserUpdateWithoutParticipationInput').implement({
   fields: UserUpdateWithoutParticipationInputFields,
+});
+
+export const AdminCreateWithoutInvitationInputFields = (t: any) => ({
+  id: t.string({"required":false}),
+  email: t.string({"required":true}),
+  password: t.string({"required":true}),
+  post: t.field({"required":false,"type":PostCreateNestedManyWithoutStatusChangedByInput}),
+});
+export const AdminCreateWithoutInvitationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminCreateWithoutInvitationInput>, false>('AdminCreateWithoutInvitationInput').implement({
+  fields: AdminCreateWithoutInvitationInputFields,
+});
+
+export const AdminCreateOrConnectWithoutInvitationInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":AdminWhereUniqueInput}),
+  create: t.field({"required":true,"type":AdminCreateWithoutInvitationInput}),
+});
+export const AdminCreateOrConnectWithoutInvitationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminCreateOrConnectWithoutInvitationInput>, false>('AdminCreateOrConnectWithoutInvitationInput').implement({
+  fields: AdminCreateOrConnectWithoutInvitationInputFields,
+});
+
+export const UserCreateWithoutInvitationsInputFields = (t: any) => ({
+  id: t.string({"required":false}),
+  email: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  activatedAt: t.field({"required":false,"type":DateTime}),
+  deletedAt: t.field({"required":false,"type":DateTime}),
+  phoneNumber: t.string({"required":false}),
+  accessCode: t.string({"required":true}),
+  posts: t.field({"required":false,"type":PostCreateNestedManyWithoutPostedByInput}),
+  participation: t.field({"required":false,"type":ParticipationCreateNestedOneWithoutUserInput}),
+  userStatus: t.field({"required":false,"type":UserStatusCreateNestedOneWithoutUserInput}),
+});
+export const UserCreateWithoutInvitationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserCreateWithoutInvitationsInput>, false>('UserCreateWithoutInvitationsInput').implement({
+  fields: UserCreateWithoutInvitationsInputFields,
+});
+
+export const UserCreateOrConnectWithoutInvitationsInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":UserWhereUniqueInput}),
+  create: t.field({"required":true,"type":UserCreateWithoutInvitationsInput}),
+});
+export const UserCreateOrConnectWithoutInvitationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserCreateOrConnectWithoutInvitationsInput>, false>('UserCreateOrConnectWithoutInvitationsInput').implement({
+  fields: UserCreateOrConnectWithoutInvitationsInputFields,
+});
+
+export const AdminUpsertWithoutInvitationInputFields = (t: any) => ({
+  update: t.field({"required":true,"type":AdminUpdateWithoutInvitationInput}),
+  create: t.field({"required":true,"type":AdminCreateWithoutInvitationInput}),
+  where: t.field({"required":false,"type":AdminWhereInput}),
+});
+export const AdminUpsertWithoutInvitationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminUpsertWithoutInvitationInput>, false>('AdminUpsertWithoutInvitationInput').implement({
+  fields: AdminUpsertWithoutInvitationInputFields,
+});
+
+export const AdminUpdateToOneWithWhereWithoutInvitationInputFields = (t: any) => ({
+  where: t.field({"required":false,"type":AdminWhereInput}),
+  data: t.field({"required":true,"type":AdminUpdateWithoutInvitationInput}),
+});
+export const AdminUpdateToOneWithWhereWithoutInvitationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminUpdateToOneWithWhereWithoutInvitationInput>, false>('AdminUpdateToOneWithWhereWithoutInvitationInput').implement({
+  fields: AdminUpdateToOneWithWhereWithoutInvitationInputFields,
+});
+
+export const AdminUpdateWithoutInvitationInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  email: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  password: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  post: t.field({"required":false,"type":PostUpdateManyWithoutStatusChangedByNestedInput}),
+});
+export const AdminUpdateWithoutInvitationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AdminUpdateWithoutInvitationInput>, false>('AdminUpdateWithoutInvitationInput').implement({
+  fields: AdminUpdateWithoutInvitationInputFields,
+});
+
+export const UserUpsertWithoutInvitationsInputFields = (t: any) => ({
+  update: t.field({"required":true,"type":UserUpdateWithoutInvitationsInput}),
+  create: t.field({"required":true,"type":UserCreateWithoutInvitationsInput}),
+  where: t.field({"required":false,"type":UserWhereInput}),
+});
+export const UserUpsertWithoutInvitationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpsertWithoutInvitationsInput>, false>('UserUpsertWithoutInvitationsInput').implement({
+  fields: UserUpsertWithoutInvitationsInputFields,
+});
+
+export const UserUpdateToOneWithWhereWithoutInvitationsInputFields = (t: any) => ({
+  where: t.field({"required":false,"type":UserWhereInput}),
+  data: t.field({"required":true,"type":UserUpdateWithoutInvitationsInput}),
+});
+export const UserUpdateToOneWithWhereWithoutInvitationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateToOneWithWhereWithoutInvitationsInput>, false>('UserUpdateToOneWithWhereWithoutInvitationsInput').implement({
+  fields: UserUpdateToOneWithWhereWithoutInvitationsInputFields,
+});
+
+export const UserUpdateWithoutInvitationsInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  email: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  activatedAt: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
+  deletedAt: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
+  phoneNumber: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  accessCode: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  posts: t.field({"required":false,"type":PostUpdateManyWithoutPostedByNestedInput}),
+  participation: t.field({"required":false,"type":ParticipationUpdateOneWithoutUserNestedInput}),
+  userStatus: t.field({"required":false,"type":UserStatusUpdateOneRequiredWithoutUserNestedInput}),
+});
+export const UserUpdateWithoutInvitationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateWithoutInvitationsInput>, false>('UserUpdateWithoutInvitationsInput').implement({
+  fields: UserUpdateWithoutInvitationsInputFields,
 });
 
 export const PostCreateManyPostedByInputFields = (t: any) => ({
@@ -2541,6 +3049,15 @@ export const PostCreateManyPostedByInputFields = (t: any) => ({
 });
 export const PostCreateManyPostedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateManyPostedByInput>, false>('PostCreateManyPostedByInput').implement({
   fields: PostCreateManyPostedByInputFields,
+});
+
+export const InvitationCreateManySentToInputFields = (t: any) => ({
+  id: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  sentById: t.string({"required":true}),
+});
+export const InvitationCreateManySentToInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCreateManySentToInput>, false>('InvitationCreateManySentToInput').implement({
+  fields: InvitationCreateManySentToInputFields,
 });
 
 export const PostUpdateWithoutPostedByInputFields = (t: any) => ({
@@ -2558,8 +3075,18 @@ export const PostUpdateWithoutPostedByInput = builder.inputRef<PrismaUpdateOpera
   fields: PostUpdateWithoutPostedByInputFields,
 });
 
+export const InvitationUpdateWithoutSentToInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  sentBy: t.field({"required":false,"type":AdminUpdateOneRequiredWithoutInvitationNestedInput}),
+});
+export const InvitationUpdateWithoutSentToInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationUpdateWithoutSentToInput>, false>('InvitationUpdateWithoutSentToInput').implement({
+  fields: InvitationUpdateWithoutSentToInputFields,
+});
+
 export const UserCreateManyUserStatusInputFields = (t: any) => ({
   id: t.string({"required":false}),
+  email: t.string({"required":false}),
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   activatedAt: t.field({"required":false,"type":DateTime}),
@@ -2573,6 +3100,7 @@ export const UserCreateManyUserStatusInput = builder.inputRef<PrismaUpdateOperat
 
 export const UserUpdateWithoutUserStatusInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  email: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   activatedAt: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
@@ -2581,6 +3109,7 @@ export const UserUpdateWithoutUserStatusInputFields = (t: any) => ({
   accessCode: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   posts: t.field({"required":false,"type":PostUpdateManyWithoutPostedByNestedInput}),
   participation: t.field({"required":false,"type":ParticipationUpdateOneWithoutUserNestedInput}),
+  invitations: t.field({"required":false,"type":InvitationUpdateManyWithoutSentToNestedInput}),
 });
 export const UserUpdateWithoutUserStatusInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateWithoutUserStatusInput>, false>('UserUpdateWithoutUserStatusInput').implement({
   fields: UserUpdateWithoutUserStatusInputFields,
@@ -2600,6 +3129,15 @@ export const PostCreateManyStatusChangedByInput = builder.inputRef<PrismaUpdateO
   fields: PostCreateManyStatusChangedByInputFields,
 });
 
+export const InvitationCreateManySentByInputFields = (t: any) => ({
+  id: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  sentToId: t.string({"required":true}),
+});
+export const InvitationCreateManySentByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCreateManySentByInput>, false>('InvitationCreateManySentByInput').implement({
+  fields: InvitationCreateManySentByInputFields,
+});
+
 export const PostUpdateWithoutStatusChangedByInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   name: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
@@ -2613,6 +3151,15 @@ export const PostUpdateWithoutStatusChangedByInputFields = (t: any) => ({
 });
 export const PostUpdateWithoutStatusChangedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateWithoutStatusChangedByInput>, false>('PostUpdateWithoutStatusChangedByInput').implement({
   fields: PostUpdateWithoutStatusChangedByInputFields,
+});
+
+export const InvitationUpdateWithoutSentByInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  sentTo: t.field({"required":false,"type":UserUpdateOneRequiredWithoutInvitationsNestedInput}),
+});
+export const InvitationUpdateWithoutSentByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationUpdateWithoutSentByInput>, false>('InvitationUpdateWithoutSentByInput').implement({
+  fields: InvitationUpdateWithoutSentByInputFields,
 });
 
 export const PostCreateManyPostStatusInputFields = (t: any) => ({

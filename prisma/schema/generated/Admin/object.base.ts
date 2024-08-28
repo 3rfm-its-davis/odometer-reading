@@ -15,7 +15,8 @@ export const AdminObject = definePrismaObject('Admin', {
     id: t.field(AdminIdFieldObject),
     email: t.field(AdminEmailFieldObject),
     password: t.field(AdminPasswordFieldObject),
-    Post: t.relation('Post', AdminPostFieldObject(t)),
+    post: t.relation('post', AdminPostFieldObject(t)),
+    invitation: t.relation('invitation', AdminInvitationFieldObject(t)),
   }),
 });
 
@@ -50,10 +51,35 @@ export const AdminPostFieldArgs = builder.args((t) => ({
 }))
 
 export const AdminPostFieldObject = defineRelationFunction('Admin', (t) =>
-  defineRelationObject('Admin', 'Post', {
+  defineRelationObject('Admin', 'post', {
     description: undefined,
     nullable: false,
     args: AdminPostFieldArgs,
+    query: (args) => ({
+      where: args.where || undefined,
+      cursor: args.cursor || undefined,
+      take: args.take || undefined,
+      distinct: args.distinct || undefined,
+      skip: args.skip || undefined,
+      orderBy: args.orderBy || undefined,
+    }),
+  }),
+);
+
+export const AdminInvitationFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.InvitationWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.InvitationOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.InvitationWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.InvitationScalarFieldEnum], required: false }),
+}))
+
+export const AdminInvitationFieldObject = defineRelationFunction('Admin', (t) =>
+  defineRelationObject('Admin', 'invitation', {
+    description: undefined,
+    nullable: false,
+    args: AdminInvitationFieldArgs,
     query: (args) => ({
       where: args.where || undefined,
       cursor: args.cursor || undefined,
