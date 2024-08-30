@@ -83,6 +83,12 @@ export async function action({ request }: ActionFunctionArgs) {
       visible: user.invitationCount > 0,
     }));
     return { message: "filtered", status: 200, newUsers };
+  } else if (intent === "filterWithNotActivated") {
+    const newUsers = users.map((user) => ({
+      ...user,
+      visible: user.userStatusId === "initialized",
+    }));
+    return { message: "filtered", status: 200, newUsers };
   }
 
   if (!form.get("selectedUserIds")) {
@@ -151,6 +157,14 @@ export default function EmailInvitation() {
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Invitation Sent
+          </button>
+          <button
+            type="submit"
+            name="intent"
+            value="filterWithNotActivated"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Not Activated
           </button>
         </div>
         <div className="flex flex-row gap-2">

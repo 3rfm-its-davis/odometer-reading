@@ -79,9 +79,9 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
 export const handleDelete = async (payload: HandleRequestPayload) => {
   // _todo: change this to something with split()
   // remove preceding "IMG"
-  const imageId = payload.message!.split(" ").slice(1).join(" ");
+  const imageName = payload.message!.split(" ").slice(1).join(" ");
 
-  if (isNaN(Number(imageId))) {
+  if (isNaN(Number(imageName.replace("IMG-", "")))) {
     const message = `Invalid image name has been entered. Please check the image name and try it again.`;
 
     sendWhatsAppMessageText(payload.phoneNumber, message);
@@ -94,7 +94,7 @@ export const handleDelete = async (payload: HandleRequestPayload) => {
       AND: [
         {
           name: {
-            equals: imageId,
+            equals: `${payload.user?.phoneNumber}-${imageName}`,
           },
         },
         {
@@ -124,7 +124,7 @@ export const handleDelete = async (payload: HandleRequestPayload) => {
 
     return { body: "OK", status: 200 };
   } else {
-    const message = `Thank you, we have successfully deleted image "${imageId}".`;
+    const message = `Thank you, we have successfully deleted image "${imageName}".`;
 
     sendWhatsAppMessageText(payload.phoneNumber, message);
 
@@ -198,7 +198,7 @@ export const handleHelp = async (payload: HandleRequestPayload) => {
   const message = `You can submit a photo image of your odometer by attaching it directly to this chat.
 For other actions, please use one of the following commands:
 
-1. DELETE - To delete an image that you already submitted.
+1. DELETE {image name} - To delete an image that you already submitted.
 2. STOP - To stop participating in this survey.
 3. STOP AND DELETE - To stop participating in this survey and delete all the image data that you have submitted.`;
 

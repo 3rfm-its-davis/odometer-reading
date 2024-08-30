@@ -65,6 +65,8 @@ export const postImage = async (
     },
   });
 
+  const imageNameBase = `IMG-${(countPhotos + 1).toString().padStart(4, "0")}`;
+
   // register image buffer to the database
   prisma.post
     .create({
@@ -72,14 +74,7 @@ export const postImage = async (
         image: imageBuffer,
         postStatus: {
           connect: {
-            id:
-              randomNumber < 0.4
-                ? "submitted"
-                : randomNumber < 0.6
-                ? "read"
-                : randomNumber < 0.8
-                ? "approved"
-                : "rejected",
+            id: "submitted",
           },
         },
         postedBy: {
@@ -89,9 +84,7 @@ export const postImage = async (
         },
         size: imageBuffer.length,
         notes: message,
-        name: `${user.phoneNumber}-IMG-${(countPhotos + 1)
-          .toString()
-          .padStart(4, "0")}`,
+        name: `${user.phoneNumber}-${imageNameBase}`,
       },
     })
     .then((response) => {
@@ -106,10 +99,10 @@ export const postImage = async (
           to: phoneNumber,
           type: "text",
           text: {
-            body: `Thank you, the image ID "IMG-${name}" has been received.
+            body: `Thank you, the image ID "${imageNameBase}" has been received.
 Rewards, if applicable, will be processed after the project is complete.
 
-If you want to delete this image please use the command "DELETE ${name}".`,
+If you want to delete this image please use the command "DELETE ${imageNameBase}".`,
           },
         },
         {
