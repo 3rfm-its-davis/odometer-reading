@@ -36,7 +36,7 @@ export const PostIdFieldObject = defineFieldObject('Post', {
 });
 
 export const PostNameFieldObject = defineFieldObject('Post', {
-  type: "Int",
+  type: "String",
   description: undefined,
   nullable: false,
   resolve: (parent) => parent.name,

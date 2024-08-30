@@ -34,7 +34,7 @@ Table Admin {
 
 Table Post {
   id String [pk]
-  name Int [increment, not null]
+  name String [unique, not null]
   createdAt DateTime [default: `now()`, not null]
   image Bytes [not null]
   reading Float [not null, default: 0]

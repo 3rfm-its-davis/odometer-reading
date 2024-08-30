@@ -1,8 +1,7 @@
-import nodemailer from "nodemailer";
 import { prisma } from "./prisma.server";
 import axios from "axios";
 
-export const sendReminder = async (users: any[], adminId: string) => {
+export const sendReminder = async (users: any[]) => {
   const ourPhoneNumber = process.env.OUR_PHONE_NUMBER;
   const newUsers = users.map(async (user) => {
     await axios.post(

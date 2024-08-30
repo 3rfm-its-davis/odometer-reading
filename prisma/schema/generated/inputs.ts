@@ -322,7 +322,7 @@ export const PostWhereInputFields = (t: any) => ({
   OR: t.field({"required":false,"type":[PostWhereInput]}),
   NOT: t.field({"required":false,"type":[PostWhereInput]}),
   id: t.field({"required":false,"type":StringFilter}),
-  name: t.field({"required":false,"type":IntFilter}),
+  name: t.field({"required":false,"type":StringFilter}),
   createdAt: t.field({"required":false,"type":DateTimeFilter}),
   image: t.field({"required":false,"type":BytesFilter}),
   reading: t.field({"required":false,"type":FloatFilter}),
@@ -360,10 +360,10 @@ export const PostOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperati
 
 export const PostWhereUniqueInputFields = (t: any) => ({
   id: t.string({"required":false}),
+  name: t.string({"required":false}),
   AND: t.field({"required":false,"type":[PostWhereInput]}),
   OR: t.field({"required":false,"type":[PostWhereInput]}),
   NOT: t.field({"required":false,"type":[PostWhereInput]}),
-  name: t.field({"required":false,"type":IntFilter}),
   createdAt: t.field({"required":false,"type":DateTimeFilter}),
   image: t.field({"required":false,"type":BytesFilter}),
   reading: t.field({"required":false,"type":FloatFilter}),
@@ -406,7 +406,7 @@ export const PostScalarWhereWithAggregatesInputFields = (t: any) => ({
   OR: t.field({"required":false,"type":[PostScalarWhereWithAggregatesInput]}),
   NOT: t.field({"required":false,"type":[PostScalarWhereWithAggregatesInput]}),
   id: t.field({"required":false,"type":StringWithAggregatesFilter}),
-  name: t.field({"required":false,"type":IntWithAggregatesFilter}),
+  name: t.field({"required":false,"type":StringWithAggregatesFilter}),
   createdAt: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
   image: t.field({"required":false,"type":BytesWithAggregatesFilter}),
   reading: t.field({"required":false,"type":FloatWithAggregatesFilter}),
@@ -815,7 +815,7 @@ export const AdminUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperati
 
 export const PostCreateInputFields = (t: any) => ({
   id: t.string({"required":false}),
-  name: t.int({"required":false}),
+  name: t.string({"required":true}),
   createdAt: t.field({"required":false,"type":DateTime}),
   image: t.field({"required":true,"type":Bytes}),
   reading: t.float({"required":false}),
@@ -831,7 +831,7 @@ export const PostCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilte
 
 export const PostUpdateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  name: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  name: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   image: t.field({"required":false,"type":BytesFieldUpdateOperationsInput}),
   reading: t.field({"required":false,"type":FloatFieldUpdateOperationsInput}),
@@ -847,6 +847,7 @@ export const PostUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilte
 
 export const PostCreateManyInputFields = (t: any) => ({
   id: t.string({"required":false}),
+  name: t.string({"required":true}),
   createdAt: t.field({"required":false,"type":DateTime}),
   image: t.field({"required":true,"type":Bytes}),
   reading: t.float({"required":false}),
@@ -862,7 +863,7 @@ export const PostCreateManyInput = builder.inputRef<PrismaUpdateOperationsInputF
 
 export const PostUpdateManyMutationInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  name: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  name: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   image: t.field({"required":false,"type":BytesFieldUpdateOperationsInput}),
   reading: t.field({"required":false,"type":FloatFieldUpdateOperationsInput}),
@@ -1320,20 +1321,6 @@ export const AdminMinOrderByAggregateInput = builder.inputRef<PrismaUpdateOperat
   fields: AdminMinOrderByAggregateInputFields,
 });
 
-export const IntFilterFields = (t: any) => ({
-  equals: t.int({"required":false}),
-  in: t.intList({"required":false}),
-  notIn: t.intList({"required":false}),
-  lt: t.int({"required":false}),
-  lte: t.int({"required":false}),
-  gt: t.int({"required":false}),
-  gte: t.int({"required":false}),
-  not: t.field({"required":false,"type":NestedIntFilter}),
-});
-export const IntFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.IntFilter>, false>('IntFilter').implement({
-  fields: IntFilterFields,
-});
-
 export const BytesFilterFields = (t: any) => ({
   equals: t.field({"required":false,"type":Bytes}),
   in: t.field({"required":false,"type":[Bytes]}),
@@ -1399,7 +1386,6 @@ export const PostCountOrderByAggregateInput = builder.inputRef<PrismaUpdateOpera
 });
 
 export const PostAvgOrderByAggregateInputFields = (t: any) => ({
-  name: t.field({"required":false,"type":SortOrder}),
   reading: t.field({"required":false,"type":SortOrder}),
   size: t.field({"required":false,"type":SortOrder}),
 });
@@ -1440,31 +1426,11 @@ export const PostMinOrderByAggregateInput = builder.inputRef<PrismaUpdateOperati
 });
 
 export const PostSumOrderByAggregateInputFields = (t: any) => ({
-  name: t.field({"required":false,"type":SortOrder}),
   reading: t.field({"required":false,"type":SortOrder}),
   size: t.field({"required":false,"type":SortOrder}),
 });
 export const PostSumOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostSumOrderByAggregateInput>, false>('PostSumOrderByAggregateInput').implement({
   fields: PostSumOrderByAggregateInputFields,
-});
-
-export const IntWithAggregatesFilterFields = (t: any) => ({
-  equals: t.int({"required":false}),
-  in: t.intList({"required":false}),
-  notIn: t.intList({"required":false}),
-  lt: t.int({"required":false}),
-  lte: t.int({"required":false}),
-  gt: t.int({"required":false}),
-  gte: t.int({"required":false}),
-  not: t.field({"required":false,"type":NestedIntWithAggregatesFilter}),
-  _count: t.field({"required":false,"type":NestedIntFilter}),
-  _avg: t.field({"required":false,"type":NestedFloatFilter}),
-  _sum: t.field({"required":false,"type":NestedIntFilter}),
-  _min: t.field({"required":false,"type":NestedIntFilter}),
-  _max: t.field({"required":false,"type":NestedIntFilter}),
-});
-export const IntWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.IntWithAggregatesFilter>, false>('IntWithAggregatesFilter').implement({
-  fields: IntWithAggregatesFilterFields,
 });
 
 export const BytesWithAggregatesFilterFields = (t: any) => ({
@@ -1570,6 +1536,20 @@ export const ParticipationSumOrderByAggregateInput = builder.inputRef<PrismaUpda
   fields: ParticipationSumOrderByAggregateInputFields,
 });
 
+export const IntFilterFields = (t: any) => ({
+  equals: t.int({"required":false}),
+  in: t.intList({"required":false}),
+  notIn: t.intList({"required":false}),
+  lt: t.int({"required":false}),
+  lte: t.int({"required":false}),
+  gt: t.int({"required":false}),
+  gte: t.int({"required":false}),
+  not: t.field({"required":false,"type":NestedIntFilter}),
+});
+export const IntFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.IntFilter>, false>('IntFilter').implement({
+  fields: IntFilterFields,
+});
+
 export const IncentiveTableCountOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   index: t.field({"required":false,"type":SortOrder}),
@@ -1611,6 +1591,25 @@ export const IncentiveTableSumOrderByAggregateInputFields = (t: any) => ({
 });
 export const IncentiveTableSumOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.IncentiveTableSumOrderByAggregateInput>, false>('IncentiveTableSumOrderByAggregateInput').implement({
   fields: IncentiveTableSumOrderByAggregateInputFields,
+});
+
+export const IntWithAggregatesFilterFields = (t: any) => ({
+  equals: t.int({"required":false}),
+  in: t.intList({"required":false}),
+  notIn: t.intList({"required":false}),
+  lt: t.int({"required":false}),
+  lte: t.int({"required":false}),
+  gt: t.int({"required":false}),
+  gte: t.int({"required":false}),
+  not: t.field({"required":false,"type":NestedIntWithAggregatesFilter}),
+  _count: t.field({"required":false,"type":NestedIntFilter}),
+  _avg: t.field({"required":false,"type":NestedFloatFilter}),
+  _sum: t.field({"required":false,"type":NestedIntFilter}),
+  _min: t.field({"required":false,"type":NestedIntFilter}),
+  _max: t.field({"required":false,"type":NestedIntFilter}),
+});
+export const IntWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.IntWithAggregatesFilter>, false>('IntWithAggregatesFilter').implement({
+  fields: IntWithAggregatesFilterFields,
 });
 
 export const AdminRelationFilterFields = (t: any) => ({
@@ -1883,17 +1882,6 @@ export const UserCreateNestedOneWithoutPostsInput = builder.inputRef<PrismaUpdat
   fields: UserCreateNestedOneWithoutPostsInputFields,
 });
 
-export const IntFieldUpdateOperationsInputFields = (t: any) => ({
-  set: t.int({"required":false}),
-  increment: t.int({"required":false}),
-  decrement: t.int({"required":false}),
-  multiply: t.int({"required":false}),
-  divide: t.int({"required":false}),
-});
-export const IntFieldUpdateOperationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.IntFieldUpdateOperationsInput>, false>('IntFieldUpdateOperationsInput').implement({
-  fields: IntFieldUpdateOperationsInputFields,
-});
-
 export const BytesFieldUpdateOperationsInputFields = (t: any) => ({
   set: t.field({"required":false,"type":Bytes}),
 });
@@ -1992,6 +1980,17 @@ export const UserUpdateOneRequiredWithoutParticipationNestedInputFields = (t: an
 });
 export const UserUpdateOneRequiredWithoutParticipationNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateOneRequiredWithoutParticipationNestedInput>, false>('UserUpdateOneRequiredWithoutParticipationNestedInput').implement({
   fields: UserUpdateOneRequiredWithoutParticipationNestedInputFields,
+});
+
+export const IntFieldUpdateOperationsInputFields = (t: any) => ({
+  set: t.int({"required":false}),
+  increment: t.int({"required":false}),
+  decrement: t.int({"required":false}),
+  multiply: t.int({"required":false}),
+  divide: t.int({"required":false}),
+});
+export const IntFieldUpdateOperationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.IntFieldUpdateOperationsInput>, false>('IntFieldUpdateOperationsInput').implement({
+  fields: IntFieldUpdateOperationsInputFields,
 });
 
 export const AdminCreateNestedOneWithoutInvitationInputFields = (t: any) => ({
@@ -2222,25 +2221,6 @@ export const NestedFloatFilter = builder.inputRef<PrismaUpdateOperationsInputFil
   fields: NestedFloatFilterFields,
 });
 
-export const NestedIntWithAggregatesFilterFields = (t: any) => ({
-  equals: t.int({"required":false}),
-  in: t.intList({"required":false}),
-  notIn: t.intList({"required":false}),
-  lt: t.int({"required":false}),
-  lte: t.int({"required":false}),
-  gt: t.int({"required":false}),
-  gte: t.int({"required":false}),
-  not: t.field({"required":false,"type":NestedIntWithAggregatesFilter}),
-  _count: t.field({"required":false,"type":NestedIntFilter}),
-  _avg: t.field({"required":false,"type":NestedFloatFilter}),
-  _sum: t.field({"required":false,"type":NestedIntFilter}),
-  _min: t.field({"required":false,"type":NestedIntFilter}),
-  _max: t.field({"required":false,"type":NestedIntFilter}),
-});
-export const NestedIntWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedIntWithAggregatesFilter>, false>('NestedIntWithAggregatesFilter').implement({
-  fields: NestedIntWithAggregatesFilterFields,
-});
-
 export const NestedBytesWithAggregatesFilterFields = (t: any) => ({
   equals: t.field({"required":false,"type":Bytes}),
   in: t.field({"required":false,"type":[Bytes]}),
@@ -2273,9 +2253,28 @@ export const NestedFloatWithAggregatesFilter = builder.inputRef<PrismaUpdateOper
   fields: NestedFloatWithAggregatesFilterFields,
 });
 
+export const NestedIntWithAggregatesFilterFields = (t: any) => ({
+  equals: t.int({"required":false}),
+  in: t.intList({"required":false}),
+  notIn: t.intList({"required":false}),
+  lt: t.int({"required":false}),
+  lte: t.int({"required":false}),
+  gt: t.int({"required":false}),
+  gte: t.int({"required":false}),
+  not: t.field({"required":false,"type":NestedIntWithAggregatesFilter}),
+  _count: t.field({"required":false,"type":NestedIntFilter}),
+  _avg: t.field({"required":false,"type":NestedFloatFilter}),
+  _sum: t.field({"required":false,"type":NestedIntFilter}),
+  _min: t.field({"required":false,"type":NestedIntFilter}),
+  _max: t.field({"required":false,"type":NestedIntFilter}),
+});
+export const NestedIntWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedIntWithAggregatesFilter>, false>('NestedIntWithAggregatesFilter').implement({
+  fields: NestedIntWithAggregatesFilterFields,
+});
+
 export const PostCreateWithoutPostedByInputFields = (t: any) => ({
   id: t.string({"required":false}),
-  name: t.int({"required":false}),
+  name: t.string({"required":true}),
   createdAt: t.field({"required":false,"type":DateTime}),
   image: t.field({"required":true,"type":Bytes}),
   reading: t.float({"required":false}),
@@ -2391,7 +2390,7 @@ export const PostScalarWhereInputFields = (t: any) => ({
   OR: t.field({"required":false,"type":[PostScalarWhereInput]}),
   NOT: t.field({"required":false,"type":[PostScalarWhereInput]}),
   id: t.field({"required":false,"type":StringFilter}),
-  name: t.field({"required":false,"type":IntFilter}),
+  name: t.field({"required":false,"type":StringFilter}),
   createdAt: t.field({"required":false,"type":DateTimeFilter}),
   image: t.field({"required":false,"type":BytesFilter}),
   reading: t.field({"required":false,"type":FloatFilter}),
@@ -2572,7 +2571,7 @@ export const UserScalarWhereInput = builder.inputRef<PrismaUpdateOperationsInput
 
 export const PostCreateWithoutStatusChangedByInputFields = (t: any) => ({
   id: t.string({"required":false}),
-  name: t.int({"required":false}),
+  name: t.string({"required":true}),
   createdAt: t.field({"required":false,"type":DateTime}),
   image: t.field({"required":true,"type":Bytes}),
   reading: t.float({"required":false}),
@@ -2821,7 +2820,7 @@ export const UserUpdateWithoutPostsInput = builder.inputRef<PrismaUpdateOperatio
 
 export const PostCreateWithoutPostStatusInputFields = (t: any) => ({
   id: t.string({"required":false}),
-  name: t.int({"required":false}),
+  name: t.string({"required":true}),
   createdAt: t.field({"required":false,"type":DateTime}),
   image: t.field({"required":true,"type":Bytes}),
   reading: t.float({"required":false}),
@@ -3039,6 +3038,7 @@ export const UserUpdateWithoutInvitationsInput = builder.inputRef<PrismaUpdateOp
 
 export const PostCreateManyPostedByInputFields = (t: any) => ({
   id: t.string({"required":false}),
+  name: t.string({"required":true}),
   createdAt: t.field({"required":false,"type":DateTime}),
   image: t.field({"required":true,"type":Bytes}),
   reading: t.float({"required":false}),
@@ -3062,7 +3062,7 @@ export const InvitationCreateManySentToInput = builder.inputRef<PrismaUpdateOper
 
 export const PostUpdateWithoutPostedByInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  name: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  name: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   image: t.field({"required":false,"type":BytesFieldUpdateOperationsInput}),
   reading: t.field({"required":false,"type":FloatFieldUpdateOperationsInput}),
@@ -3117,6 +3117,7 @@ export const UserUpdateWithoutUserStatusInput = builder.inputRef<PrismaUpdateOpe
 
 export const PostCreateManyStatusChangedByInputFields = (t: any) => ({
   id: t.string({"required":false}),
+  name: t.string({"required":true}),
   createdAt: t.field({"required":false,"type":DateTime}),
   image: t.field({"required":true,"type":Bytes}),
   reading: t.float({"required":false}),
@@ -3140,7 +3141,7 @@ export const InvitationCreateManySentByInput = builder.inputRef<PrismaUpdateOper
 
 export const PostUpdateWithoutStatusChangedByInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  name: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  name: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   image: t.field({"required":false,"type":BytesFieldUpdateOperationsInput}),
   reading: t.field({"required":false,"type":FloatFieldUpdateOperationsInput}),
@@ -3164,6 +3165,7 @@ export const InvitationUpdateWithoutSentByInput = builder.inputRef<PrismaUpdateO
 
 export const PostCreateManyPostStatusInputFields = (t: any) => ({
   id: t.string({"required":false}),
+  name: t.string({"required":true}),
   createdAt: t.field({"required":false,"type":DateTime}),
   image: t.field({"required":true,"type":Bytes}),
   reading: t.float({"required":false}),
@@ -3178,7 +3180,7 @@ export const PostCreateManyPostStatusInput = builder.inputRef<PrismaUpdateOperat
 
 export const PostUpdateWithoutPostStatusInputFields = (t: any) => ({
   id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  name: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  name: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   image: t.field({"required":false,"type":BytesFieldUpdateOperationsInput}),
   reading: t.field({"required":false,"type":FloatFieldUpdateOperationsInput}),

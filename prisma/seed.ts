@@ -44,39 +44,27 @@ const userStatusArray = [
 ];
 
 async function main() {
+  await prisma.invitation.deleteMany({});
+  await prisma.post.deleteMany({});
+  await prisma.postStatus.deleteMany({});
   await prisma.user.deleteMany({});
+  await prisma.userStatus.deleteMany({});
+
   await prisma.user.createMany({
     data: accessCodeArray.map((item) => ({
       accessCode: item.accessCode,
       email: item.email,
     })),
   });
-
-  await prisma.postStatus.deleteMany({});
   await prisma.postStatus.createMany({
     data: postStatusArray.map((item) => ({ id: item })),
   });
-
-  await prisma.userStatus.deleteMany({});
   await prisma.userStatus.createMany({
     data: userStatusArray.map((item) => ({ id: item })),
   });
 }
 
-main()
-  .then(async () => {
-    prisma.user.findUnique({ where: { accessCode: "QWERTY" } }).then((user) => {
-      const decipher = crypto.createDecipheriv(algorithm, secretKey!, iv!);
-      const email =
-        decipher.update(user!.email!, "hex", "utf8") + decipher.final("utf8");
-
-      console.log(email);
-      console.log(user);
-    });
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+main().then(() => {
+  console.log("Seed complete");
+  process.exit(0);
+});

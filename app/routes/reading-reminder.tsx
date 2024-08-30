@@ -47,7 +47,7 @@ export async function action({ request }: ActionFunctionArgs) {
     );
     const adminId = await requireAdminId(request);
 
-    const userWithReminderSent = await sendReminder(usersToRemind, adminId);
+    const userWithReminderSent = await sendReminder(usersToRemind);
     const newUsers = users.map(
       (user) => userWithReminderSent.find((item) => item.id === user.id) || user
     );

@@ -59,7 +59,7 @@ model Admin {
 
 model Post {
   id                String     @id @default(uuid())
-  name              Int        @default(autoincrement())
+  name              String     @unique
   createdAt         DateTime   @default(now())
   image             Bytes
   reading           Float      @default(0)
