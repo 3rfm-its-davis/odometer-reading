@@ -79,37 +79,19 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
 export const handleDelete = async (payload: HandleRequestPayload) => {
   // _todo: change this to something with split()
   // remove preceding "IMG"
-  const imageName = payload.message!.split(" ").slice(1).join(" ");
+  const imageId = payload.repliedTo;
 
-  if (isNaN(Number(imageName.replace("IMG-", "")))) {
-    const message = `Invalid image name has been entered. Please check the image name and try it again.`;
+  if (!imageId) {
+    const message = `Please reply to a message that contains the image you want to delete.`;
 
     sendWhatsAppMessageText(payload.phoneNumber, message);
 
     return { body: "Bad image id", status: 400 };
   }
 
-  const count = await prisma.post.updateMany({
+  const result = await prisma.post.updateMany({
     where: {
-      AND: [
-        {
-          name: {
-            equals: `${payload.user?.phoneNumber}-${imageName}`,
-          },
-        },
-        {
-          postedBy: {
-            phoneNumber: {
-              equals: payload.phoneNumber,
-            },
-          },
-        },
-        {
-          size: {
-            gt: 0,
-          },
-        },
-      ],
+      id: imageId,
     },
     data: {
       image: Buffer.from(""),
@@ -117,14 +99,14 @@ export const handleDelete = async (payload: HandleRequestPayload) => {
     },
   });
 
-  if (count.count === 0) {
-    const message = `No image has been deleted. This could be because you already deleted the image or you entered a wrong image name.`;
+  if (result.count === 0) {
+    const message = `No image has been deleted. This could be because you already deleted the image.`;
 
     sendWhatsAppMessageText(payload.phoneNumber, message);
 
     return { body: "OK", status: 200 };
   } else {
-    const message = `Thank you, we have successfully deleted image "${imageName}".`;
+    const message = `Thank you, we have successfully deleted the image.`;
 
     sendWhatsAppMessageText(payload.phoneNumber, message);
 
@@ -211,6 +193,12 @@ export const handleReset = async (payload: HandleRequestPayload) => {
   if (!payload.user) {
     return json({ body: "No user found", status: 400 });
   }
+
+  await prisma.post.deleteMany({
+    where: {
+      postedById: payload.user.id,
+    },
+  });
 
   await prisma.user.update({
     where: {

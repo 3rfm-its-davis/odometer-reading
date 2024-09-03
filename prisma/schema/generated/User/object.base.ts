@@ -25,6 +25,7 @@ export const UserObject = definePrismaObject('User', {
     userStatus: t.relation('userStatus', UserUserStatusFieldObject),
     userStatusId: t.field(UserUserStatusIdFieldObject),
     invitations: t.relation('invitations', UserInvitationsFieldObject(t)),
+    messages: t.relation('messages', UserMessagesFieldObject(t)),
   }),
 });
 
@@ -144,6 +145,31 @@ export const UserInvitationsFieldObject = defineRelationFunction('User', (t) =>
     description: undefined,
     nullable: false,
     args: UserInvitationsFieldArgs,
+    query: (args) => ({
+      where: args.where || undefined,
+      cursor: args.cursor || undefined,
+      take: args.take || undefined,
+      distinct: args.distinct || undefined,
+      skip: args.skip || undefined,
+      orderBy: args.orderBy || undefined,
+    }),
+  }),
+);
+
+export const UserMessagesFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.MessageWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.MessageOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.MessageWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.MessageScalarFieldEnum], required: false }),
+}))
+
+export const UserMessagesFieldObject = defineRelationFunction('User', (t) =>
+  defineRelationObject('User', 'messages', {
+    description: undefined,
+    nullable: false,
+    args: UserMessagesFieldArgs,
     query: (args) => ({
       where: args.where || undefined,
       cursor: args.cursor || undefined,

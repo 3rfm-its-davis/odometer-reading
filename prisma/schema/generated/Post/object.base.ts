@@ -13,7 +13,6 @@ export const PostObject = definePrismaObject('Post', {
   findUnique: ({ id }) => ({ id }),
   fields: (t) => ({
     id: t.field(PostIdFieldObject),
-    name: t.field(PostNameFieldObject),
     createdAt: t.field(PostCreatedAtFieldObject),
     image: t.field(PostImageFieldObject),
     reading: t.field(PostReadingFieldObject),
@@ -33,13 +32,6 @@ export const PostIdFieldObject = defineFieldObject('Post', {
   description: undefined,
   nullable: false,
   resolve: (parent) => String(parent.id),
-});
-
-export const PostNameFieldObject = defineFieldObject('Post', {
-  type: "String",
-  description: undefined,
-  nullable: false,
-  resolve: (parent) => parent.name,
 });
 
 export const PostCreatedAtFieldObject = defineFieldObject('Post', {

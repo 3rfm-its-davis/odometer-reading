@@ -10,4 +10,6 @@ export type HandleRequestPayload = {
   imageId: string | null;
   message: string | null;
   phoneNumber: string;
+  messageId: string | null;
+  repliedTo: string | null;
 };

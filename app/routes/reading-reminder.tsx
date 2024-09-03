@@ -11,7 +11,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const users = await prisma.user.findMany({
     where: {
       userStatusId: {
-        equals: "activated",
+        in: ["activated", "suspended", "closed", "deleted", "completed"],
       },
     },
     include: {

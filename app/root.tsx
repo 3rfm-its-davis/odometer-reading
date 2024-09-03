@@ -4,9 +4,13 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
+  useLocation,
 } from "@remix-run/react";
 import "./tailwind.css";
 import { Header } from "./components/header";
+import { requireAdminId } from "./server/auth.server";
+import { LoaderFunctionArgs } from "@remix-run/node";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -27,9 +31,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const isLoginPage = useLocation().pathname === "/login";
   return (
     <div className="h-screen">
-      <Header />
+      <Header isLoginPage={isLoginPage} />
       <main>
         <Outlet />
       </main>

@@ -16,6 +16,7 @@ Table User {
   userStatus UserStatus [not null]
   userStatusId String [not null, default: 'initialized']
   invitations Invitation [not null]
+  messages Message [not null]
 }
 
 Table UserStatus {
@@ -34,7 +35,6 @@ Table Admin {
 
 Table Post {
   id String [pk]
-  name String [unique, not null]
   createdAt DateTime [default: `now()`, not null]
   image Bytes [not null]
   reading Float [not null, default: 0]
@@ -52,6 +52,14 @@ Table PostStatus {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
   Post Post [not null]
+}
+
+Table Message {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  message String [not null]
+  sentBy User [not null]
+  sentById String [not null]
 }
 
 Table Participation {
@@ -85,6 +93,8 @@ Ref: Post.postStatusId > PostStatus.id
 Ref: Post.statusChangedById > Admin.id
 
 Ref: Post.postedById > User.id
+
+Ref: Message.sentById > User.id
 
 Ref: Participation.userId - User.id
 

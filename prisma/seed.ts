@@ -44,24 +44,40 @@ const userStatusArray = [
 ];
 
 async function main() {
-  await prisma.invitation.deleteMany({});
-  await prisma.post.deleteMany({});
-  await prisma.postStatus.deleteMany({});
-  await prisma.user.deleteMany({});
-  await prisma.userStatus.deleteMany({});
+  // await prisma.invitation.deleteMany({});
+  // await prisma.post.deleteMany({});
+  // await prisma.postStatus.deleteMany({});
+  // await prisma.user.deleteMany({});
+  // await prisma.userStatus.deleteMany({});
 
-  await prisma.user.createMany({
-    data: accessCodeArray.map((item) => ({
-      accessCode: item.accessCode,
-      email: item.email,
-    })),
-  });
-  await prisma.postStatus.createMany({
-    data: postStatusArray.map((item) => ({ id: item })),
-  });
-  await prisma.userStatus.createMany({
-    data: userStatusArray.map((item) => ({ id: item })),
-  });
+  // await prisma.user.createMany({
+  //   data: accessCodeArray.map((item) => ({
+  //     accessCode: item.accessCode,
+  //     email: item.email,
+  //   })),
+  // });
+
+  await Promise.all(
+    accessCodeArray.map(async (item) => {
+      console.log(item);
+      await prisma.user.upsert({
+        where: {
+          accessCode: item.accessCode,
+        },
+        create: {
+          accessCode: item.accessCode,
+          email: item.email,
+        },
+        update: {},
+      });
+    })
+  );
+  // await prisma.postStatus.createMany({
+  //   data: postStatusArray.map((item) => ({ id: item })),
+  // });
+  // await prisma.userStatus.createMany({
+  //   data: userStatusArray.map((item) => ({ id: item })),
+  // });
 }
 
 main().then(() => {

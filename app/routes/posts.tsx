@@ -9,22 +9,9 @@ import { sendEmail } from "~/server/sendEmail";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireAdminId(request);
-  const users = await prisma.user.findMany({
-    where: {
-      email: {
-        not: null,
-      },
-    },
-    include: {
-      invitations: {
-        orderBy: {
-          createdAt: "desc",
-        },
-      },
-    },
-  });
+  const posts = await prisma.post.findMany();
 
-  return users;
+  return posts;
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -99,12 +86,10 @@ export default function EmailInvitation() {
   const users = useLoaderData<typeof loader>().map((item) => {
     return {
       ...item,
-      invitations: null,
-      lastInvitationSentAt: item.invitations[0]
-        ? item.invitations[0].createdAt
-        : null,
-      invitationCount: item.invitations ? item.invitations.length : 0,
       visible: true,
+      image: btoa(
+        item.image.data.map((num) => String.fromCharCode(num)).join("")
+      ),
     };
   });
   const [decipherKey, setDecipherKey] = useState("");

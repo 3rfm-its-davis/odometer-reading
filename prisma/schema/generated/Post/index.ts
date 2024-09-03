@@ -1,7 +1,6 @@
 export {
   PostObject,
   PostIdFieldObject,
-  PostNameFieldObject,
   PostCreatedAtFieldObject,
   PostImageFieldObject,
   PostReadingFieldObject,

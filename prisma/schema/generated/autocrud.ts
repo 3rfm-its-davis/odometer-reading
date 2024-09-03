@@ -3,6 +3,7 @@ import * as UserStatus from './UserStatus';
 import * as Admin from './Admin';
 import * as Post from './Post';
 import * as PostStatus from './PostStatus';
+import * as Message from './Message';
 import * as Participation from './Participation';
 import * as IncentiveTable from './IncentiveTable';
 import * as Invitation from './Invitation';
@@ -107,6 +108,24 @@ export const Cruds: Record<
       updateMany: PostStatus.updateManyPostStatusMutationObject,
       updateOne: PostStatus.updateOnePostStatusMutationObject,
       upsertOne: PostStatus.upsertOnePostStatusMutationObject,
+    },
+  },
+  Message: {
+    Object: Message.MessageObject,
+    queries: {
+      findFirst: Message.findFirstMessageQueryObject,
+      findMany: Message.findManyMessageQueryObject,
+      count: Message.countMessageQueryObject,
+      findUnique: Message.findUniqueMessageQueryObject,
+    },
+    mutations: {
+      createMany: Message.createManyMessageMutationObject,
+      createOne: Message.createOneMessageMutationObject,
+      deleteMany: Message.deleteManyMessageMutationObject,
+      deleteOne: Message.deleteOneMessageMutationObject,
+      updateMany: Message.updateManyMessageMutationObject,
+      updateOne: Message.updateOneMessageMutationObject,
+      upsertOne: Message.upsertOneMessageMutationObject,
     },
   },
   Participation: {

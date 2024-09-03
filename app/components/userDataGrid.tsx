@@ -17,8 +17,9 @@ export default function UserDataGrid({ _users }: { _users: any[] }) {
   const getData = useCallback(
     ([col, row]: Item): GridCell => {
       const userRow = users[row];
+      const columnName = columns[col].id;
 
-      const d = userRow[columns[col].id];
+      const d = userRow[columnName];
 
       return {
         kind: GridCellKind.Text,

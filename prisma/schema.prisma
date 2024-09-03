@@ -39,6 +39,7 @@ model User {
   userStatus    UserStatus     @relation(fields: [userStatusId], references: [id])
   userStatusId  String         @default("initialized")
   invitations   Invitation[]
+  messages      Message[]
 
   @@index([userStatusId])
 }
@@ -59,7 +60,6 @@ model Admin {
 
 model Post {
   id                String     @id @default(uuid())
-  name              String     @unique
   createdAt         DateTime   @default(now())
   image             Bytes
   reading           Float      @default(0)
@@ -81,6 +81,16 @@ model PostStatus {
   id        String   @id
   createdAt DateTime @default(now())
   Post      Post[]
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  message   String
+  sentBy    User     @relation(fields: [sentById], references: [id])
+  sentById  String
+
+  @@index([sentById])
 }
 
 model Participation {

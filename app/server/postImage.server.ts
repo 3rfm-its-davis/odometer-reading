@@ -2,22 +2,18 @@ import axios from "axios";
 import { prisma } from "./prisma.server";
 import { User } from "@prisma/client";
 import { json } from "@remix-run/node";
+import { HandleRequestPayload } from "./types.server";
 
-export const postImage = async (
-  imageId: string,
-  message: string,
-  user: User,
-  phoneNumber: string,
-  ourPhoneNumber: string
-) => {
+export const postImage = async (payload: HandleRequestPayload) => {
+  const ourPhoneNumber = process.env.OUR_PHONE_NUMBER;
   // validate user state to see if they can submit images
-  if (user.userStatusId !== "activated") {
+  if (payload.user!.userStatusId !== "activated") {
     // reply to the user for ineligibility
     axios.post(
       `https://graph.facebook.com/v19.0/${ourPhoneNumber}/messages`,
       {
         messaging_product: "whatsapp",
-        to: phoneNumber,
+        to: payload.phoneNumber!,
         type: "text",
         text: {
           body: "Your account has been suspended by the admin. No further image submission allowed.",
@@ -34,7 +30,7 @@ export const postImage = async (
   }
 
   const imageUrl = (
-    await axios.get(`https://graph.facebook.com/v19.0/${imageId}`, {
+    await axios.get(`https://graph.facebook.com/v19.0/${payload.imageId!}`, {
       headers: {
         Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
       },
@@ -52,25 +48,10 @@ export const postImage = async (
     ).data
   );
 
-  // _todo validate it is an image format
-  // _todo validate image size is not more than 10mb(environment variable)
-
-  const randomNumber = Math.random();
-
-  const countPhotos = await prisma.post.count({
-    where: {
-      postedBy: {
-        id: user.id,
-      },
-    },
-  });
-
-  const imageNameBase = `IMG-${(countPhotos + 1).toString().padStart(4, "0")}`;
-
-  // register image buffer to the database
   prisma.post
     .create({
       data: {
+        id: payload.messageId!,
         image: imageBuffer,
         postStatus: {
           connect: {
@@ -79,30 +60,28 @@ export const postImage = async (
         },
         postedBy: {
           connect: {
-            id: user.id,
+            id: payload.user!.id,
           },
         },
         size: imageBuffer.length,
-        notes: message,
-        name: `${user.phoneNumber}-${imageNameBase}`,
+        notes: payload.message,
       },
     })
     .then((response) => {
-      // _todo: pad "IMG" instead of 0 filling
-      const name = String(response.name).padStart(4, "0");
-      console.log("Post created", response);
-      // reply to the user for confirmation
       axios.post(
         `https://graph.facebook.com/v19.0/${ourPhoneNumber}/messages`,
         {
           messaging_product: "whatsapp",
-          to: phoneNumber,
+          to: payload.phoneNumber!,
           type: "text",
           text: {
-            body: `Thank you, the image ID "${imageNameBase}" has been received.
+            body: `Thank you, your image has been received.
 Rewards, if applicable, will be processed after the project is complete.
 
-If you want to delete this image please use the command "DELETE ${imageNameBase}".`,
+If you want to delete this image, please reply a command "DELETE" to this message.`,
+          },
+          context: {
+            message_id: payload.messageId,
           },
         },
         {

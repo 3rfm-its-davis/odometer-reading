@@ -12,7 +12,8 @@ export {
   UserParticipationFieldObject,
   UserUserStatusFieldObject,
   UserUserStatusIdFieldObject,
-  UserInvitationsFieldObject
+  UserInvitationsFieldObject,
+  UserMessagesFieldObject
 } from './object.base';
 export {
   createManyUserMutation,

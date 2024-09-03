@@ -118,6 +118,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const message = body.entry[0].changes[0].value.messages[0].text?.body.trim();
   const messageType = String((message || "").split(" ")[0]).toUpperCase();
+  const messageId = body.entry[0].changes[0].value.messages[0].id || null;
+
+  const repliedTo =
+    body.entry[0].changes[0].value.messages[0].context?.id || null;
 
   const imageId = await getImageId(body);
 
@@ -126,6 +130,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     imageId,
     message,
     phoneNumber,
+    messageId,
+    repliedTo,
   };
 
   if (messageType === "RESET") {
@@ -135,10 +141,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (user?.userStatusId === "closed" || user?.userStatusId === "deleted") {
     const message = `Your account is closed or deleted.`;
 
-    sendWhatsAppMessageText(
-      payload.phoneNumber,
-      message
-    );
+    sendWhatsAppMessageText(payload.phoneNumber, message);
     return { body: "User closed or deleted", status: 403 };
   }
 
@@ -151,9 +154,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   if (imageId && user) {
-    await postImage(imageId, message, user, phoneNumber, ourPhoneNumber);
+    await postImage(payload);
     return json({ body: "OK", status: 200 });
   }
+
+  prisma.message.create({
+    data: {
+      id: messageId,
+      message: message,
+      sentById: user.id,
+    },
+  });
 
   switch (messageType) {
     case "REGISTER":
