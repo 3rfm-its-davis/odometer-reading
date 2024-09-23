@@ -3,6 +3,10 @@ import { useLoaderData } from "@remix-run/react";
 import { prisma } from "~/server/prisma.server";
 import { OdometerSubmissionForm } from "~/components/odometerSubmissionForm";
 import { requireAdminId } from "~/server/auth.server";
+import {
+  sendApprovalTemplateMessage,
+  sendRejectionTemplateMessage,
+} from "~/server/sendTemplateMessage.server";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await prisma.user.findUniqueOrThrow({
@@ -37,21 +41,43 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   const adminId = await requireAdminId(request);
+  const statusChangeTo = String(form.get("statusChangeTo"));
+  const rejectionReason = String(form.get("rejectionReason"));
+  console.log(statusChangeTo);
 
   const result = await prisma.post.update({
     where: { id: String(form.get("id")) },
     data: {
       reading: Number(form.get("odometer")),
-      postStatusId: String(form.get("statusChangeTo")),
+      postStatusId: statusChangeTo,
       statusChangedById: adminId,
     },
+    include: {
+      postedBy: {
+        select: {
+          phoneNumber: true,
+        },
+      },
+    },
   });
+
+  console.log(result.postedBy.phoneNumber);
+
+  if (statusChangeTo === "approved") {
+    await sendApprovalTemplateMessage(result.postedBy.phoneNumber, result.id);
+  } else if (statusChangeTo === "rejected") {
+    await sendRejectionTemplateMessage(
+      result.postedBy.phoneNumber,
+      rejectionReason,
+      result.id
+    );
+  }
 
   return json(result);
 }
 
 export default function User() {
-  const { user, posts } = useLoaderData<typeof loader>();
+  const { user, posts, adminId } = useLoaderData<typeof loader>();
 
   return (
     <div className="flex flex-col flex-auto p-6 divide-y  overflow-scroll">
@@ -68,7 +94,7 @@ export default function User() {
                 post.image.data.map((num) => String.fromCharCode(num)).join("")
               );
               return (
-                <div className="flex flex-col w-full gap-y-1">
+                <div className="flex flex-col w-full gap-y-1" key={post.id}>
                   <img src={`data:image/jpg;base64,${imageBase64}`} />
                   <form method="post">
                     <OdometerSubmissionForm
@@ -92,12 +118,12 @@ export default function User() {
                 post.image.data.map((num) => String.fromCharCode(num)).join("")
               );
               return (
-                <div className="flex flex-col w-full gap-y-1">
+                <div className="flex flex-col w-full gap-y-1" key={post.id}>
                   <img src={`data:image/jpg;base64,${imageBase64}`} />
                   <p>Read by: {post.statusChangedBy?.email || "System"}</p>
                   <form method="post">
                     <OdometerSubmissionForm
-                      // enabled={post.statusChangedBy?.id !== adminId}
+                      enabled={post.statusChangedBy?.id !== adminId}
                       htmlFor={post.id}
                       initialValue={post.reading || undefined}
                       currentStatus={post.postStatusId}
@@ -118,13 +144,12 @@ export default function User() {
                 post.image.data.map((num) => String.fromCharCode(num)).join("")
               );
               return (
-                <div className="flex flex-col w-full gap-y-1">
+                <div className="flex flex-col w-full gap-y-1" key={post.id}>
                   <img src={`data:image/jpg;base64,${imageBase64}`} />
                   <p>Approved by: {post.statusChangedBy?.email || "System"}</p>
                   <form method="post">
                     <OdometerSubmissionForm
-                      // enabled={post.statusChangedBy?.id !== adminId}
-                      enabled={true}
+                      enabled={false}
                       htmlFor={post.id}
                       initialValue={post.reading || undefined}
                       currentStatus={post.postStatusId}
@@ -145,13 +170,12 @@ export default function User() {
                 post.image.data.map((num) => String.fromCharCode(num)).join("")
               );
               return (
-                <div className="flex flex-col w-full gap-y-1">
+                <div className="flex flex-col w-full gap-y-1" key={post.id}>
                   <img src={`data:image/jpg;base64,${imageBase64}`} />
                   <p>Rejected by: {post.statusChangedBy?.email || "System"}</p>
                   <form method="post">
                     <OdometerSubmissionForm
-                      // enabled={post.statusChangedBy?.id !== adminId}
-                      enabled={true}
+                      enabled={false}
                       htmlFor={post.id}
                       initialValue={post.reading || undefined}
                       currentStatus={post.postStatusId}

@@ -48,10 +48,19 @@ export const postImage = async (payload: HandleRequestPayload) => {
     ).data
   );
 
+  const count = await prisma.post.count({
+    where: {
+      postedBy: {
+        id: payload.user!.id,
+      },
+    },
+  });
+
   prisma.post
     .create({
       data: {
-        id: payload.messageId!,
+        // id: payload.messageId!,
+        id: payload.user!.phoneNumber + "IMG" + count,
         image: imageBuffer,
         postStatus: {
           connect: {
@@ -75,10 +84,12 @@ export const postImage = async (payload: HandleRequestPayload) => {
           to: payload.phoneNumber!,
           type: "text",
           text: {
-            body: `Thank you, your image has been received.
+            body: `Thank you, your image "${"IMG" + count}" has been received.
 Rewards, if applicable, will be processed after the project is complete.
 
-If you want to delete this image, please reply a command "DELETE" to this message.`,
+If you want to delete this image, please use the command "DELETE ${
+              "IMG" + count
+            }".`,
           },
           context: {
             message_id: payload.messageId,

@@ -26,7 +26,10 @@ export const sendEmail = async (users: any[], adminId: string) => {
     return users;
   }
 
-  const newUsers = users.map(async (user) => {
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
+  const newUsers = users.map(async (user, index) => {
     const firstInvitation = {
       subject:
         "Invitation to Participate in the First Trial: Collecting Odometer Pictures via WhatsApp",
@@ -37,7 +40,7 @@ As part of our ongoing research efforts, Keita has developed a state-of-the-art 
 <b>What We Need from You:</b><br>
 
 <ul>
-  <li><b>Participation:</b> Please participate by submitting three pictures of odometers through WhatsApp by 5 PM of today. You can use odometer images from Google for testing purposes. Additionally, please intentionally send a few incorrect pictures and then request their deletion to help us test the system’s functionality. At the end of the survey, you will receive a dummy gift card of $5 (unfortunately, we are not allowed to pay ourselves—very unfortunate!).</li>
+  <li><b>Participation:</b> Please participate by submitting three pictures of odometers through WhatsApp by 5 PM of today. You can use odometer images from Google for testing purposes. Additionally, please intentionally send a few incorrect pictures and then request their deletion to help us test the system's functionality. At the end of the survey, you will receive a dummy gift card of $5 (unfortunately, we are not allowed to pay ourselves—very unfortunate!).</li>
   <li><b>Feedback:</b> Your insights and feedback are invaluable. After using the system, we would greatly appreciate your thoughts on the process, ease of use, and any issues you might encounter. We will set up group meetings next week to gather feedback and discuss ways to improve the participation experience.</li>
 </ul>
 
@@ -79,6 +82,9 @@ Postdoctoral Researcher<br>
 3 Revolutions Future Mobility<br>
 Institute of Transportation Studies, UC Davis<br>`,
     };
+
+    await delay(index * 1000);
+
     try {
       await transporter.sendMail({
         from: process.env.EMAIL_USER,

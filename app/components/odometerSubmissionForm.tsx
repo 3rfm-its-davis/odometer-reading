@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 type OdometerSubmissionFormProps = {
   enabled?: boolean;
@@ -55,16 +57,61 @@ export function OdometerSubmissionForm({
         </button>
       ) : null}
       {currentStatus !== "rejected" ? (
-        <button
-          type="submit"
-          disabled={!enabled}
-          name="statusChangeTo"
-          value="rejected"
-          className="w-24 p-2 bg-red-300 hover:bg-red-500 transition duration-300 ease-in-out"
-        >
-          Reject
-        </button>
-      ) : null}
+        <Menu as="div" className="relative inline-block text-left">
+          <input
+            hidden
+            readOnly
+            type="text"
+            name="statusChangeTo"
+            value="rejected"
+          />
+          <MenuButton className="inline-flex w-full h-full justify-center align-baseline p-2 bg-red-200 hover:bg-red-300">
+            <p className="flex">Reject</p>
+            <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" />
+          </MenuButton>
+          <MenuItems
+            transition
+            className="absolute left-0 z-100 mt-2 w-80 bg-red-50 ring-1 ring-red-800 ring-opacity-25 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+          >
+            <MenuItem>
+              <button
+                name="rejectionReason"
+                value="Not a valid odometer image"
+                className="block w-full text-left px-4 py-2 data-[focus]:bg-red-100"
+              >
+                Not a valid odometer image
+              </button>
+            </MenuItem>
+            <MenuItem>
+              <button
+                name="rejectionReason"
+                value="Odometer is hidden or blocked"
+                className="block px-4 py-2 data-[focus]:bg-red-100"
+              >
+                Odometer is hidden or blocked
+              </button>
+            </MenuItem>
+            <MenuItem>
+              <button
+                name="rejectionReason"
+                value="Image is blurry"
+                className="block px-4 py-2 data-[focus]:bg-red-100"
+              >
+                Image is blurry
+              </button>
+            </MenuItem>
+          </MenuItems>
+        </Menu>
+      ) : // <button
+      //   type="submit"
+      //   disabled={!enabled}
+      //   name="statusChangeTo"
+      //   value="rejected"
+      //   className="w-24 p-2 bg-red-300 hover:bg-red-500 transition duration-300 ease-in-out"
+      // >
+      //   Reject
+      // </button>
+      null}
     </div>
   );
 }

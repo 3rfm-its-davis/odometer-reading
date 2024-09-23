@@ -4,12 +4,19 @@ import {
   GridCellKind,
   DataEditor,
   GridSelection,
+  HeaderClickedEventArgs,
 } from "@glideapps/glide-data-grid";
 import { useCallback, useEffect, useState } from "react";
 import "@glideapps/glide-data-grid/dist/index.css";
 import { ClientOnly } from "remix-utils/client-only";
 
-export default function UserDataGrid({ _users }: { _users: any[] }) {
+export default function UserDataGrid({
+  _users,
+  onHeaderClicked,
+}: {
+  _users: any[];
+  onHeaderClicked?: (colIndex: number, event: HeaderClickedEventArgs) => void;
+}) {
   const users = _users.filter((user) => user.visible);
   const [selectedUserIds, setSelectedUserIds] = useState("");
   const [selection, setSelection] = useState<GridSelection>();
@@ -20,6 +27,15 @@ export default function UserDataGrid({ _users }: { _users: any[] }) {
       const columnName = columns[col].id;
 
       const d = userRow[columnName];
+
+      if (columnName === "image") {
+        return {
+          kind: GridCellKind.Image,
+          allowOverlay: false,
+          displayData: d ? d.toString() : "",
+          data: d,
+        };
+      }
 
       return {
         kind: GridCellKind.Text,
@@ -74,6 +90,7 @@ export default function UserDataGrid({ _users }: { _users: any[] }) {
               getCellContent={getData}
               columns={columns}
               rows={users.length}
+              onHeaderClicked={onHeaderClicked}
             />
           </div>
         )}

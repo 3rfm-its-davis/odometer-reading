@@ -5,7 +5,7 @@ import UserDataGrid from "~/components/userDataGrid";
 import { requireAdminId } from "~/server/auth.server";
 import { decipherEmail } from "~/server/decipherEmail.server";
 import { prisma } from "~/server/prisma.server";
-import { sendEmail } from "~/server/sendEmail";
+import { sendEmail } from "~/server/sendEmail.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireAdminId(request);

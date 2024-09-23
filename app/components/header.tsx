@@ -14,6 +14,15 @@ export const Header = ({ isLoginPage }: { isLoginPage: boolean }) => {
             <li>
               <a href="/reading-reminder">Reading Reminder</a>
             </li>
+            <li>
+              <a href="/posts">Posts</a>
+            </li>
+            <li>
+              <a href="/stats">Stats</a>
+            </li>
+            <li>
+              <a href="/messages">Messages</a>
+            </li>
           </ul>
         </nav>
       ) : null}

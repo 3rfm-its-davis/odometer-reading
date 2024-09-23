@@ -5,8 +5,6 @@ import { sendWhatsAppMessageText } from "~/utils/sendWhatsAppMessage";
 import { json } from "@remix-run/node";
 import { v4 } from "uuid";
 
-// log <Whatsappid>:<function name>:<msg>
-
 export const handleRegistration = async (payload: HandleRequestPayload) => {
   // check if the sent message matches the access code in the database
   // _todo: change this to something with split()
@@ -27,7 +25,6 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
   );
 
   if (userIdByAccessCode === undefined) {
-    // ask the sender to sign up by access code
     const message = `Please use the command "REGISTER {access code}", replacing {access code} with the unique access code sent in your invitation email.`;
 
     sendWhatsAppMessageText(payload.phoneNumber, message);
@@ -35,10 +32,6 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
     console.log("Sent sign up message");
     return { body: "OK", status: 200 };
   }
-
-  // _todo if no user found return error message
-  // _todo: validated if user found. user phone number same as current phone number : msg: You are already registered
-  // user object phone number exists but different from current -> msg - access code has already been claimed
 
   const userIdByPhoneNumber = (
     await prisma.user.findUnique({
@@ -77,21 +70,11 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
 };
 
 export const handleDelete = async (payload: HandleRequestPayload) => {
-  // _todo: change this to something with split()
-  // remove preceding "IMG"
-  const imageId = payload.repliedTo;
-
-  if (!imageId) {
-    const message = `Please reply to a message that contains the image you want to delete.`;
-
-    sendWhatsAppMessageText(payload.phoneNumber, message);
-
-    return { body: "Bad image id", status: 400 };
-  }
+  const imageId = payload.message?.replace("DELETE ", "");
 
   const result = await prisma.post.updateMany({
     where: {
-      id: imageId,
+      id: payload.user!.phoneNumber + imageId,
     },
     data: {
       image: Buffer.from(""),
@@ -100,13 +83,13 @@ export const handleDelete = async (payload: HandleRequestPayload) => {
   });
 
   if (result.count === 0) {
-    const message = `No image has been deleted. This could be because you already deleted the image.`;
+    const message = `No image has been deleted. This could be because you already deleted the image or you input an invalid image name.`;
 
     sendWhatsAppMessageText(payload.phoneNumber, message);
 
     return { body: "OK", status: 200 };
   } else {
-    const message = `Thank you, we have successfully deleted the image.`;
+    const message = `Thank you, we have successfully deleted the image ${imageId}.`;
 
     sendWhatsAppMessageText(payload.phoneNumber, message);
 
@@ -124,6 +107,7 @@ export const handleStop = async (payload: HandleRequestPayload) => {
         },
         data: {
           userStatusId: "closed",
+          deletedAt: new Date(),
         },
       });
 
@@ -141,6 +125,7 @@ export const handleStop = async (payload: HandleRequestPayload) => {
         },
         data: {
           userStatusId: "deleted",
+          deletedAt: new Date(),
           posts: {
             updateMany: {
               where: {
@@ -181,8 +166,8 @@ export const handleHelp = async (payload: HandleRequestPayload) => {
 For other actions, please use one of the following commands:
 
 1. DELETE {image name} - To delete an image that you already submitted.
-2. STOP - To stop participating in this survey.
-3. STOP AND DELETE - To stop participating in this survey and delete all the image data that you have submitted.`;
+2. STOP {access code} - To stop participating in this survey. Please replace {access code} with the unique access code sent in your invitation email.
+3. STOP AND DELETE {access code} - To stop participating in this survey and delete all the image data that you have submitted. Please replace {access code} with the unique access code sent in your invitation email.`;
 
   sendWhatsAppMessageText(payload.phoneNumber, message);
 

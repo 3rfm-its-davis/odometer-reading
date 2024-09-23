@@ -153,18 +153,31 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   }
 
+  if (message) {
+    await prisma.message.create({
+      data: {
+        id: messageId,
+        message: message,
+        sentById: user.id,
+      },
+    });
+  }
+
   if (imageId && user) {
+    if (
+      !["image/jpeg", "image/png", "image/jpg", "image/webp"].includes(
+        body.entry[0].changes[0].value.messages[0].image?.mime_type
+      )
+    ) {
+      sendWhatsAppMessageText(
+        payload.phoneNumber,
+        "Please send a valid image type (not a movie or gif image). We accept only jpeg, png, and webp images."
+      );
+      return json({ body: "Bad image format", status: 400 });
+    }
     await postImage(payload);
     return json({ body: "OK", status: 200 });
   }
-
-  prisma.message.create({
-    data: {
-      id: messageId,
-      message: message,
-      sentById: user.id,
-    },
-  });
 
   switch (messageType) {
     case "REGISTER":
