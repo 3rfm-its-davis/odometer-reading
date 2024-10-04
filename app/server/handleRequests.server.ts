@@ -74,7 +74,7 @@ export const handleDelete = async (payload: HandleRequestPayload) => {
 
   const result = await prisma.post.updateMany({
     where: {
-      id: payload.user!.phoneNumber + imageId,
+      id: payload.user!.accessCode + "-" + imageId,
     },
     data: {
       image: Buffer.from(""),
@@ -98,7 +98,6 @@ export const handleDelete = async (payload: HandleRequestPayload) => {
 };
 
 export const handleStop = async (payload: HandleRequestPayload) => {
-  // _todo: change this to something with split()
   if (payload.user?.userStatusId === "activated") {
     if (payload.message === `STOP ${payload.user.accessCode}`) {
       await prisma.user.update({
@@ -182,6 +181,12 @@ export const handleReset = async (payload: HandleRequestPayload) => {
   await prisma.post.deleteMany({
     where: {
       postedById: payload.user.id,
+    },
+  });
+
+  await prisma.message.deleteMany({
+    where: {
+      sentById: payload.user.id,
     },
   });
 

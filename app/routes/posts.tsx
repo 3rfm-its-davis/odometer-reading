@@ -25,13 +25,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Posts() {
-  const users = useLoaderData<typeof loader>().map((item) => {
+  const data = useLoaderData<typeof loader>().map((item) => {
     return {
-      ...item,
+      Id: item.id,
+      Image_Create_Date: item.createdAt,
+      VMT: item.reading,
+      Status: item.postStatusId,
+      Is_Deleted: item.size === 0,
+      Posted_By_Id: item.postedById,
+      Notes: item.notes,
+      Image_Size: item.size,
       visible: true,
     };
   });
-  const [currentUsers, setCurrentUsers] = useState(users);
+  console.log(data);
+  const [currentData, setCurrentData] = useState(data);
   const [sortedBy, setSortedBy] = useState({
     key: "id",
     order: "asc",
@@ -39,8 +47,8 @@ export default function Posts() {
 
   useMemo(() => {
     if (sortedBy) {
-      setCurrentUsers(
-        currentUsers.sort((a, b) => {
+      setCurrentData(
+        currentData.sort((a, b) => {
           if (sortedBy.order === "asc") {
             return a[sortedBy.key] > b[sortedBy.key] ? 1 : -1;
           } else {
@@ -52,7 +60,7 @@ export default function Posts() {
   }, [sortedBy]);
 
   const onHeaderClicked = (colIndex: number, _event: any) => {
-    const keys = Object.keys(users[0]);
+    const keys = Object.keys(data[0]);
 
     if (keys[colIndex] === sortedBy.key) {
       setSortedBy({
@@ -74,14 +82,14 @@ export default function Posts() {
         <div className="flex flex-row gap-2">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => handleDownload(currentUsers)}
+            onClick={() => handleDownload(currentData)}
           >
             Download JSON
           </button>
         </div>
       </div>
       <UserDataGrid
-        _users={currentUsers.filter((user) => user.visible)}
+        _users={currentData.filter((user) => user.visible)}
         onHeaderClicked={onHeaderClicked}
       />
     </>

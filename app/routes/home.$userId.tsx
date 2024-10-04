@@ -56,6 +56,7 @@ export async function action({ request }: ActionFunctionArgs) {
       postedBy: {
         select: {
           phoneNumber: true,
+          accessCode: true,
         },
       },
     },
@@ -64,12 +65,15 @@ export async function action({ request }: ActionFunctionArgs) {
   console.log(result.postedBy.phoneNumber);
 
   if (statusChangeTo === "approved") {
-    await sendApprovalTemplateMessage(result.postedBy.phoneNumber, result.id);
+    await sendApprovalTemplateMessage(
+      result.postedBy.phoneNumber,
+      result.id.replace(`${result.postedBy.accessCode}-`, "")
+    );
   } else if (statusChangeTo === "rejected") {
     await sendRejectionTemplateMessage(
       result.postedBy.phoneNumber,
       rejectionReason,
-      result.id
+      result.id.replace(`${result.postedBy.accessCode}-`, "")
     );
   }
 
@@ -95,6 +99,9 @@ export default function User() {
               );
               return (
                 <div className="flex flex-col w-full gap-y-1" key={post.id}>
+                  <h5 className="text-md">
+                    <u>{post.id.replace(user.phoneNumber, "")}</u>
+                  </h5>
                   <img src={`data:image/jpg;base64,${imageBase64}`} />
                   <form method="post">
                     <OdometerSubmissionForm
@@ -119,11 +126,15 @@ export default function User() {
               );
               return (
                 <div className="flex flex-col w-full gap-y-1" key={post.id}>
+                  <h5 className="text-md">
+                    <u>{post.id.replace(user.phoneNumber, "")}</u>
+                  </h5>
                   <img src={`data:image/jpg;base64,${imageBase64}`} />
                   <p>Read by: {post.statusChangedBy?.email || "System"}</p>
                   <form method="post">
                     <OdometerSubmissionForm
-                      enabled={post.statusChangedBy?.id !== adminId}
+                      // enabled={post.statusChangedBy?.id !== adminId}
+                      enabled={true}
                       htmlFor={post.id}
                       initialValue={post.reading || undefined}
                       currentStatus={post.postStatusId}
@@ -145,11 +156,14 @@ export default function User() {
               );
               return (
                 <div className="flex flex-col w-full gap-y-1" key={post.id}>
+                  <h5 className="text-md">
+                    <u>{post.id.replace(user.phoneNumber, "")}</u>
+                  </h5>
                   <img src={`data:image/jpg;base64,${imageBase64}`} />
                   <p>Approved by: {post.statusChangedBy?.email || "System"}</p>
                   <form method="post">
                     <OdometerSubmissionForm
-                      enabled={false}
+                      enabled={true}
                       htmlFor={post.id}
                       initialValue={post.reading || undefined}
                       currentStatus={post.postStatusId}
@@ -171,11 +185,14 @@ export default function User() {
               );
               return (
                 <div className="flex flex-col w-full gap-y-1" key={post.id}>
+                  <h5 className="text-md">
+                    <u>{post.id.replace(user.phoneNumber, "")}</u>
+                  </h5>
                   <img src={`data:image/jpg;base64,${imageBase64}`} />
                   <p>Rejected by: {post.statusChangedBy?.email || "System"}</p>
                   <form method="post">
                     <OdometerSubmissionForm
-                      enabled={false}
+                      enabled={true}
                       htmlFor={post.id}
                       initialValue={post.reading || undefined}
                       currentStatus={post.postStatusId}

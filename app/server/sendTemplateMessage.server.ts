@@ -43,7 +43,7 @@ export const sendApprovalTemplateMessage = async (
 export const sendRejectionTemplateMessage = async (
   userPhoneNumber: string,
   rejectionReason: string,
-  replyToId: string
+  imageId: string
 ) => {
   const ourPhoneNumber = process.env.OUR_PHONE_NUMBER;
   await axios.post(
@@ -61,6 +61,10 @@ export const sendRejectionTemplateMessage = async (
           {
             type: "body",
             parameters: [
+              {
+                type: "text",
+                text: imageId,
+              },
               {
                 type: "text",
                 text: rejectionReason,
