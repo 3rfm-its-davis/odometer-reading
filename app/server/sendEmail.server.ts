@@ -81,11 +81,11 @@ Institute of Transportation Studies, UC Davis<br>`,
         from: process.env.EMAIL_USER,
         to: user.email!,
         subject:
-          user.invitationCount > 0
+          user.invitationCount === 0
             ? firstInvitation.subject
             : secondInvitation.subject,
         html:
-          user.invitationCount > 0
+          user.invitationCount === 0
             ? firstInvitation.html
             : secondInvitation.html,
       });
