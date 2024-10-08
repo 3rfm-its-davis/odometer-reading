@@ -37,7 +37,7 @@ export const InvitationCreatedAtFieldObject = defineFieldObject('Invitation', {
 
 export const InvitationSentByFieldObject = defineRelationObject('Invitation', 'sentBy', {
   description: undefined,
-  nullable: false,
+  nullable: true,
   args: undefined,
   query: undefined,
 });
@@ -45,7 +45,7 @@ export const InvitationSentByFieldObject = defineRelationObject('Invitation', 's
 export const InvitationSentByIdFieldObject = defineFieldObject('Invitation', {
   type: "String",
   description: undefined,
-  nullable: false,
+  nullable: true,
   resolve: (parent) => parent.sentById,
 });
 

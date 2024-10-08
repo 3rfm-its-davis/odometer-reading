@@ -61,8 +61,9 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
       },
     });
 
-    const message =
-      "You have successfully signed up. Please send your odometer reading.";
+    const message = `Thank you for registering! We're excited to have you on board for our study, 'Collecting Odometer Pictures via WhatsApp to Measure Precise Vehicle Miles Traveled.' Your participation is essential, and we truly appreciate your involvement in this exciting project.
+
+To get started, please send us a picture of your current odometer reading at your convenience.`;
 
     sendWhatsAppMessageText(payload.phoneNumber, message);
     return { body: "OK", status: 200 };

@@ -4,7 +4,7 @@
 
 Table User {
   id String [pk]
-  email String
+  email String [unique, not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   activatedAt DateTime
@@ -80,8 +80,8 @@ Table IncentiveTable {
 Table Invitation {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
-  sentBy Admin [not null]
-  sentById String [not null]
+  sentBy Admin
+  sentById String
   sentTo User [not null]
   sentToId String [not null]
 }

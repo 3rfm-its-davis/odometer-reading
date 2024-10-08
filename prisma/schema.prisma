@@ -27,7 +27,7 @@ generator pothosCrud {
 
 model User {
   id            String         @id @default(uuid())
-  email         String?
+  email         String         @unique @default(uuid())
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   activatedAt   DateTime?
@@ -113,8 +113,8 @@ model IncentiveTable {
 model Invitation {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
-  sentBy    Admin    @relation(fields: [sentById], references: [id])
-  sentById  String
+  sentBy    Admin?   @relation(fields: [sentById], references: [id])
+  sentById  String?
   sentTo    User     @relation(fields: [sentToId], references: [id])
   sentToId  String
 

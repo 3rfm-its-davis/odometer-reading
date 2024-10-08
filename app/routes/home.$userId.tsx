@@ -57,6 +57,7 @@ export async function action({ request }: ActionFunctionArgs) {
         select: {
           phoneNumber: true,
           accessCode: true,
+          userStatusId: true,
         },
       },
     },
@@ -64,12 +65,18 @@ export async function action({ request }: ActionFunctionArgs) {
 
   console.log(result.postedBy.phoneNumber);
 
-  if (statusChangeTo === "approved") {
+  if (
+    statusChangeTo === "approved" &&
+    result.postedBy.userStatusId === "activated"
+  ) {
     await sendApprovalTemplateMessage(
       result.postedBy.phoneNumber,
       result.id.replace(`${result.postedBy.accessCode}-`, "")
     );
-  } else if (statusChangeTo === "rejected") {
+  } else if (
+    statusChangeTo === "rejected" &&
+    result.postedBy.userStatusId === "activated"
+  ) {
     await sendRejectionTemplateMessage(
       result.postedBy.phoneNumber,
       rejectionReason,
@@ -161,14 +168,6 @@ export default function User() {
                   </h5>
                   <img src={`data:image/jpg;base64,${imageBase64}`} />
                   <p>Approved by: {post.statusChangedBy?.email || "System"}</p>
-                  <form method="post">
-                    <OdometerSubmissionForm
-                      enabled={true}
-                      htmlFor={post.id}
-                      initialValue={post.reading || undefined}
-                      currentStatus={post.postStatusId}
-                    />
-                  </form>
                 </div>
               );
             })}
@@ -190,14 +189,6 @@ export default function User() {
                   </h5>
                   <img src={`data:image/jpg;base64,${imageBase64}`} />
                   <p>Rejected by: {post.statusChangedBy?.email || "System"}</p>
-                  <form method="post">
-                    <OdometerSubmissionForm
-                      enabled={true}
-                      htmlFor={post.id}
-                      initialValue={post.reading || undefined}
-                      currentStatus={post.postStatusId}
-                    />
-                  </form>
                 </div>
               );
             })}

@@ -85,8 +85,9 @@ export const postImage = async (payload: HandleRequestPayload) => {
           to: payload.phoneNumber!,
           type: "text",
           text: {
-            body: `Thank you, your image "${"IMG-" + count}" has been received.
-Rewards, if applicable, will be processed after the project is complete.
+            body: `Your image "${
+              "IMG-" + count
+            }" has been received. Our team will review the image for quality and reply to you soon. Thanks for your submission. 
 
 If you want to delete this image, please use the command "DELETE ${
               "IMG-" + count

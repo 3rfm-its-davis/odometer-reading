@@ -39,7 +39,7 @@ export const UserIdFieldObject = defineFieldObject('User', {
 export const UserEmailFieldObject = defineFieldObject('User', {
   type: "String",
   description: undefined,
-  nullable: true,
+  nullable: false,
   resolve: (parent) => parent.email,
 });
 
