@@ -141,7 +141,7 @@ export async function action({ request }: ActionFunctionArgs) {
 const requireApiKey = async (request: Request) => {
   const apiKey = request.headers.get("x-api-key");
 
-  if (!apiKey || apiKey !== process.env.API_KEY) {
+  if (!apiKey || apiKey !== process.env.QUALTRICS_API_KEY) {
     return json({ message: "Invalid API key" }, { status: 401 });
   }
 };
