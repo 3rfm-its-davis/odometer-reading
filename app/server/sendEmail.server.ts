@@ -81,13 +81,13 @@ Institute of Transportation Studies, UC Davis<br>`,
         from: process.env.EMAIL_USER,
         to: user.email!,
         subject:
-          user.invitationCount === 0
-            ? firstInvitation.subject
-            : secondInvitation.subject,
+          user.invitationCount > 1
+            ? secondInvitation.subject
+            : firstInvitation.subject,
         html:
-          user.invitationCount === 0
-            ? firstInvitation.html
-            : secondInvitation.html,
+          user.invitationCount > 1
+            ? secondInvitation.html
+            : firstInvitation.html,
       });
 
       await prisma.user.update({

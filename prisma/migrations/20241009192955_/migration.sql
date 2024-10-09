@@ -5,7 +5,7 @@ BEGIN TRAN;
 -- CreateTable
 CREATE TABLE [dbo].[User] (
     [id] NVARCHAR(1000) NOT NULL,
-    [email] NVARCHAR(1000),
+    [email] NVARCHAR(1000) NOT NULL,
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [User_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [updatedAt] DATETIME2 NOT NULL,
     [activatedAt] DATETIME2,
@@ -14,6 +14,7 @@ CREATE TABLE [dbo].[User] (
     [accessCode] NVARCHAR(1000) NOT NULL,
     [userStatusId] NVARCHAR(1000) NOT NULL CONSTRAINT [User_userStatusId_df] DEFAULT 'initialized',
     CONSTRAINT [User_pkey] PRIMARY KEY CLUSTERED ([id]),
+    CONSTRAINT [User_email_key] UNIQUE NONCLUSTERED ([email]),
     CONSTRAINT [User_phoneNumber_key] UNIQUE NONCLUSTERED ([phoneNumber]),
     CONSTRAINT [User_accessCode_key] UNIQUE NONCLUSTERED ([accessCode])
 );
@@ -37,7 +38,6 @@ CREATE TABLE [dbo].[Admin] (
 -- CreateTable
 CREATE TABLE [dbo].[Post] (
     [id] NVARCHAR(1000) NOT NULL,
-    [name] INT NOT NULL IDENTITY(1,1),
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [Post_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [image] VARBINARY(max) NOT NULL,
     [reading] FLOAT(53) NOT NULL CONSTRAINT [Post_reading_df] DEFAULT 0,
@@ -54,6 +54,15 @@ CREATE TABLE [dbo].[PostStatus] (
     [id] NVARCHAR(1000) NOT NULL,
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [PostStatus_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT [PostStatus_pkey] PRIMARY KEY CLUSTERED ([id])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[Message] (
+    [id] NVARCHAR(1000) NOT NULL,
+    [createdAt] DATETIME2 NOT NULL CONSTRAINT [Message_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
+    [message] NVARCHAR(1000) NOT NULL,
+    [sentById] NVARCHAR(1000) NOT NULL,
+    CONSTRAINT [Message_pkey] PRIMARY KEY CLUSTERED ([id])
 );
 
 -- CreateTable
@@ -79,7 +88,7 @@ CREATE TABLE [dbo].[IncentiveTable] (
 CREATE TABLE [dbo].[Invitation] (
     [id] NVARCHAR(1000) NOT NULL,
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [Invitation_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
-    [sentById] NVARCHAR(1000) NOT NULL,
+    [sentById] NVARCHAR(1000),
     [sentToId] NVARCHAR(1000) NOT NULL,
     CONSTRAINT [Invitation_pkey] PRIMARY KEY CLUSTERED ([id])
 );
@@ -95,6 +104,9 @@ CREATE NONCLUSTERED INDEX [Post_postedById_idx] ON [dbo].[Post]([postedById]);
 
 -- CreateIndex
 CREATE NONCLUSTERED INDEX [Post_statusChangedById_idx] ON [dbo].[Post]([statusChangedById]);
+
+-- CreateIndex
+CREATE NONCLUSTERED INDEX [Message_sentById_idx] ON [dbo].[Message]([sentById]);
 
 -- CreateIndex
 CREATE NONCLUSTERED INDEX [Participation_userId_idx] ON [dbo].[Participation]([userId]);
