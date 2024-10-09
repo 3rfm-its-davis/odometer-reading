@@ -52,7 +52,7 @@ export async function action({ request }: ActionFunctionArgs) {
     if (fileId) {
       clearInterval(intervalId);
     }
-  }, 5000);
+  }, 2500);
 
   while (!fileId) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -92,12 +92,9 @@ export async function action({ request }: ActionFunctionArgs) {
 
   console.log("Emails current: ", emailsCurrent);
 
-  // check if the length of emailsCurrent is equal to the length of emailsRetrieved
-  // if not, add the missing emails to the database
-
-  const emailsNew = emailsRetrieved.filter(
-    (item) => !emailsCurrent.includes(item)
-  );
+  const emailsNew = emailsRetrieved
+    .filter((item) => !emailsCurrent.includes(item))
+    .filter((value, index, array) => array.indexOf(value) === index);
 
   const usersToBeUpdated = (
     await prisma.user.findMany({
@@ -120,7 +117,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   console.log("Users to be updated: ", usersToBeUpdated);
 
-  const result = await Promise.all(
+  Promise.all(
     usersToBeUpdated.map(async (user, index) => {
       return prisma.user.update({
         where: {
@@ -131,9 +128,7 @@ export async function action({ request }: ActionFunctionArgs) {
         },
       });
     })
-  );
-
-  sendEmail(result);
+  ).then((result) => sendEmail(result));
 
   return json({ message: "Emails updated" }, { status: 200 });
 }
