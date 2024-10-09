@@ -14,7 +14,7 @@ const accessCodeArray: {
   email?: string;
 }[] =
   process.env.NODE_ENV === "development"
-    ? accessCodes.map((item) => {
+    ? accessCodes.map((item: { accessCode: string; email?: string }) => {
         const cipher = crypto.createCipheriv(algorithm, secretKey!, iv!);
 
         return {

@@ -12,7 +12,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const users = await prisma.user.findMany({
     where: {
       email: {
-        contains: "@",
+        not: {
+          contains: "-",
+        },
       },
     },
     include: {

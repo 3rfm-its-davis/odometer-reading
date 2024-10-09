@@ -1,7 +1,6 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import axios from "axios";
-import { prisma } from "prisma/schema/builder";
-import { sendEmail } from "~/server/sendEmail.server";
+import { RegisterUser } from "~/server/registerUsers";
 
 export async function action({ request }: ActionFunctionArgs) {
   await requireApiKey(request);
@@ -77,58 +76,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   console.log("Emails: ", emailsRetrieved);
 
-  const emailsCurrent = (
-    await prisma.user.findMany({
-      select: {
-        email: true,
-      },
-      where: {
-        email: {
-          in: emailsRetrieved,
-        },
-      },
-    })
-  ).map((item) => item.email);
-
-  console.log("Emails current: ", emailsCurrent);
-
-  const emailsNew = emailsRetrieved
-    .filter((item) => !emailsCurrent.includes(item))
-    .filter((value, index, array) => array.indexOf(value) === index);
-
-  const usersToBeUpdated = (
-    await prisma.user.findMany({
-      where: {
-        email: {
-          not: {
-            contains: "@",
-          },
-        },
-      },
-      select: {
-        id: true,
-      },
-      take: emailsNew.length,
-    })
-  ).map((item, index) => ({
-    id: item.id,
-    email: emailsNew[index],
-  }));
-
-  console.log("Users to be updated: ", usersToBeUpdated);
-
-  Promise.all(
-    usersToBeUpdated.map(async (user, index) => {
-      return prisma.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          email: user.email,
-        },
-      });
-    })
-  ).then((result) => sendEmail(result));
+  RegisterUser(emailsRetrieved);
 
   return json({ message: "Emails updated" }, { status: 200 });
 }
