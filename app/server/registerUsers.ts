@@ -33,9 +33,7 @@ export const RegisterUser = async (emailsRetrieved: string[]) => {
     await prisma.user.findMany({
       where: {
         email: {
-          not: {
-            contains: "-",
-          },
+          contains: "-",
         },
       },
       select: {
