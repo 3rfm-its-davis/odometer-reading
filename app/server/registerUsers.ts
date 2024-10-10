@@ -12,22 +12,13 @@ const iv = process.env.IV_EMAIL;
 export const RegisterUser = async (emailsRetrieved: string[]) => {
   const emailsCurrent = (
     await prisma.user.findMany({
-      select: {
-        email: true,
-      },
       where: {
         email: {
-          in: emailsRetrieved,
+          not: { contains: "-" },
         },
       },
     })
   ).map((item) => item.email);
-
-  console.log("Emails current: ", emailsCurrent);
-
-  const emailsNew = emailsRetrieved
-    .filter((item) => !emailsCurrent.includes(item))
-    .filter((value, index, array) => array.indexOf(value) === index);
 
   const usersToBeUpdated = (
     await prisma.user.findMany({
@@ -39,33 +30,35 @@ export const RegisterUser = async (emailsRetrieved: string[]) => {
       select: {
         id: true,
       },
-      take: emailsNew.length,
+      take: emailsRetrieved.length,
     })
-  ).map((item, index) => ({
-    id: item.id,
-    email: emailsNew[index],
-  }));
+  )
+    .map((item, index) => {
+      const cipher = crypto.createCipheriv(algorithm, secretKey!, iv!);
+      return {
+        id: item.id,
+        email: emailsRetrieved[index],
+        emailCiphered:
+          cipher.update(emailsRetrieved[index], "utf8", "hex") +
+          cipher.final("hex"),
+      };
+    })
+    .filter((item) => !emailsCurrent.includes(item.emailCiphered));
 
   console.log("Users to be updated: ", usersToBeUpdated);
 
-  const usersUpdated = await Promise.all(
+  Promise.all(
     usersToBeUpdated.map(async (user) => {
-      const cipher = crypto.createCipheriv(algorithm, secretKey!, iv!);
       return prisma.user.update({
         where: {
           id: user.id,
         },
         data: {
-          email: cipher.update(user.email, "utf8", "hex") + cipher.final("hex"),
+          email: user.emailCiphered,
         },
       });
     })
   );
 
-  sendEmail(
-    usersUpdated.map((item, index) => ({
-      ...item,
-      email: emailsNew[index],
-    }))
-  );
+  sendEmail(usersToBeUpdated);
 };
