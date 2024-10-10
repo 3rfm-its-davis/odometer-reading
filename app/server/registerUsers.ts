@@ -27,16 +27,13 @@ export const RegisterUser = async (emailsRetrieved: string[]) => {
           contains: "-",
         },
       },
-      select: {
-        id: true,
-      },
       take: emailsRetrieved.length,
     })
   )
     .map((item, index) => {
       const cipher = crypto.createCipheriv(algorithm, secretKey!, iv!);
       return {
-        id: item.id,
+        ...item,
         email: emailsRetrieved[index],
         emailCiphered:
           cipher.update(emailsRetrieved[index], "utf8", "hex") +
