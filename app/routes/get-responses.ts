@@ -70,11 +70,15 @@ export async function action({ request }: ActionFunctionArgs) {
 
   console.log("Blob: ", file);
 
-  const emailsRetrieved: string[] = file.responses.map(
-    (item: { values: { QID9_1: any } }) => item.values.QID9_1
-  );
+  const emailsRetrieved: string[] = file.responses
+    .map((item: { values: { QID9_1: any } }) => item.values.QID9_1)
+    .filter((item: string) => item !== undefined);
 
   console.log("Emails: ", emailsRetrieved);
+
+  if (emailsRetrieved.length === 0) {
+    return json({ message: "No emails found" }, { status: 200 });
+  }
 
   RegisterUser(emailsRetrieved);
 
