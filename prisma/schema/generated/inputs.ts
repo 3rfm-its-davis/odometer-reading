@@ -96,6 +96,10 @@ export const InvitationScalarFieldEnum = builder.enumType('InvitationScalarField
   values: ["id","createdAt","sentById","sentToId"] as const,
 });
 
+export const LastQualtricsResponseRetrievalScalarFieldEnum = builder.enumType('LastQualtricsResponseRetrievalScalarFieldEnum', {
+  values: ["id"] as const,
+});
+
 export const SortOrder = builder.enumType('SortOrder', {
   values: ["asc","desc"] as const,
 });
@@ -741,6 +745,53 @@ export const InvitationScalarWhereWithAggregatesInput = builder.inputRef<PrismaU
   fields: InvitationScalarWhereWithAggregatesInputFields,
 });
 
+export const LastQualtricsResponseRetrievalWhereInputFields = (t: any) => ({
+  AND: t.field({"required":false,"type":[LastQualtricsResponseRetrievalWhereInput]}),
+  OR: t.field({"required":false,"type":[LastQualtricsResponseRetrievalWhereInput]}),
+  NOT: t.field({"required":false,"type":[LastQualtricsResponseRetrievalWhereInput]}),
+  id: t.field({"required":false,"type":StringFilter}),
+});
+export const LastQualtricsResponseRetrievalWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.LastQualtricsResponseRetrievalWhereInput>, false>('LastQualtricsResponseRetrievalWhereInput').implement({
+  fields: LastQualtricsResponseRetrievalWhereInputFields,
+});
+
+export const LastQualtricsResponseRetrievalOrderByWithRelationInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+});
+export const LastQualtricsResponseRetrievalOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.LastQualtricsResponseRetrievalOrderByWithRelationInput>, false>('LastQualtricsResponseRetrievalOrderByWithRelationInput').implement({
+  fields: LastQualtricsResponseRetrievalOrderByWithRelationInputFields,
+});
+
+export const LastQualtricsResponseRetrievalWhereUniqueInputFields = (t: any) => ({
+  id: t.string({"required":false}),
+  AND: t.field({"required":false,"type":[LastQualtricsResponseRetrievalWhereInput]}),
+  OR: t.field({"required":false,"type":[LastQualtricsResponseRetrievalWhereInput]}),
+  NOT: t.field({"required":false,"type":[LastQualtricsResponseRetrievalWhereInput]}),
+});
+export const LastQualtricsResponseRetrievalWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.LastQualtricsResponseRetrievalWhereUniqueInput>, false>('LastQualtricsResponseRetrievalWhereUniqueInput').implement({
+  fields: LastQualtricsResponseRetrievalWhereUniqueInputFields,
+});
+
+export const LastQualtricsResponseRetrievalOrderByWithAggregationInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  _count: t.field({"required":false,"type":LastQualtricsResponseRetrievalCountOrderByAggregateInput}),
+  _max: t.field({"required":false,"type":LastQualtricsResponseRetrievalMaxOrderByAggregateInput}),
+  _min: t.field({"required":false,"type":LastQualtricsResponseRetrievalMinOrderByAggregateInput}),
+});
+export const LastQualtricsResponseRetrievalOrderByWithAggregationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.LastQualtricsResponseRetrievalOrderByWithAggregationInput>, false>('LastQualtricsResponseRetrievalOrderByWithAggregationInput').implement({
+  fields: LastQualtricsResponseRetrievalOrderByWithAggregationInputFields,
+});
+
+export const LastQualtricsResponseRetrievalScalarWhereWithAggregatesInputFields = (t: any) => ({
+  AND: t.field({"required":false,"type":[LastQualtricsResponseRetrievalScalarWhereWithAggregatesInput]}),
+  OR: t.field({"required":false,"type":[LastQualtricsResponseRetrievalScalarWhereWithAggregatesInput]}),
+  NOT: t.field({"required":false,"type":[LastQualtricsResponseRetrievalScalarWhereWithAggregatesInput]}),
+  id: t.field({"required":false,"type":StringWithAggregatesFilter}),
+});
+export const LastQualtricsResponseRetrievalScalarWhereWithAggregatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.LastQualtricsResponseRetrievalScalarWhereWithAggregatesInput>, false>('LastQualtricsResponseRetrievalScalarWhereWithAggregatesInput').implement({
+  fields: LastQualtricsResponseRetrievalScalarWhereWithAggregatesInputFields,
+});
+
 export const UserCreateInputFields = (t: any) => ({
   id: t.string({"required":false}),
   email: t.string({"required":false}),
@@ -1127,6 +1178,34 @@ export const InvitationUpdateManyMutationInputFields = (t: any) => ({
 });
 export const InvitationUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationUpdateManyMutationInput>, false>('InvitationUpdateManyMutationInput').implement({
   fields: InvitationUpdateManyMutationInputFields,
+});
+
+export const LastQualtricsResponseRetrievalCreateInputFields = (t: any) => ({
+  id: t.string({"required":true}),
+});
+export const LastQualtricsResponseRetrievalCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.LastQualtricsResponseRetrievalCreateInput>, false>('LastQualtricsResponseRetrievalCreateInput').implement({
+  fields: LastQualtricsResponseRetrievalCreateInputFields,
+});
+
+export const LastQualtricsResponseRetrievalUpdateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+});
+export const LastQualtricsResponseRetrievalUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.LastQualtricsResponseRetrievalUpdateInput>, false>('LastQualtricsResponseRetrievalUpdateInput').implement({
+  fields: LastQualtricsResponseRetrievalUpdateInputFields,
+});
+
+export const LastQualtricsResponseRetrievalCreateManyInputFields = (t: any) => ({
+  id: t.string({"required":true}),
+});
+export const LastQualtricsResponseRetrievalCreateManyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.LastQualtricsResponseRetrievalCreateManyInput>, false>('LastQualtricsResponseRetrievalCreateManyInput').implement({
+  fields: LastQualtricsResponseRetrievalCreateManyInputFields,
+});
+
+export const LastQualtricsResponseRetrievalUpdateManyMutationInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+});
+export const LastQualtricsResponseRetrievalUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.LastQualtricsResponseRetrievalUpdateManyMutationInput>, false>('LastQualtricsResponseRetrievalUpdateManyMutationInput').implement({
+  fields: LastQualtricsResponseRetrievalUpdateManyMutationInputFields,
 });
 
 export const StringFilterFields = (t: any) => ({
@@ -1787,6 +1866,27 @@ export const InvitationMinOrderByAggregateInputFields = (t: any) => ({
 });
 export const InvitationMinOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationMinOrderByAggregateInput>, false>('InvitationMinOrderByAggregateInput').implement({
   fields: InvitationMinOrderByAggregateInputFields,
+});
+
+export const LastQualtricsResponseRetrievalCountOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+});
+export const LastQualtricsResponseRetrievalCountOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.LastQualtricsResponseRetrievalCountOrderByAggregateInput>, false>('LastQualtricsResponseRetrievalCountOrderByAggregateInput').implement({
+  fields: LastQualtricsResponseRetrievalCountOrderByAggregateInputFields,
+});
+
+export const LastQualtricsResponseRetrievalMaxOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+});
+export const LastQualtricsResponseRetrievalMaxOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.LastQualtricsResponseRetrievalMaxOrderByAggregateInput>, false>('LastQualtricsResponseRetrievalMaxOrderByAggregateInput').implement({
+  fields: LastQualtricsResponseRetrievalMaxOrderByAggregateInputFields,
+});
+
+export const LastQualtricsResponseRetrievalMinOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+});
+export const LastQualtricsResponseRetrievalMinOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.LastQualtricsResponseRetrievalMinOrderByAggregateInput>, false>('LastQualtricsResponseRetrievalMinOrderByAggregateInput').implement({
+  fields: LastQualtricsResponseRetrievalMinOrderByAggregateInputFields,
 });
 
 export const PostCreateNestedManyWithoutPostedByInputFields = (t: any) => ({

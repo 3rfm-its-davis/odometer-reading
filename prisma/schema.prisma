@@ -121,3 +121,7 @@ model Invitation {
   @@index([sentById])
   @@index([sentToId])
 }
+
+model LastQualtricsResponseRetrieval {
+  id String @id
+}

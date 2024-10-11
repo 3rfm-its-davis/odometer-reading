@@ -7,6 +7,7 @@ import * as Message from './Message';
 import * as Participation from './Participation';
 import * as IncentiveTable from './IncentiveTable';
 import * as Invitation from './Invitation';
+import * as LastQualtricsResponseRetrieval from './LastQualtricsResponseRetrieval';
 import { builder } from '../builder';
 import * as Objects from './objects';
 
@@ -180,6 +181,24 @@ export const Cruds: Record<
       updateMany: Invitation.updateManyInvitationMutationObject,
       updateOne: Invitation.updateOneInvitationMutationObject,
       upsertOne: Invitation.upsertOneInvitationMutationObject,
+    },
+  },
+  LastQualtricsResponseRetrieval: {
+    Object: LastQualtricsResponseRetrieval.LastQualtricsResponseRetrievalObject,
+    queries: {
+      findFirst: LastQualtricsResponseRetrieval.findFirstLastQualtricsResponseRetrievalQueryObject,
+      findMany: LastQualtricsResponseRetrieval.findManyLastQualtricsResponseRetrievalQueryObject,
+      count: LastQualtricsResponseRetrieval.countLastQualtricsResponseRetrievalQueryObject,
+      findUnique: LastQualtricsResponseRetrieval.findUniqueLastQualtricsResponseRetrievalQueryObject,
+    },
+    mutations: {
+      createMany: LastQualtricsResponseRetrieval.createManyLastQualtricsResponseRetrievalMutationObject,
+      createOne: LastQualtricsResponseRetrieval.createOneLastQualtricsResponseRetrievalMutationObject,
+      deleteMany: LastQualtricsResponseRetrieval.deleteManyLastQualtricsResponseRetrievalMutationObject,
+      deleteOne: LastQualtricsResponseRetrieval.deleteOneLastQualtricsResponseRetrievalMutationObject,
+      updateMany: LastQualtricsResponseRetrieval.updateManyLastQualtricsResponseRetrievalMutationObject,
+      updateOne: LastQualtricsResponseRetrieval.updateOneLastQualtricsResponseRetrievalMutationObject,
+      upsertOne: LastQualtricsResponseRetrieval.upsertOneLastQualtricsResponseRetrievalMutationObject,
     },
   },
 };

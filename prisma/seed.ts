@@ -50,6 +50,7 @@ async function main() {
   await prisma.postStatus.deleteMany({});
   await prisma.user.deleteMany({});
   await prisma.userStatus.deleteMany({});
+  await prisma.lastQualtricsResponseRetrieval.deleteMany({});
 
   await prisma.user.createMany({
     data: accessCodeArray.map((item) => ({
@@ -79,6 +80,13 @@ async function main() {
   await prisma.userStatus.createMany({
     data: userStatusArray.map((item) => ({ id: item })),
   });
+  await prisma.lastQualtricsResponseRetrieval.create({
+    data: {
+      id: "default",
+    },
+  });
+
+  await prisma.$disconnect();
 }
 
 main().then(() => {

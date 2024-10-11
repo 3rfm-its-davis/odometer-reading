@@ -86,6 +86,10 @@ Table Invitation {
   sentToId String [not null]
 }
 
+Table LastQualtricsResponseRetrieval {
+  id String [pk]
+}
+
 Ref: User.userStatusId > UserStatus.id
 
 Ref: Post.postStatusId > PostStatus.id

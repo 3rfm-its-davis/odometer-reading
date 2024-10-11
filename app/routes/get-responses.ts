@@ -1,5 +1,6 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import axios from "axios";
+import { prisma } from "prisma/schema/builder";
 import { RegisterUser } from "~/server/registerUsers";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -13,14 +14,20 @@ export async function action({ request }: ActionFunctionArgs) {
     return json({ message: "Invalid request body" }, { status: 400 });
   }
 
+  const continuationToken = (
+    await prisma.lastQualtricsResponseRetrieval.findFirst({})
+  )?.id;
+
   const progressId = (
     await axios.post(
       `https://${server}.qualtrics.com/API/v3/surveys/${surveyId}/export-responses`,
       {
         format: "json",
         limit: 5,
-        sortByLastModifiedDate: true,
         compress: false,
+        allowContinuation: continuationToken !== "default" ? false : true,
+        continuationToken:
+          continuationToken !== "default" ? continuationToken : undefined,
       },
       {
         headers: {
@@ -35,8 +42,9 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   let fileId = undefined;
+  let newContinuationToken = continuationToken;
 
-  const intervalId = setInterval(async () => {
+  const getFileIdInterval = setInterval(async () => {
     const response = await axios.get(
       `https://${server}.qualtrics.com/API/v3/surveys/${surveyId}/export-responses/${progressId}`,
       {
@@ -47,9 +55,10 @@ export async function action({ request }: ActionFunctionArgs) {
     );
 
     fileId = response.data?.result?.fileId;
+    newContinuationToken = response.data?.result?.continuationToken;
 
     if (fileId) {
-      clearInterval(intervalId);
+      clearInterval(getFileIdInterval);
     }
   }, 2500);
 
@@ -70,9 +79,24 @@ export async function action({ request }: ActionFunctionArgs) {
 
   console.log("Blob: ", file);
 
+  if (file.responses.length > 0) {
+    await prisma.lastQualtricsResponseRetrieval.update({
+      where: {
+        id: continuationToken,
+      },
+      data: {
+        id: newContinuationToken,
+      },
+    });
+  }
+
   const emailsRetrieved: string[] = file.responses
     .map((item: { values: { QID9_1: any } }) => item.values.QID9_1)
-    .filter((item: string) => item !== undefined);
+    .filter((item: string) => item !== undefined)
+    .filter(
+      (item: string, index: number, array: string[]) =>
+        array.indexOf(item) === index
+    );
 
   console.log("Emails: ", emailsRetrieved);
 
