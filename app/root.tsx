@@ -6,8 +6,8 @@ import {
   ScrollRestoration,
   useLocation,
 } from "@remix-run/react";
-import "./tailwind.css";
 import { Header } from "./components/header";
+import "./tailwind.css";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -30,9 +30,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   const isLoginPage = useLocation().pathname === "/login";
   return (
-    <div className="h-screen">
+    <div className="h-screen flex flex-col">
       <Header isLoginPage={isLoginPage} />
-      <main>
+      <main className="flex-grow overflow-y-auto">
         <Outlet />
       </main>
     </div>

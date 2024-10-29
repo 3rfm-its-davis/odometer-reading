@@ -1,13 +1,13 @@
 import {
-  Item,
+  DataEditor,
   GridCell,
   GridCellKind,
-  DataEditor,
   GridSelection,
   HeaderClickedEventArgs,
+  Item,
 } from "@glideapps/glide-data-grid";
-import { useCallback, useEffect, useState } from "react";
 import "@glideapps/glide-data-grid/dist/index.css";
+import { useCallback, useState } from "react";
 import { ClientOnly } from "remix-utils/client-only";
 
 export default function UserDataGrid({

@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { useState } from "react";
 
 type OdometerSubmissionFormProps = {
   enabled?: boolean;
@@ -56,7 +54,7 @@ export function OdometerSubmissionForm({
           Approve
         </button>
       ) : null}
-      {currentStatus !== "rejected" ? (
+      {/* {currentStatus !== "rejected" ? (
         <Menu as="div" className="relative inline-block text-left">
           <input
             hidden
@@ -111,7 +109,7 @@ export function OdometerSubmissionForm({
       // >
       //   Reject
       // </button>
-      null}
+      null} */}
     </div>
   );
 }

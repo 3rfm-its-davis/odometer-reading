@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import crypto from "crypto";
 import dotenv from "dotenv";
 import accessCodes from "./seedValues/accessCodes.json";
-import crypto from "crypto";
 
 dotenv.config();
 
@@ -44,49 +44,46 @@ const userStatusArray = [
 ];
 
 async function main() {
-  await prisma.message.deleteMany({});
-  await prisma.invitation.deleteMany({});
-  await prisma.post.deleteMany({});
-  await prisma.postStatus.deleteMany({});
-  await prisma.user.deleteMany({});
-  await prisma.userStatus.deleteMany({});
-  await prisma.lastQualtricsResponseRetrieval.deleteMany({});
-
-  await prisma.user.createMany({
-    data: accessCodeArray.map((item) => ({
-      accessCode: item.accessCode,
-      email: item.email,
-    })),
-  });
-
-  await Promise.all(
-    accessCodeArray.map(async (item) => {
-      console.log(item);
-      await prisma.user.upsert({
-        where: {
-          accessCode: item.accessCode,
-        },
-        create: {
-          accessCode: item.accessCode,
-          email: item.email,
-        },
-        update: {},
-      });
-    })
-  );
-  await prisma.postStatus.createMany({
-    data: postStatusArray.map((item) => ({ id: item })),
-  });
-  await prisma.userStatus.createMany({
-    data: userStatusArray.map((item) => ({ id: item })),
-  });
-  await prisma.lastQualtricsResponseRetrieval.create({
-    data: {
-      id: "default",
-    },
-  });
-
-  await prisma.$disconnect();
+  // // await prisma.message.deleteMany({});
+  // // await prisma.invitation.deleteMany({});
+  // // await prisma.post.deleteMany({});
+  // // await prisma.postStatus.deleteMany({});
+  // // await prisma.user.deleteMany({});
+  // // await prisma.userStatus.deleteMany({});
+  // // await prisma.lastQualtricsResponseRetrieval.deleteMany({});
+  // await prisma.user.createMany({
+  //   data: accessCodeArray.map((item) => ({
+  //     accessCode: item.accessCode,
+  //     email: item.email,
+  //   })),
+  // });
+  // await Promise.all(
+  //   accessCodeArray.map(async (item) => {
+  //     console.log(item);
+  //     await prisma.user.upsert({
+  //       where: {
+  //         accessCode: item.accessCode,
+  //       },
+  //       create: {
+  //         accessCode: item.accessCode,
+  //         email: item.email,
+  //       },
+  //       update: {},
+  //     });
+  //   })
+  // );
+  // await prisma.postStatus.createMany({
+  //   data: postStatusArray.map((item) => ({ id: item })),
+  // });
+  // await prisma.userStatus.createMany({
+  //   data: userStatusArray.map((item) => ({ id: item })),
+  // });
+  // await prisma.lastQualtricsResponseRetrieval.create({
+  //   data: {
+  //     id: "default",
+  //   },
+  // });
+  // await prisma.$disconnect();
 }
 
 main().then(() => {

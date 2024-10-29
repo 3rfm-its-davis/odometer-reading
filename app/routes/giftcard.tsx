@@ -3,8 +3,9 @@ import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import UserDataGrid from "~/components/userDataGrid";
 import { requireAdminId } from "~/server/auth.server";
+import { decipherEmail } from "~/server/decipherEmail.server";
 import { prisma } from "~/server/prisma.server";
-import { sendReminder } from "~/server/sendReminder.server";
+import { handleDownload } from "~/utils/handleDownload";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireAdminId(request);
@@ -15,13 +16,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
           contains: "-",
         },
       },
-    },
-    include: {
-      posts: {
-        orderBy: {
-          createdAt: "desc",
-        },
+      userStatusId: {
+        equals: "completed",
       },
+    },
+    select: {
+      id: true,
+      email: true,
     },
   });
 
@@ -39,32 +40,38 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const intent = form.get("intent");
 
-  if (intent === "sendReminder") {
-    if (!form.get("selectedUserIds")) {
-      return { message: "no users selected", status: 400, newUsers: null };
+  if (intent === "decipher") {
+    if (!form.get("key")) {
+      return { message: "key missing", status: 400, newUsers: null };
     }
-    const selectedUserIds = JSON.parse(form.get("selectedUserIds")!.toString());
-    const usersToRemind = users.filter((user) =>
-      selectedUserIds.includes(user.id)
-    );
-    const adminId = await requireAdminId(request);
 
-    const userWithReminderSent = await sendReminder(usersToRemind);
-    const newUsers = users.map(
-      (user) => userWithReminderSent.find((item) => item.id === user.id) || user
-    );
+    const decipheredUsers = users.map((user) => ({
+      ...user,
+      email: user.email
+        ? decipherEmail(user.email, form.get("key")!.toString())
+        : null,
+    })) as {
+      id: string;
+      email: string;
+    }[];
 
-    return { message: "reminder sent", status: 200, newUsers };
-  } else if (intent === "filterNoPost") {
+    return { message: "deciphered", status: 200, newUsers: decipheredUsers };
+  } else if (intent === "filterNoInvitation") {
     const newUsers = users.map((user) => ({
       ...user,
-      visible: user.postCount === 0,
+      visible: user.invitationCount === 0,
     }));
     return { message: "filtered", status: 200, newUsers };
-  } else if (intent === "filterWithPost") {
+  } else if (intent === "filterWithInvitation") {
     const newUsers = users.map((user) => ({
       ...user,
-      visible: user.postCount > 0,
+      visible: user.invitationCount > 0,
+    }));
+    return { message: "filtered", status: 200, newUsers };
+  } else if (intent === "filterWithNotActivated") {
+    const newUsers = users.map((user) => ({
+      ...user,
+      visible: user.userStatusId === "initialized",
     }));
     return { message: "filtered", status: 200, newUsers };
   }
@@ -76,25 +83,19 @@ export async function action({ request }: ActionFunctionArgs) {
   return { message: "no users selected", status: 400, newUsers: null };
 }
 
-export default function ReadingReminder() {
-  const users = useLoaderData<typeof loader>().map((item) => {
-    return {
-      ...item,
-      posts: null,
-      postCount: item.posts?.length || 0,
-      lastActivityAt: [
-        item.posts?.[0]?.createdAt,
-        item.updatedAt,
-        item.createdAt,
-      ]
-        .filter(Boolean)
-        .sort()
-        .reverse()[0],
-      visible: true,
-    };
-  });
+export default function Stats() {
+  const users = useLoaderData<typeof loader>();
+
+  const [decipherKey, setDecipherKey] = useState("");
   const actionData = useActionData<typeof action>();
-  const [currentUsers, setCurrentUsers] = useState(users);
+  const [currentUsers, setCurrentUsers] = useState(
+    users.map((item) => {
+      return {
+        ...item,
+        visible: true,
+      };
+    })
+  );
 
   useEffect(() => {
     if (actionData?.newUsers) {
@@ -107,9 +108,7 @@ export default function ReadingReminder() {
           if (newUser) {
             return {
               ...user,
-              updatedAt: newUser.updatedAt,
-              lastActivityAt: newUser.lastActivityAt,
-              visible: newUser.visible,
+              email: newUser.email,
             };
           }
 
@@ -119,24 +118,6 @@ export default function ReadingReminder() {
     }
   }, [actionData]);
 
-  const handleDownload = () => {
-    const jsonString = JSON.stringify(
-      currentUsers.map((user) => {
-        delete (user as any).image;
-        return user;
-      })
-    );
-    const blob = new Blob([jsonString], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "data.json";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
   return (
     <Form method="post" className="flex flex-col gap-2">
       <div className="w-screen flex flex-row justify-between p-4 gap-2">
@@ -144,7 +125,7 @@ export default function ReadingReminder() {
           <button
             type="submit"
             name="intent"
-            value="filterNoPost"
+            value="filterNoInvitation"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             No Invitation Sent
@@ -152,10 +133,18 @@ export default function ReadingReminder() {
           <button
             type="submit"
             name="intent"
-            value="filterWithPost"
+            value="filterWithInvitation"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Invitation Sent
+          </button>
+          <button
+            type="submit"
+            name="intent"
+            value="filterWithNotActivated"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Not Activated
           </button>
         </div>
         <div className="flex flex-row gap-2">
@@ -166,19 +155,37 @@ export default function ReadingReminder() {
             name="users"
             value={JSON.stringify(currentUsers)}
           />
+          <label>
+            <span className="pr-2 text-lg">Decipher Key</span>
+            <input
+              type="text"
+              name="key"
+              className="p-2 bg-slate-100 w-60"
+              onChange={(e) => {
+                setDecipherKey(e.target.value);
+              }}
+              value={decipherKey}
+            />
+          </label>
           <button
             type="submit"
             name="intent"
-            value="sendReminder"
+            value="decipher"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
-            Send Reminder
+            Decipher
+          </button>{" "}
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => handleDownload(currentUsers)}
+          >
+            Download JSON
           </button>
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleDownload}
+            onClick={() => handleDownload(currentUsers, "csv")}
           >
-            Download JSON
+            Download CSV
           </button>
         </div>
       </div>

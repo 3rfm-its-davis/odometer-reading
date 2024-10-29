@@ -73,7 +73,11 @@ export const AdminScalarFieldEnum = builder.enumType('AdminScalarFieldEnum', {
 });
 
 export const PostScalarFieldEnum = builder.enumType('PostScalarFieldEnum', {
-  values: ["id","createdAt","image","reading","postStatusId","statusChangedById","postedById","notes","size"] as const,
+  values: ["id","createdAt","image","reading","postStatusId","statusChangedById","postedById","notes","rejectionReasonId","size"] as const,
+});
+
+export const RejectionReasonScalarFieldEnum = builder.enumType('RejectionReasonScalarFieldEnum', {
+  values: ["id","createdAt"] as const,
 });
 
 export const PostStatusScalarFieldEnum = builder.enumType('PostStatusScalarFieldEnum', {
@@ -340,10 +344,12 @@ export const PostWhereInputFields = (t: any) => ({
   statusChangedById: t.field({"required":false,"type":StringNullableFilter}),
   postedById: t.field({"required":false,"type":StringFilter}),
   notes: t.field({"required":false,"type":StringNullableFilter}),
+  rejectionReasonId: t.field({"required":false,"type":StringNullableFilter}),
   size: t.field({"required":false,"type":FloatFilter}),
   postStatus: t.field({"required":false,"type":PostStatusWhereInput}),
   statusChangedBy: t.field({"required":false,"type":AdminWhereInput}),
   postedBy: t.field({"required":false,"type":UserWhereInput}),
+  rejectionReason: t.field({"required":false,"type":RejectionReasonWhereInput}),
 });
 export const PostWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostWhereInput>, false>('PostWhereInput').implement({
   fields: PostWhereInputFields,
@@ -358,10 +364,12 @@ export const PostOrderByWithRelationInputFields = (t: any) => ({
   statusChangedById: t.field({"required":false,"type":SortOrder}),
   postedById: t.field({"required":false,"type":SortOrder}),
   notes: t.field({"required":false,"type":SortOrder}),
+  rejectionReasonId: t.field({"required":false,"type":SortOrder}),
   size: t.field({"required":false,"type":SortOrder}),
   postStatus: t.field({"required":false,"type":PostStatusOrderByWithRelationInput}),
   statusChangedBy: t.field({"required":false,"type":AdminOrderByWithRelationInput}),
   postedBy: t.field({"required":false,"type":UserOrderByWithRelationInput}),
+  rejectionReason: t.field({"required":false,"type":RejectionReasonOrderByWithRelationInput}),
 });
 export const PostOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostOrderByWithRelationInput>, false>('PostOrderByWithRelationInput').implement({
   fields: PostOrderByWithRelationInputFields,
@@ -379,10 +387,12 @@ export const PostWhereUniqueInputFields = (t: any) => ({
   statusChangedById: t.field({"required":false,"type":StringNullableFilter}),
   postedById: t.field({"required":false,"type":StringFilter}),
   notes: t.field({"required":false,"type":StringNullableFilter}),
+  rejectionReasonId: t.field({"required":false,"type":StringNullableFilter}),
   size: t.field({"required":false,"type":FloatFilter}),
   postStatus: t.field({"required":false,"type":PostStatusWhereInput}),
   statusChangedBy: t.field({"required":false,"type":AdminWhereInput}),
   postedBy: t.field({"required":false,"type":UserWhereInput}),
+  rejectionReason: t.field({"required":false,"type":RejectionReasonWhereInput}),
 });
 export const PostWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostWhereUniqueInput>, false>('PostWhereUniqueInput').implement({
   fields: PostWhereUniqueInputFields,
@@ -397,6 +407,7 @@ export const PostOrderByWithAggregationInputFields = (t: any) => ({
   statusChangedById: t.field({"required":false,"type":SortOrder}),
   postedById: t.field({"required":false,"type":SortOrder}),
   notes: t.field({"required":false,"type":SortOrder}),
+  rejectionReasonId: t.field({"required":false,"type":SortOrder}),
   size: t.field({"required":false,"type":SortOrder}),
   _count: t.field({"required":false,"type":PostCountOrderByAggregateInput}),
   _avg: t.field({"required":false,"type":PostAvgOrderByAggregateInput}),
@@ -420,10 +431,66 @@ export const PostScalarWhereWithAggregatesInputFields = (t: any) => ({
   statusChangedById: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
   postedById: t.field({"required":false,"type":StringWithAggregatesFilter}),
   notes: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
+  rejectionReasonId: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
   size: t.field({"required":false,"type":FloatWithAggregatesFilter}),
 });
 export const PostScalarWhereWithAggregatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostScalarWhereWithAggregatesInput>, false>('PostScalarWhereWithAggregatesInput').implement({
   fields: PostScalarWhereWithAggregatesInputFields,
+});
+
+export const RejectionReasonWhereInputFields = (t: any) => ({
+  AND: t.field({"required":false,"type":[RejectionReasonWhereInput]}),
+  OR: t.field({"required":false,"type":[RejectionReasonWhereInput]}),
+  NOT: t.field({"required":false,"type":[RejectionReasonWhereInput]}),
+  id: t.field({"required":false,"type":StringFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  Post: t.field({"required":false,"type":PostListRelationFilter}),
+});
+export const RejectionReasonWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonWhereInput>, false>('RejectionReasonWhereInput').implement({
+  fields: RejectionReasonWhereInputFields,
+});
+
+export const RejectionReasonOrderByWithRelationInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  Post: t.field({"required":false,"type":PostOrderByRelationAggregateInput}),
+});
+export const RejectionReasonOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonOrderByWithRelationInput>, false>('RejectionReasonOrderByWithRelationInput').implement({
+  fields: RejectionReasonOrderByWithRelationInputFields,
+});
+
+export const RejectionReasonWhereUniqueInputFields = (t: any) => ({
+  id: t.string({"required":false}),
+  AND: t.field({"required":false,"type":[RejectionReasonWhereInput]}),
+  OR: t.field({"required":false,"type":[RejectionReasonWhereInput]}),
+  NOT: t.field({"required":false,"type":[RejectionReasonWhereInput]}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  Post: t.field({"required":false,"type":PostListRelationFilter}),
+});
+export const RejectionReasonWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonWhereUniqueInput>, false>('RejectionReasonWhereUniqueInput').implement({
+  fields: RejectionReasonWhereUniqueInputFields,
+});
+
+export const RejectionReasonOrderByWithAggregationInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  _count: t.field({"required":false,"type":RejectionReasonCountOrderByAggregateInput}),
+  _max: t.field({"required":false,"type":RejectionReasonMaxOrderByAggregateInput}),
+  _min: t.field({"required":false,"type":RejectionReasonMinOrderByAggregateInput}),
+});
+export const RejectionReasonOrderByWithAggregationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonOrderByWithAggregationInput>, false>('RejectionReasonOrderByWithAggregationInput').implement({
+  fields: RejectionReasonOrderByWithAggregationInputFields,
+});
+
+export const RejectionReasonScalarWhereWithAggregatesInputFields = (t: any) => ({
+  AND: t.field({"required":false,"type":[RejectionReasonScalarWhereWithAggregatesInput]}),
+  OR: t.field({"required":false,"type":[RejectionReasonScalarWhereWithAggregatesInput]}),
+  NOT: t.field({"required":false,"type":[RejectionReasonScalarWhereWithAggregatesInput]}),
+  id: t.field({"required":false,"type":StringWithAggregatesFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
+});
+export const RejectionReasonScalarWhereWithAggregatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonScalarWhereWithAggregatesInput>, false>('RejectionReasonScalarWhereWithAggregatesInput').implement({
+  fields: RejectionReasonScalarWhereWithAggregatesInputFields,
 });
 
 export const PostStatusWhereInputFields = (t: any) => ({
@@ -943,6 +1010,7 @@ export const PostCreateInputFields = (t: any) => ({
   postStatus: t.field({"required":true,"type":PostStatusCreateNestedOneWithoutPostInput}),
   statusChangedBy: t.field({"required":false,"type":AdminCreateNestedOneWithoutPostInput}),
   postedBy: t.field({"required":true,"type":UserCreateNestedOneWithoutPostsInput}),
+  rejectionReason: t.field({"required":false,"type":RejectionReasonCreateNestedOneWithoutPostInput}),
 });
 export const PostCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateInput>, false>('PostCreateInput').implement({
   fields: PostCreateInputFields,
@@ -958,6 +1026,7 @@ export const PostUpdateInputFields = (t: any) => ({
   postStatus: t.field({"required":false,"type":PostStatusUpdateOneRequiredWithoutPostNestedInput}),
   statusChangedBy: t.field({"required":false,"type":AdminUpdateOneWithoutPostNestedInput}),
   postedBy: t.field({"required":false,"type":UserUpdateOneRequiredWithoutPostsNestedInput}),
+  rejectionReason: t.field({"required":false,"type":RejectionReasonUpdateOneWithoutPostNestedInput}),
 });
 export const PostUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateInput>, false>('PostUpdateInput').implement({
   fields: PostUpdateInputFields,
@@ -972,6 +1041,7 @@ export const PostCreateManyInputFields = (t: any) => ({
   statusChangedById: t.string({"required":false}),
   postedById: t.string({"required":true}),
   notes: t.string({"required":false}),
+  rejectionReasonId: t.string({"required":false}),
   size: t.float({"required":false}),
 });
 export const PostCreateManyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateManyInput>, false>('PostCreateManyInput').implement({
@@ -988,6 +1058,40 @@ export const PostUpdateManyMutationInputFields = (t: any) => ({
 });
 export const PostUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateManyMutationInput>, false>('PostUpdateManyMutationInput').implement({
   fields: PostUpdateManyMutationInputFields,
+});
+
+export const RejectionReasonCreateInputFields = (t: any) => ({
+  id: t.string({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  Post: t.field({"required":false,"type":PostCreateNestedManyWithoutRejectionReasonInput}),
+});
+export const RejectionReasonCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonCreateInput>, false>('RejectionReasonCreateInput').implement({
+  fields: RejectionReasonCreateInputFields,
+});
+
+export const RejectionReasonUpdateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  Post: t.field({"required":false,"type":PostUpdateManyWithoutRejectionReasonNestedInput}),
+});
+export const RejectionReasonUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonUpdateInput>, false>('RejectionReasonUpdateInput').implement({
+  fields: RejectionReasonUpdateInputFields,
+});
+
+export const RejectionReasonCreateManyInputFields = (t: any) => ({
+  id: t.string({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+});
+export const RejectionReasonCreateManyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonCreateManyInput>, false>('RejectionReasonCreateManyInput').implement({
+  fields: RejectionReasonCreateManyInputFields,
+});
+
+export const RejectionReasonUpdateManyMutationInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+});
+export const RejectionReasonUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonUpdateManyMutationInput>, false>('RejectionReasonUpdateManyMutationInput').implement({
+  fields: RejectionReasonUpdateManyMutationInputFields,
 });
 
 export const PostStatusCreateInputFields = (t: any) => ({
@@ -1548,6 +1652,14 @@ export const UserRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFi
   fields: UserRelationFilterFields,
 });
 
+export const RejectionReasonNullableRelationFilterFields = (t: any) => ({
+  is: t.field({"required":false,"type":RejectionReasonWhereInput}),
+  isNot: t.field({"required":false,"type":RejectionReasonWhereInput}),
+});
+export const RejectionReasonNullableRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonNullableRelationFilter>, false>('RejectionReasonNullableRelationFilter').implement({
+  fields: RejectionReasonNullableRelationFilterFields,
+});
+
 export const PostCountOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   createdAt: t.field({"required":false,"type":SortOrder}),
@@ -1557,6 +1669,7 @@ export const PostCountOrderByAggregateInputFields = (t: any) => ({
   statusChangedById: t.field({"required":false,"type":SortOrder}),
   postedById: t.field({"required":false,"type":SortOrder}),
   notes: t.field({"required":false,"type":SortOrder}),
+  rejectionReasonId: t.field({"required":false,"type":SortOrder}),
   size: t.field({"required":false,"type":SortOrder}),
 });
 export const PostCountOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCountOrderByAggregateInput>, false>('PostCountOrderByAggregateInput').implement({
@@ -1580,6 +1693,7 @@ export const PostMaxOrderByAggregateInputFields = (t: any) => ({
   statusChangedById: t.field({"required":false,"type":SortOrder}),
   postedById: t.field({"required":false,"type":SortOrder}),
   notes: t.field({"required":false,"type":SortOrder}),
+  rejectionReasonId: t.field({"required":false,"type":SortOrder}),
   size: t.field({"required":false,"type":SortOrder}),
 });
 export const PostMaxOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostMaxOrderByAggregateInput>, false>('PostMaxOrderByAggregateInput').implement({
@@ -1595,6 +1709,7 @@ export const PostMinOrderByAggregateInputFields = (t: any) => ({
   statusChangedById: t.field({"required":false,"type":SortOrder}),
   postedById: t.field({"required":false,"type":SortOrder}),
   notes: t.field({"required":false,"type":SortOrder}),
+  rejectionReasonId: t.field({"required":false,"type":SortOrder}),
   size: t.field({"required":false,"type":SortOrder}),
 });
 export const PostMinOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostMinOrderByAggregateInput>, false>('PostMinOrderByAggregateInput').implement({
@@ -1659,6 +1774,30 @@ export const StringNullableWithAggregatesFilterFields = (t: any) => ({
 });
 export const StringNullableWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StringNullableWithAggregatesFilter>, false>('StringNullableWithAggregatesFilter').implement({
   fields: StringNullableWithAggregatesFilterFields,
+});
+
+export const RejectionReasonCountOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+});
+export const RejectionReasonCountOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonCountOrderByAggregateInput>, false>('RejectionReasonCountOrderByAggregateInput').implement({
+  fields: RejectionReasonCountOrderByAggregateInputFields,
+});
+
+export const RejectionReasonMaxOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+});
+export const RejectionReasonMaxOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonMaxOrderByAggregateInput>, false>('RejectionReasonMaxOrderByAggregateInput').implement({
+  fields: RejectionReasonMaxOrderByAggregateInputFields,
+});
+
+export const RejectionReasonMinOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+});
+export const RejectionReasonMinOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonMinOrderByAggregateInput>, false>('RejectionReasonMinOrderByAggregateInput').implement({
+  fields: RejectionReasonMinOrderByAggregateInputFields,
 });
 
 export const PostStatusCountOrderByAggregateInputFields = (t: any) => ({
@@ -2141,6 +2280,15 @@ export const UserCreateNestedOneWithoutPostsInput = builder.inputRef<PrismaUpdat
   fields: UserCreateNestedOneWithoutPostsInputFields,
 });
 
+export const RejectionReasonCreateNestedOneWithoutPostInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":RejectionReasonCreateWithoutPostInput}),
+  connectOrCreate: t.field({"required":false,"type":RejectionReasonCreateOrConnectWithoutPostInput}),
+  connect: t.field({"required":false,"type":RejectionReasonWhereUniqueInput}),
+});
+export const RejectionReasonCreateNestedOneWithoutPostInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonCreateNestedOneWithoutPostInput>, false>('RejectionReasonCreateNestedOneWithoutPostInput').implement({
+  fields: RejectionReasonCreateNestedOneWithoutPostInputFields,
+});
+
 export const BytesFieldUpdateOperationsInputFields = (t: any) => ({
   set: t.field({"required":false,"type":Bytes}),
 });
@@ -2199,6 +2347,46 @@ export const UserUpdateOneRequiredWithoutPostsNestedInputFields = (t: any) => ({
 });
 export const UserUpdateOneRequiredWithoutPostsNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateOneRequiredWithoutPostsNestedInput>, false>('UserUpdateOneRequiredWithoutPostsNestedInput').implement({
   fields: UserUpdateOneRequiredWithoutPostsNestedInputFields,
+});
+
+export const RejectionReasonUpdateOneWithoutPostNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":RejectionReasonCreateWithoutPostInput}),
+  connectOrCreate: t.field({"required":false,"type":RejectionReasonCreateOrConnectWithoutPostInput}),
+  upsert: t.field({"required":false,"type":RejectionReasonUpsertWithoutPostInput}),
+  disconnect: t.field({"required":false,"type":RejectionReasonWhereInput}),
+  delete: t.field({"required":false,"type":RejectionReasonWhereInput}),
+  connect: t.field({"required":false,"type":RejectionReasonWhereUniqueInput}),
+  update: t.field({"required":false,"type":RejectionReasonUpdateToOneWithWhereWithoutPostInput}),
+});
+export const RejectionReasonUpdateOneWithoutPostNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonUpdateOneWithoutPostNestedInput>, false>('RejectionReasonUpdateOneWithoutPostNestedInput').implement({
+  fields: RejectionReasonUpdateOneWithoutPostNestedInputFields,
+});
+
+export const PostCreateNestedManyWithoutRejectionReasonInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[PostCreateWithoutRejectionReasonInput]}),
+  connectOrCreate: t.field({"required":false,"type":[PostCreateOrConnectWithoutRejectionReasonInput]}),
+  createMany: t.field({"required":false,"type":PostCreateManyRejectionReasonInputEnvelope}),
+  connect: t.field({"required":false,"type":[PostWhereUniqueInput]}),
+});
+export const PostCreateNestedManyWithoutRejectionReasonInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateNestedManyWithoutRejectionReasonInput>, false>('PostCreateNestedManyWithoutRejectionReasonInput').implement({
+  fields: PostCreateNestedManyWithoutRejectionReasonInputFields,
+});
+
+export const PostUpdateManyWithoutRejectionReasonNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[PostCreateWithoutRejectionReasonInput]}),
+  connectOrCreate: t.field({"required":false,"type":[PostCreateOrConnectWithoutRejectionReasonInput]}),
+  upsert: t.field({"required":false,"type":[PostUpsertWithWhereUniqueWithoutRejectionReasonInput]}),
+  createMany: t.field({"required":false,"type":PostCreateManyRejectionReasonInputEnvelope}),
+  set: t.field({"required":false,"type":[PostWhereUniqueInput]}),
+  disconnect: t.field({"required":false,"type":[PostWhereUniqueInput]}),
+  delete: t.field({"required":false,"type":[PostWhereUniqueInput]}),
+  connect: t.field({"required":false,"type":[PostWhereUniqueInput]}),
+  update: t.field({"required":false,"type":[PostUpdateWithWhereUniqueWithoutRejectionReasonInput]}),
+  updateMany: t.field({"required":false,"type":[PostUpdateManyWithWhereWithoutRejectionReasonInput]}),
+  deleteMany: t.field({"required":false,"type":[PostScalarWhereInput]}),
+});
+export const PostUpdateManyWithoutRejectionReasonNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateManyWithoutRejectionReasonNestedInput>, false>('PostUpdateManyWithoutRejectionReasonNestedInput').implement({
+  fields: PostUpdateManyWithoutRejectionReasonNestedInputFields,
 });
 
 export const PostCreateNestedManyWithoutPostStatusInputFields = (t: any) => ({
@@ -2569,6 +2757,7 @@ export const PostCreateWithoutPostedByInputFields = (t: any) => ({
   size: t.float({"required":false}),
   postStatus: t.field({"required":true,"type":PostStatusCreateNestedOneWithoutPostInput}),
   statusChangedBy: t.field({"required":false,"type":AdminCreateNestedOneWithoutPostInput}),
+  rejectionReason: t.field({"required":false,"type":RejectionReasonCreateNestedOneWithoutPostInput}),
 });
 export const PostCreateWithoutPostedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateWithoutPostedByInput>, false>('PostCreateWithoutPostedByInput').implement({
   fields: PostCreateWithoutPostedByInputFields,
@@ -2708,6 +2897,7 @@ export const PostScalarWhereInputFields = (t: any) => ({
   statusChangedById: t.field({"required":false,"type":StringNullableFilter}),
   postedById: t.field({"required":false,"type":StringFilter}),
   notes: t.field({"required":false,"type":StringNullableFilter}),
+  rejectionReasonId: t.field({"required":false,"type":StringNullableFilter}),
   size: t.field({"required":false,"type":FloatFilter}),
 });
 export const PostScalarWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostScalarWhereInput>, false>('PostScalarWhereInput').implement({
@@ -2927,6 +3117,7 @@ export const PostCreateWithoutStatusChangedByInputFields = (t: any) => ({
   size: t.float({"required":false}),
   postStatus: t.field({"required":true,"type":PostStatusCreateNestedOneWithoutPostInput}),
   postedBy: t.field({"required":true,"type":UserCreateNestedOneWithoutPostsInput}),
+  rejectionReason: t.field({"required":false,"type":RejectionReasonCreateNestedOneWithoutPostInput}),
 });
 export const PostCreateWithoutStatusChangedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateWithoutStatusChangedByInput>, false>('PostCreateWithoutStatusChangedByInput').implement({
   fields: PostCreateWithoutStatusChangedByInputFields,
@@ -3081,6 +3272,22 @@ export const UserCreateOrConnectWithoutPostsInput = builder.inputRef<PrismaUpdat
   fields: UserCreateOrConnectWithoutPostsInputFields,
 });
 
+export const RejectionReasonCreateWithoutPostInputFields = (t: any) => ({
+  id: t.string({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+});
+export const RejectionReasonCreateWithoutPostInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonCreateWithoutPostInput>, false>('RejectionReasonCreateWithoutPostInput').implement({
+  fields: RejectionReasonCreateWithoutPostInputFields,
+});
+
+export const RejectionReasonCreateOrConnectWithoutPostInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":RejectionReasonWhereUniqueInput}),
+  create: t.field({"required":true,"type":RejectionReasonCreateWithoutPostInput}),
+});
+export const RejectionReasonCreateOrConnectWithoutPostInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonCreateOrConnectWithoutPostInput>, false>('RejectionReasonCreateOrConnectWithoutPostInput').implement({
+  fields: RejectionReasonCreateOrConnectWithoutPostInputFields,
+});
+
 export const PostStatusUpsertWithoutPostInputFields = (t: any) => ({
   update: t.field({"required":true,"type":PostStatusUpdateWithoutPostInput}),
   create: t.field({"required":true,"type":PostStatusCreateWithoutPostInput}),
@@ -3168,6 +3375,86 @@ export const UserUpdateWithoutPostsInput = builder.inputRef<PrismaUpdateOperatio
   fields: UserUpdateWithoutPostsInputFields,
 });
 
+export const RejectionReasonUpsertWithoutPostInputFields = (t: any) => ({
+  update: t.field({"required":true,"type":RejectionReasonUpdateWithoutPostInput}),
+  create: t.field({"required":true,"type":RejectionReasonCreateWithoutPostInput}),
+  where: t.field({"required":false,"type":RejectionReasonWhereInput}),
+});
+export const RejectionReasonUpsertWithoutPostInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonUpsertWithoutPostInput>, false>('RejectionReasonUpsertWithoutPostInput').implement({
+  fields: RejectionReasonUpsertWithoutPostInputFields,
+});
+
+export const RejectionReasonUpdateToOneWithWhereWithoutPostInputFields = (t: any) => ({
+  where: t.field({"required":false,"type":RejectionReasonWhereInput}),
+  data: t.field({"required":true,"type":RejectionReasonUpdateWithoutPostInput}),
+});
+export const RejectionReasonUpdateToOneWithWhereWithoutPostInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonUpdateToOneWithWhereWithoutPostInput>, false>('RejectionReasonUpdateToOneWithWhereWithoutPostInput').implement({
+  fields: RejectionReasonUpdateToOneWithWhereWithoutPostInputFields,
+});
+
+export const RejectionReasonUpdateWithoutPostInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+});
+export const RejectionReasonUpdateWithoutPostInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.RejectionReasonUpdateWithoutPostInput>, false>('RejectionReasonUpdateWithoutPostInput').implement({
+  fields: RejectionReasonUpdateWithoutPostInputFields,
+});
+
+export const PostCreateWithoutRejectionReasonInputFields = (t: any) => ({
+  id: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  image: t.field({"required":true,"type":Bytes}),
+  reading: t.float({"required":false}),
+  notes: t.string({"required":false}),
+  size: t.float({"required":false}),
+  postStatus: t.field({"required":true,"type":PostStatusCreateNestedOneWithoutPostInput}),
+  statusChangedBy: t.field({"required":false,"type":AdminCreateNestedOneWithoutPostInput}),
+  postedBy: t.field({"required":true,"type":UserCreateNestedOneWithoutPostsInput}),
+});
+export const PostCreateWithoutRejectionReasonInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateWithoutRejectionReasonInput>, false>('PostCreateWithoutRejectionReasonInput').implement({
+  fields: PostCreateWithoutRejectionReasonInputFields,
+});
+
+export const PostCreateOrConnectWithoutRejectionReasonInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":PostWhereUniqueInput}),
+  create: t.field({"required":true,"type":PostCreateWithoutRejectionReasonInput}),
+});
+export const PostCreateOrConnectWithoutRejectionReasonInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateOrConnectWithoutRejectionReasonInput>, false>('PostCreateOrConnectWithoutRejectionReasonInput').implement({
+  fields: PostCreateOrConnectWithoutRejectionReasonInputFields,
+});
+
+export const PostCreateManyRejectionReasonInputEnvelopeFields = (t: any) => ({
+  data: t.field({"required":true,"type":[PostCreateManyRejectionReasonInput]}),
+});
+export const PostCreateManyRejectionReasonInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateManyRejectionReasonInputEnvelope>, false>('PostCreateManyRejectionReasonInputEnvelope').implement({
+  fields: PostCreateManyRejectionReasonInputEnvelopeFields,
+});
+
+export const PostUpsertWithWhereUniqueWithoutRejectionReasonInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":PostWhereUniqueInput}),
+  update: t.field({"required":true,"type":PostUpdateWithoutRejectionReasonInput}),
+  create: t.field({"required":true,"type":PostCreateWithoutRejectionReasonInput}),
+});
+export const PostUpsertWithWhereUniqueWithoutRejectionReasonInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpsertWithWhereUniqueWithoutRejectionReasonInput>, false>('PostUpsertWithWhereUniqueWithoutRejectionReasonInput').implement({
+  fields: PostUpsertWithWhereUniqueWithoutRejectionReasonInputFields,
+});
+
+export const PostUpdateWithWhereUniqueWithoutRejectionReasonInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":PostWhereUniqueInput}),
+  data: t.field({"required":true,"type":PostUpdateWithoutRejectionReasonInput}),
+});
+export const PostUpdateWithWhereUniqueWithoutRejectionReasonInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateWithWhereUniqueWithoutRejectionReasonInput>, false>('PostUpdateWithWhereUniqueWithoutRejectionReasonInput').implement({
+  fields: PostUpdateWithWhereUniqueWithoutRejectionReasonInputFields,
+});
+
+export const PostUpdateManyWithWhereWithoutRejectionReasonInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":PostScalarWhereInput}),
+  data: t.field({"required":true,"type":PostUpdateManyMutationInput}),
+});
+export const PostUpdateManyWithWhereWithoutRejectionReasonInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateManyWithWhereWithoutRejectionReasonInput>, false>('PostUpdateManyWithWhereWithoutRejectionReasonInput').implement({
+  fields: PostUpdateManyWithWhereWithoutRejectionReasonInputFields,
+});
+
 export const PostCreateWithoutPostStatusInputFields = (t: any) => ({
   id: t.string({"required":false}),
   createdAt: t.field({"required":false,"type":DateTime}),
@@ -3177,6 +3464,7 @@ export const PostCreateWithoutPostStatusInputFields = (t: any) => ({
   size: t.float({"required":false}),
   statusChangedBy: t.field({"required":false,"type":AdminCreateNestedOneWithoutPostInput}),
   postedBy: t.field({"required":true,"type":UserCreateNestedOneWithoutPostsInput}),
+  rejectionReason: t.field({"required":false,"type":RejectionReasonCreateNestedOneWithoutPostInput}),
 });
 export const PostCreateWithoutPostStatusInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateWithoutPostStatusInput>, false>('PostCreateWithoutPostStatusInput').implement({
   fields: PostCreateWithoutPostStatusInputFields,
@@ -3458,6 +3746,7 @@ export const PostCreateManyPostedByInputFields = (t: any) => ({
   postStatusId: t.string({"required":true}),
   statusChangedById: t.string({"required":false}),
   notes: t.string({"required":false}),
+  rejectionReasonId: t.string({"required":false}),
   size: t.float({"required":false}),
 });
 export const PostCreateManyPostedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateManyPostedByInput>, false>('PostCreateManyPostedByInput').implement({
@@ -3491,6 +3780,7 @@ export const PostUpdateWithoutPostedByInputFields = (t: any) => ({
   size: t.field({"required":false,"type":FloatFieldUpdateOperationsInput}),
   postStatus: t.field({"required":false,"type":PostStatusUpdateOneRequiredWithoutPostNestedInput}),
   statusChangedBy: t.field({"required":false,"type":AdminUpdateOneWithoutPostNestedInput}),
+  rejectionReason: t.field({"required":false,"type":RejectionReasonUpdateOneWithoutPostNestedInput}),
 });
 export const PostUpdateWithoutPostedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateWithoutPostedByInput>, false>('PostUpdateWithoutPostedByInput').implement({
   fields: PostUpdateWithoutPostedByInputFields,
@@ -3554,6 +3844,7 @@ export const PostCreateManyStatusChangedByInputFields = (t: any) => ({
   postStatusId: t.string({"required":true}),
   postedById: t.string({"required":true}),
   notes: t.string({"required":false}),
+  rejectionReasonId: t.string({"required":false}),
   size: t.float({"required":false}),
 });
 export const PostCreateManyStatusChangedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateManyStatusChangedByInput>, false>('PostCreateManyStatusChangedByInput').implement({
@@ -3578,6 +3869,7 @@ export const PostUpdateWithoutStatusChangedByInputFields = (t: any) => ({
   size: t.field({"required":false,"type":FloatFieldUpdateOperationsInput}),
   postStatus: t.field({"required":false,"type":PostStatusUpdateOneRequiredWithoutPostNestedInput}),
   postedBy: t.field({"required":false,"type":UserUpdateOneRequiredWithoutPostsNestedInput}),
+  rejectionReason: t.field({"required":false,"type":RejectionReasonUpdateOneWithoutPostNestedInput}),
 });
 export const PostUpdateWithoutStatusChangedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateWithoutStatusChangedByInput>, false>('PostUpdateWithoutStatusChangedByInput').implement({
   fields: PostUpdateWithoutStatusChangedByInputFields,
@@ -3592,6 +3884,36 @@ export const InvitationUpdateWithoutSentByInput = builder.inputRef<PrismaUpdateO
   fields: InvitationUpdateWithoutSentByInputFields,
 });
 
+export const PostCreateManyRejectionReasonInputFields = (t: any) => ({
+  id: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  image: t.field({"required":true,"type":Bytes}),
+  reading: t.float({"required":false}),
+  postStatusId: t.string({"required":true}),
+  statusChangedById: t.string({"required":false}),
+  postedById: t.string({"required":true}),
+  notes: t.string({"required":false}),
+  size: t.float({"required":false}),
+});
+export const PostCreateManyRejectionReasonInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateManyRejectionReasonInput>, false>('PostCreateManyRejectionReasonInput').implement({
+  fields: PostCreateManyRejectionReasonInputFields,
+});
+
+export const PostUpdateWithoutRejectionReasonInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  image: t.field({"required":false,"type":BytesFieldUpdateOperationsInput}),
+  reading: t.field({"required":false,"type":FloatFieldUpdateOperationsInput}),
+  notes: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  size: t.field({"required":false,"type":FloatFieldUpdateOperationsInput}),
+  postStatus: t.field({"required":false,"type":PostStatusUpdateOneRequiredWithoutPostNestedInput}),
+  statusChangedBy: t.field({"required":false,"type":AdminUpdateOneWithoutPostNestedInput}),
+  postedBy: t.field({"required":false,"type":UserUpdateOneRequiredWithoutPostsNestedInput}),
+});
+export const PostUpdateWithoutRejectionReasonInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateWithoutRejectionReasonInput>, false>('PostUpdateWithoutRejectionReasonInput').implement({
+  fields: PostUpdateWithoutRejectionReasonInputFields,
+});
+
 export const PostCreateManyPostStatusInputFields = (t: any) => ({
   id: t.string({"required":false}),
   createdAt: t.field({"required":false,"type":DateTime}),
@@ -3600,6 +3922,7 @@ export const PostCreateManyPostStatusInputFields = (t: any) => ({
   statusChangedById: t.string({"required":false}),
   postedById: t.string({"required":true}),
   notes: t.string({"required":false}),
+  rejectionReasonId: t.string({"required":false}),
   size: t.float({"required":false}),
 });
 export const PostCreateManyPostStatusInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateManyPostStatusInput>, false>('PostCreateManyPostStatusInput').implement({
@@ -3615,6 +3938,7 @@ export const PostUpdateWithoutPostStatusInputFields = (t: any) => ({
   size: t.field({"required":false,"type":FloatFieldUpdateOperationsInput}),
   statusChangedBy: t.field({"required":false,"type":AdminUpdateOneWithoutPostNestedInput}),
   postedBy: t.field({"required":false,"type":UserUpdateOneRequiredWithoutPostsNestedInput}),
+  rejectionReason: t.field({"required":false,"type":RejectionReasonUpdateOneWithoutPostNestedInput}),
 });
 export const PostUpdateWithoutPostStatusInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateWithoutPostStatusInput>, false>('PostUpdateWithoutPostStatusInput').implement({
   fields: PostUpdateWithoutPostStatusInputFields,

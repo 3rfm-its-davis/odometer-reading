@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import UserDataGrid from "~/components/userDataGrid";
@@ -6,6 +6,7 @@ import { requireAdminId } from "~/server/auth.server";
 import { decipherEmail } from "~/server/decipherEmail.server";
 import { prisma } from "~/server/prisma.server";
 import { sendEmail } from "~/server/sendEmail.server";
+import { handleDownload } from "~/utils/handleDownload";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireAdminId(request);
@@ -201,6 +202,12 @@ export default function EmailInvitation() {
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Send Invitation Email
+          </button>{" "}
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => handleDownload(currentUsers)}
+          >
+            Download JSON
           </button>
         </div>
       </div>

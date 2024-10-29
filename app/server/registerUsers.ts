@@ -1,7 +1,7 @@
-import { prisma } from "./prisma.server";
-import dotenv from "dotenv";
-import { sendEmail } from "./sendEmail.server";
 import crypto from "crypto";
+import dotenv from "dotenv";
+import { prisma } from "./prisma.server";
+import { sendEmail } from "./sendEmail.server";
 
 dotenv.config();
 
@@ -41,8 +41,6 @@ export const RegisterUser = async (emailsRetrieved: string[]) => {
       };
     })
     .filter((item) => !emailsCurrent.includes(item.emailCiphered));
-
-  console.log("Users to be updated: ", usersToBeUpdated);
 
   Promise.all(
     usersToBeUpdated.map(async (user) => {

@@ -23,6 +23,8 @@ export const PostObject = definePrismaObject('Post', {
     postedBy: t.relation('postedBy', PostPostedByFieldObject),
     postedById: t.field(PostPostedByIdFieldObject),
     notes: t.field(PostNotesFieldObject),
+    rejectionReason: t.relation('rejectionReason', PostRejectionReasonFieldObject),
+    rejectionReasonId: t.field(PostRejectionReasonIdFieldObject),
     size: t.field(PostSizeFieldObject),
   }),
 });
@@ -102,6 +104,20 @@ export const PostNotesFieldObject = defineFieldObject('Post', {
   description: undefined,
   nullable: true,
   resolve: (parent) => parent.notes,
+});
+
+export const PostRejectionReasonFieldObject = defineRelationObject('Post', 'rejectionReason', {
+  description: undefined,
+  nullable: true,
+  args: undefined,
+  query: undefined,
+});
+
+export const PostRejectionReasonIdFieldObject = defineFieldObject('Post', {
+  type: "String",
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.rejectionReasonId,
 });
 
 export const PostSizeFieldObject = defineFieldObject('Post', {

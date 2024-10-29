@@ -2,6 +2,7 @@ import * as User from './User';
 import * as UserStatus from './UserStatus';
 import * as Admin from './Admin';
 import * as Post from './Post';
+import * as RejectionReason from './RejectionReason';
 import * as PostStatus from './PostStatus';
 import * as Message from './Message';
 import * as Participation from './Participation';
@@ -91,6 +92,24 @@ export const Cruds: Record<
       updateMany: Post.updateManyPostMutationObject,
       updateOne: Post.updateOnePostMutationObject,
       upsertOne: Post.upsertOnePostMutationObject,
+    },
+  },
+  RejectionReason: {
+    Object: RejectionReason.RejectionReasonObject,
+    queries: {
+      findFirst: RejectionReason.findFirstRejectionReasonQueryObject,
+      findMany: RejectionReason.findManyRejectionReasonQueryObject,
+      count: RejectionReason.countRejectionReasonQueryObject,
+      findUnique: RejectionReason.findUniqueRejectionReasonQueryObject,
+    },
+    mutations: {
+      createMany: RejectionReason.createManyRejectionReasonMutationObject,
+      createOne: RejectionReason.createOneRejectionReasonMutationObject,
+      deleteMany: RejectionReason.deleteManyRejectionReasonMutationObject,
+      deleteOne: RejectionReason.deleteOneRejectionReasonMutationObject,
+      updateMany: RejectionReason.updateManyRejectionReasonMutationObject,
+      updateOne: RejectionReason.updateOneRejectionReasonMutationObject,
+      upsertOne: RejectionReason.upsertOneRejectionReasonMutationObject,
     },
   },
   PostStatus: {

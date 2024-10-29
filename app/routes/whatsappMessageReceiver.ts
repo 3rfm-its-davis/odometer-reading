@@ -1,10 +1,5 @@
-import type {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-  TypedResponse,
-} from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { prisma } from "~/server/prisma.server";
 import {
   handleDelete,
   handleHelp,
@@ -12,8 +7,9 @@ import {
   handleReset,
   handleStop,
 } from "~/server/handleRequests.server";
-import { HandleRequestPayload } from "~/server/types.server";
 import { postImage } from "~/server/postImage.server";
+import { prisma } from "~/server/prisma.server";
+import { HandleRequestPayload } from "~/server/types.server";
 import { sendWhatsAppMessageText } from "~/utils/sendWhatsAppMessage";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -113,8 +109,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const user = await getUser(phoneNumber);
-
-  console.log("userId: ", user?.id);
 
   const message = body.entry[0].changes[0].value.messages[0].text?.body.trim();
   const messageType = String((message || "").split(" ")[0]).toUpperCase();

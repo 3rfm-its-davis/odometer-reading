@@ -1,9 +1,8 @@
-import axios from "axios";
-import { prisma } from "./prisma.server";
-import { HandleRequestPayload } from "./types.server";
-import { sendWhatsAppMessageText } from "~/utils/sendWhatsAppMessage";
 import { json } from "@remix-run/node";
 import { v4 } from "uuid";
+import { sendWhatsAppMessageText } from "~/utils/sendWhatsAppMessage";
+import { prisma } from "./prisma.server";
+import { HandleRequestPayload } from "./types.server";
 
 export const handleRegistration = async (payload: HandleRequestPayload) => {
   // check if the sent message matches the access code in the database
@@ -40,8 +39,6 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
       },
     })
   )?.id;
-
-  console.log("userIdByPhoneNumber:", userIdByPhoneNumber);
 
   if (userIdByPhoneNumber !== undefined) {
     const message = "You have already signed up with this phone number.";

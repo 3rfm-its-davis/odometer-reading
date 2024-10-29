@@ -10,8 +10,14 @@ export const cronJob = async () => {
       const users = await prisma.user.findMany({
         where: {
           activatedAt: {
-            lt: new Date(new Date().setDate(new Date().getDate() - 8)),
+            lt: new Date(new Date().setDate(new Date().getDate() - 14)),
           },
+          phoneNumber: {
+            not: {
+              contains: "TEST",
+            },
+          },
+          userStatusId: "activated",
         },
       });
 

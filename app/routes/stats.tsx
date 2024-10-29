@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import UserDataGrid from "~/components/userDataGrid";
@@ -10,6 +10,13 @@ import { handleDownload } from "~/utils/handleDownload";
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireAdminId(request);
   const users = await prisma.user.findMany({
+    where: {
+      email: {
+        not: {
+          contains: "-",
+        },
+      },
+    },
     include: {
       invitations: {
         orderBy: {
@@ -19,6 +26,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
       posts: {
         orderBy: {
           createdAt: "desc",
+        },
+        select: {
+          id: true,
+          size: true,
+          postStatusId: true,
         },
       },
     },

@@ -77,8 +77,6 @@ export async function action({ request }: ActionFunctionArgs) {
     )
   ).data;
 
-  console.log("Blob: ", file);
-
   if (file.responses.length > 0) {
     await prisma.lastQualtricsResponseRetrieval.update({
       where: {
@@ -97,8 +95,6 @@ export async function action({ request }: ActionFunctionArgs) {
       (item: string, index: number, array: string[]) =>
         array.indexOf(item) === index
     );
-
-  console.log("Emails: ", emailsRetrieved);
 
   if (emailsRetrieved.length === 0) {
     return json({ message: "No emails found" }, { status: 200 });

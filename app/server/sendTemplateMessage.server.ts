@@ -2,7 +2,8 @@ import axios from "axios";
 
 export const sendApprovalTemplateMessage = async (
   userPhoneNumber: string,
-  imageId: string
+  imageId: string,
+  days: string
 ) => {
   const ourPhoneNumber = process.env.OUR_PHONE_NUMBER;
   await axios.post(
@@ -12,9 +13,9 @@ export const sendApprovalTemplateMessage = async (
       to: userPhoneNumber,
       type: "template",
       template: {
-        name: "reading_approved",
+        name: "approve_post",
         language: {
-          code: "en",
+          code: "en_US",
         },
         components: [
           {
@@ -23,6 +24,10 @@ export const sendApprovalTemplateMessage = async (
               {
                 type: "text",
                 text: imageId,
+              },
+              {
+                type: "text",
+                text: days,
               },
             ],
           },
@@ -53,9 +58,9 @@ export const sendRejectionTemplateMessage = async (
       to: userPhoneNumber,
       type: "template",
       template: {
-        name: "reading_rejected",
+        name: "reject_post",
         language: {
-          code: "en",
+          code: "en_US",
         },
         components: [
           {

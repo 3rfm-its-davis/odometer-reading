@@ -11,6 +11,8 @@ export {
   PostPostedByFieldObject,
   PostPostedByIdFieldObject,
   PostNotesFieldObject,
+  PostRejectionReasonFieldObject,
+  PostRejectionReasonIdFieldObject,
   PostSizeFieldObject
 } from './object.base';
 export {

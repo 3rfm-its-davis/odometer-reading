@@ -45,7 +45,15 @@ Table Post {
   postedBy User [not null]
   postedById String [not null]
   notes String
+  rejectionReason RejectionReason
+  rejectionReasonId String
   size Float [not null, default: 0]
+}
+
+Table RejectionReason {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  Post Post [not null]
 }
 
 Table PostStatus {
@@ -97,6 +105,8 @@ Ref: Post.postStatusId > PostStatus.id
 Ref: Post.statusChangedById > Admin.id
 
 Ref: Post.postedById > User.id
+
+Ref: Post.rejectionReasonId > RejectionReason.id
 
 Ref: Message.sentById > User.id
 
