@@ -61,7 +61,7 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  await new Promise((resolve) => setTimeout(resolve, 1500));
 
   // return actions without the first item
   // return json({ actions: actions.slice(1) });
@@ -117,7 +117,7 @@ export async function action({ request }: ActionFunctionArgs) {
     )
       .reduce((acc, post) => {
         const date = DateTime.fromJSDate(post.createdAt)
-          .setZone("America/New_York")
+          .setZone("America/Los_Angeles")
           .toISODate();
         if (!acc.includes(date)) {
           acc.push(date);

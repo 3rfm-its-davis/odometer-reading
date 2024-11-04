@@ -57,7 +57,7 @@ export const Bytes = builder.scalarType('Bytes', {
 });
 
 export const TransactionIsolationLevel = builder.enumType('TransactionIsolationLevel', {
-  values: ["ReadUncommitted","ReadCommitted","RepeatableRead","Serializable","Snapshot"] as const,
+  values: ["ReadUncommitted","ReadCommitted","RepeatableRead","Serializable"] as const,
 });
 
 export const UserScalarFieldEnum = builder.enumType('UserScalarFieldEnum', {
@@ -106,6 +106,10 @@ export const LastQualtricsResponseRetrievalScalarFieldEnum = builder.enumType('L
 
 export const SortOrder = builder.enumType('SortOrder', {
   values: ["asc","desc"] as const,
+});
+
+export const QueryMode = builder.enumType('QueryMode', {
+  values: ["default","insensitive"] as const,
 });
 
 export const NullsOrder = builder.enumType('NullsOrder', {
@@ -1323,6 +1327,7 @@ export const StringFilterFields = (t: any) => ({
   contains: t.string({"required":false}),
   startsWith: t.string({"required":false}),
   endsWith: t.string({"required":false}),
+  mode: t.field({"required":false,"type":QueryMode}),
   not: t.field({"required":false,"type":NestedStringFilter}),
 });
 export const StringFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StringFilter>, false>('StringFilter').implement({
@@ -1477,6 +1482,7 @@ export const StringWithAggregatesFilterFields = (t: any) => ({
   contains: t.string({"required":false}),
   startsWith: t.string({"required":false}),
   endsWith: t.string({"required":false}),
+  mode: t.field({"required":false,"type":QueryMode}),
   not: t.field({"required":false,"type":NestedStringWithAggregatesFilter}),
   _count: t.field({"required":false,"type":NestedIntFilter}),
   _min: t.field({"required":false,"type":NestedStringFilter}),
@@ -1622,6 +1628,7 @@ export const StringNullableFilterFields = (t: any) => ({
   contains: t.string({"required":false}),
   startsWith: t.string({"required":false}),
   endsWith: t.string({"required":false}),
+  mode: t.field({"required":false,"type":QueryMode}),
   not: t.field({"required":false,"type":NestedStringNullableFilter}),
 });
 export const StringNullableFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StringNullableFilter>, false>('StringNullableFilter').implement({
@@ -1767,6 +1774,7 @@ export const StringNullableWithAggregatesFilterFields = (t: any) => ({
   contains: t.string({"required":false}),
   startsWith: t.string({"required":false}),
   endsWith: t.string({"required":false}),
+  mode: t.field({"required":false,"type":QueryMode}),
   not: t.field({"required":false,"type":NestedStringNullableWithAggregatesFilter}),
   _count: t.field({"required":false,"type":NestedIntNullableFilter}),
   _min: t.field({"required":false,"type":NestedStringNullableFilter}),
@@ -2773,6 +2781,7 @@ export const PostCreateOrConnectWithoutPostedByInput = builder.inputRef<PrismaUp
 
 export const PostCreateManyPostedByInputEnvelopeFields = (t: any) => ({
   data: t.field({"required":true,"type":[PostCreateManyPostedByInput]}),
+  skipDuplicates: t.boolean({"required":false}),
 });
 export const PostCreateManyPostedByInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateManyPostedByInputEnvelope>, false>('PostCreateManyPostedByInputEnvelope').implement({
   fields: PostCreateManyPostedByInputEnvelopeFields,
@@ -2831,6 +2840,7 @@ export const InvitationCreateOrConnectWithoutSentToInput = builder.inputRef<Pris
 
 export const InvitationCreateManySentToInputEnvelopeFields = (t: any) => ({
   data: t.field({"required":true,"type":[InvitationCreateManySentToInput]}),
+  skipDuplicates: t.boolean({"required":false}),
 });
 export const InvitationCreateManySentToInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCreateManySentToInputEnvelope>, false>('InvitationCreateManySentToInputEnvelope').implement({
   fields: InvitationCreateManySentToInputEnvelopeFields,
@@ -2855,6 +2865,7 @@ export const MessageCreateOrConnectWithoutSentByInput = builder.inputRef<PrismaU
 
 export const MessageCreateManySentByInputEnvelopeFields = (t: any) => ({
   data: t.field({"required":true,"type":[MessageCreateManySentByInput]}),
+  skipDuplicates: t.boolean({"required":false}),
 });
 export const MessageCreateManySentByInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.MessageCreateManySentByInputEnvelope>, false>('MessageCreateManySentByInputEnvelope').implement({
   fields: MessageCreateManySentByInputEnvelopeFields,
@@ -3060,6 +3071,7 @@ export const UserCreateOrConnectWithoutUserStatusInput = builder.inputRef<Prisma
 
 export const UserCreateManyUserStatusInputEnvelopeFields = (t: any) => ({
   data: t.field({"required":true,"type":[UserCreateManyUserStatusInput]}),
+  skipDuplicates: t.boolean({"required":false}),
 });
 export const UserCreateManyUserStatusInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserCreateManyUserStatusInputEnvelope>, false>('UserCreateManyUserStatusInputEnvelope').implement({
   fields: UserCreateManyUserStatusInputEnvelopeFields,
@@ -3133,6 +3145,7 @@ export const PostCreateOrConnectWithoutStatusChangedByInput = builder.inputRef<P
 
 export const PostCreateManyStatusChangedByInputEnvelopeFields = (t: any) => ({
   data: t.field({"required":true,"type":[PostCreateManyStatusChangedByInput]}),
+  skipDuplicates: t.boolean({"required":false}),
 });
 export const PostCreateManyStatusChangedByInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateManyStatusChangedByInputEnvelope>, false>('PostCreateManyStatusChangedByInputEnvelope').implement({
   fields: PostCreateManyStatusChangedByInputEnvelopeFields,
@@ -3157,6 +3170,7 @@ export const InvitationCreateOrConnectWithoutSentByInput = builder.inputRef<Pris
 
 export const InvitationCreateManySentByInputEnvelopeFields = (t: any) => ({
   data: t.field({"required":true,"type":[InvitationCreateManySentByInput]}),
+  skipDuplicates: t.boolean({"required":false}),
 });
 export const InvitationCreateManySentByInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.InvitationCreateManySentByInputEnvelope>, false>('InvitationCreateManySentByInputEnvelope').implement({
   fields: InvitationCreateManySentByInputEnvelopeFields,
@@ -3425,6 +3439,7 @@ export const PostCreateOrConnectWithoutRejectionReasonInput = builder.inputRef<P
 
 export const PostCreateManyRejectionReasonInputEnvelopeFields = (t: any) => ({
   data: t.field({"required":true,"type":[PostCreateManyRejectionReasonInput]}),
+  skipDuplicates: t.boolean({"required":false}),
 });
 export const PostCreateManyRejectionReasonInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateManyRejectionReasonInputEnvelope>, false>('PostCreateManyRejectionReasonInputEnvelope').implement({
   fields: PostCreateManyRejectionReasonInputEnvelopeFields,
@@ -3480,6 +3495,7 @@ export const PostCreateOrConnectWithoutPostStatusInput = builder.inputRef<Prisma
 
 export const PostCreateManyPostStatusInputEnvelopeFields = (t: any) => ({
   data: t.field({"required":true,"type":[PostCreateManyPostStatusInput]}),
+  skipDuplicates: t.boolean({"required":false}),
 });
 export const PostCreateManyPostStatusInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateManyPostStatusInputEnvelope>, false>('PostCreateManyPostStatusInputEnvelope').implement({
   fields: PostCreateManyPostStatusInputEnvelopeFields,

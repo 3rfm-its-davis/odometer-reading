@@ -3,7 +3,6 @@ import crypto from "crypto";
 import dotenv from "dotenv";
 import fs from "fs/promises";
 import r from "random";
-import { v4 } from "uuid";
 import { prisma } from "~/server/prisma.server";
 
 dotenv.config();
@@ -13,13 +12,43 @@ const secretKey = process.env.SECRET_EMAIL;
 const iv = process.env.IV_EMAIL;
 
 const addTestImages = async () => {
-  const testUsersCreated = await prisma.user.findMany({
-    where: {
-      phoneNumber: {
-        contains: "TEST",
-      },
-    },
-  });
+  // const testUsersCreated = await prisma.user.findMany({
+  //   where: {
+  //     phoneNumber: {
+  //       contains: "TEST2",
+  //     },
+  //   },
+  // });
+
+  // for (const [index, user] of [...testUsersCreated].entries()) {
+  //   await new Promise((resolve) => setTimeout(resolve, 10000));
+
+  //   console.log(`Processing user ${index + 1} of ${testUsersCreated.length}`);
+
+  //   const countApprovedDays = (
+  //     await prisma.post.findMany({
+  //       where: {
+  //         postedById: user.id,
+  //         postStatusId: "approved",
+  //       },
+  //     })
+  //   )
+  //     .reduce((acc, post) => {
+  //       const date = DateTime.fromJSDate(post.createdAt)
+  //         .setZone("America/Los_Angeles")
+  //         .toISODate();
+  //       if (!acc.includes(date)) {
+  //         acc.push(date);
+  //       }
+  //       return acc;
+  //     }, [] as (string | null)[])
+  //     .filter((date) => date !== null).length;
+
+  //   if (countApprovedDays >= 3) {
+  //     await makeUserComplete(user);
+  //     console.log("Made user completed");
+  //   }
+  // }
 
   // pick 100 inactive users from prisma db
   const users = await prisma.user.findMany({
@@ -28,27 +57,29 @@ const addTestImages = async () => {
         contains: "-",
       },
     },
-    take: 100 - testUsersCreated.length,
+    take: 100,
   });
 
-  for (const [index, user] of [...testUsersCreated, ...users].entries()) {
-    await new Promise((resolve) => setTimeout(resolve, index * 3000));
+  for (const [index, user] of [...users].entries()) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    await prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        email: v4(),
-        phoneNumber: v4(),
-        userStatusId: "initialized",
-        activatedAt: null,
-        deletedAt: null,
-        posts: {
-          deleteMany: {},
-        },
-      },
-    });
+    console.log(`Processing user ${index + 1} of ${users.length}`);
+
+    // await prisma.user.update({
+    //   where: {
+    //     id: user.id,
+    //   },
+    //   data: {
+    //     email: v4(),
+    //     phoneNumber: v4(),
+    //     userStatusId: "initialized",
+    //     activatedAt: null,
+    //     deletedAt: null,
+    //     posts: {
+    //       deleteMany: {},
+    //     },
+    //   },
+    // });
 
     // get a random number from -1 to 10
     const random = Math.floor(Math.random() * 11) - 1;
@@ -63,7 +94,7 @@ const addTestImages = async () => {
 
     // pick a time between October 1, 2024 and October 8, 2024
     const daysToAddToSurveyCompletionStandardDate = Math.random() * 7;
-    const surveyCompletionStandardDate = new Date(2024, 9, 1);
+    const surveyCompletionStandardDate = new Date(2024, 10, 1);
     const surveyCompletionDate = new Date(
       surveyCompletionStandardDate.getTime() +
         daysToAddToSurveyCompletionStandardDate * 24 * 60 * 60 * 1000
@@ -86,7 +117,7 @@ const addTestImages = async () => {
     const prismaImages: Omit<Prisma.PostCreateManyInput, "postedById">[] =
       images.map((image, imageIndex) => {
         let daysToAddToActivationDate;
-        const randNormal = r.normal(0, 5);
+        const randNormal = r.normal(0, 8);
         const randNormalValue = randNormal();
         if (randNormalValue < 0) {
           daysToAddToActivationDate = Math.abs(randNormalValue);
@@ -114,7 +145,7 @@ const addTestImages = async () => {
       .toString()
       .padStart(10, "0");
 
-    const email = `test${phoneNumber}@hogehoge.fugafuga`;
+    const email = `test2${phoneNumber}@hogehoge.fugafuga`;
     const cipher = crypto.createCipheriv(algorithm, secretKey!, iv!);
 
     const result = await prisma.user.update({
@@ -123,7 +154,7 @@ const addTestImages = async () => {
       },
       data: {
         // TEST1 + random 10 numbers
-        phoneNumber: `TEST1${phoneNumber}`,
+        phoneNumber: `TEST2${phoneNumber}`,
         activatedAt: activationDate,
         userStatusId: random === -1 ? "initialized" : "activated",
         email: cipher.update(email, "utf8", "hex") + cipher.final("hex"),
