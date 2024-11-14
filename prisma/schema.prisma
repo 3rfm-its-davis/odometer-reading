@@ -61,7 +61,7 @@ model Admin {
 model Post {
   id                String           @id @default(uuid())
   createdAt         DateTime         @default(now())
-  image             Bytes
+  image             String
   reading           Float            @default(0)
   postStatus        PostStatus       @relation(fields: [postStatusId], references: [id])
   postStatusId      String

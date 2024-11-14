@@ -12,10 +12,7 @@ import { MainImage } from "~/components/mainImage";
 import { requireAdminId } from "~/server/auth.server";
 import { makeUserComplete } from "~/server/makeUserComplete";
 import { prisma } from "~/server/prisma.server";
-import {
-  sendApprovalTemplateMessage,
-  sendRejectionTemplateMessage,
-} from "~/server/sendTemplateMessage.server";
+import { sendTemplateMessage } from "~/server/sendTemplateMessage.server";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await prisma.user.findUniqueOrThrow({
@@ -103,8 +100,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (
     action.changeTo === "approved" &&
-    result.postedBy.userStatusId === "activated" &&
-    !result.postedBy.phoneNumber.includes("TEST")
+    result.postedBy.userStatusId === "activated"
   ) {
     // get the number of uniq days that the user has submitted at least one approved post
     const countApprovedDays = (
@@ -126,11 +122,10 @@ export async function action({ request }: ActionFunctionArgs) {
       }, [] as (string | null)[])
       .filter((date) => date !== null).length;
 
-    await sendApprovalTemplateMessage(
-      result.postedBy.phoneNumber,
+    await sendTemplateMessage(result.postedBy.phoneNumber, "approve_post", [
       result.id.replace(`${result.postedBy.accessCode}-`, ""),
-      countApprovedDays.toString()
-    );
+      countApprovedDays.toString(),
+    ]);
 
     if (countApprovedDays == 3) {
       await makeUserComplete(result.postedBy);
@@ -149,14 +144,12 @@ export async function action({ request }: ActionFunctionArgs) {
   if (
     action.changeTo === "rejected" &&
     action.rejectionReason &&
-    result.postedBy.userStatusId === "activated" &&
-    !result.postedBy.phoneNumber.includes("TEST")
+    result.postedBy.userStatusId === "activated"
   ) {
-    await sendRejectionTemplateMessage(
-      result.postedBy.phoneNumber,
+    await sendTemplateMessage(result.postedBy.phoneNumber, "reject_post", [
       action.rejectionReason,
-      result.id.replace(`${result.postedBy.accessCode}-`, "")
-    );
+      result.id.replace(`${result.postedBy.accessCode}-`, ""),
+    ]);
 
     return json(
       {
@@ -167,46 +160,6 @@ export async function action({ request }: ActionFunctionArgs) {
       { status: 200 }
     );
   }
-
-  // if (
-  //   statusChangeTo === "approved" &&
-  //   result.postedBy.userStatusId === "activated"
-  // ) {
-  //   // get the number of uniq days that the user has submitted at least one approved post
-  //   const countApprovedDays = (
-  //     await prisma.post.findMany({
-  //       where: {
-  //         postedById: result.postedBy.id,
-  //         postStatusId: "approved",
-  //       },
-  //     })
-  //   ).reduce((acc, post) => {
-  //     const date = post.createdAt.toISOString().split("T")[0];
-  //     if (!acc.includes(date)) {
-  //       acc.push(date);
-  //     }
-  //     return acc;
-  //   }, [] as string[]).length;
-
-  //   await sendApprovalTemplateMessage(
-  //     result.postedBy.phoneNumber,
-  //     result.id.replace(`${result.postedBy.accessCode}-`, "")
-  //   );
-
-  //   if (countApprovedDays >= 3) {
-  //     await makeUserComplete(result.postedBy.id);
-  //   }
-  // } else if (
-  //   statusChangeTo === "rejected" &&
-  //   result.postedBy.userStatusId === "activated" &&
-  //   !result.postedBy.phoneNumber.includes("TEST")
-  // ) {
-  //   await sendRejectionTemplateMessage(
-  //     result.postedBy.phoneNumber,
-  //     rejectionReason,
-  //     result.id.replace(`${result.postedBy.accessCode}-`, "")
-  //   );
-  // }
 
   return json(
     {
@@ -227,7 +180,7 @@ type PostAction = {
 
 type UIPost = {
   id: string;
-  imageBase64: string;
+  image: string;
   createdAt: string;
   postStatusId: string;
   reading: number;
@@ -250,9 +203,7 @@ export default function User() {
     if (posts) {
       setFocusedPost({
         id: posts[0].id,
-        imageBase64: btoa(
-          posts[0].image.data.map((num) => String.fromCharCode(num)).join("")
-        ),
+        image: posts[0].image,
         createdAt: posts[0].createdAt,
         postStatusId: posts[0].postStatusId,
         reading: posts[0].reading,
@@ -265,12 +216,9 @@ export default function User() {
       );
       setUiPosts(
         posts.map((post) => {
-          const imageBase64 = btoa(
-            post.image.data.map((num) => String.fromCharCode(num)).join("")
-          );
           return {
             id: post.id,
-            imageBase64,
+            image: post.image,
             createdAt: post.createdAt,
             postStatusId: post.postStatusId,
             reading: post.reading,
@@ -490,7 +438,7 @@ export default function User() {
               >
                 <div className="flex-1">
                   <img
-                    src={`data:image/jpg;base64,${uiPost.imageBase64}`}
+                    src={uiPost.image}
                     style={{
                       width: "100%",
                       height: "100%",

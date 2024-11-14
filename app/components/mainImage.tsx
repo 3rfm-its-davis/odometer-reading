@@ -1,5 +1,5 @@
 interface FocusedPost {
-  imageBase64: string;
+  image: string;
 }
 
 export const MainImage = ({
@@ -11,7 +11,7 @@ export const MainImage = ({
     <div className="flex-1 h-full">
       {focusedPost !== undefined ? (
         <img
-          src={`data:image/jpg;base64,${focusedPost.imageBase64}`}
+          src={focusedPost.image}
           style={{
             width: "100%",
             height: "100%",

@@ -1,8 +1,10 @@
+import { BlobServiceClient } from "@azure/storage-blob";
 import { Prisma } from "@prisma/client";
 import crypto from "crypto";
 import dotenv from "dotenv";
 import fs from "fs/promises";
 import r from "random";
+import { v4 } from "uuid";
 import { prisma } from "~/server/prisma.server";
 
 dotenv.config();
@@ -11,113 +13,122 @@ const algorithm = "aes256";
 const secretKey = process.env.SECRET_EMAIL;
 const iv = process.env.IV_EMAIL;
 
-const addTestImages = async () => {
-  // const testUsersCreated = await prisma.user.findMany({
-  //   where: {
-  //     phoneNumber: {
-  //       contains: "TEST2",
-  //     },
-  //   },
-  // });
-
-  // for (const [index, user] of [...testUsersCreated].entries()) {
-  //   await new Promise((resolve) => setTimeout(resolve, 10000));
-
-  //   console.log(`Processing user ${index + 1} of ${testUsersCreated.length}`);
-
-  //   const countApprovedDays = (
-  //     await prisma.post.findMany({
-  //       where: {
-  //         postedById: user.id,
-  //         postStatusId: "approved",
-  //       },
-  //     })
-  //   )
-  //     .reduce((acc, post) => {
-  //       const date = DateTime.fromJSDate(post.createdAt)
-  //         .setZone("America/Los_Angeles")
-  //         .toISODate();
-  //       if (!acc.includes(date)) {
-  //         acc.push(date);
-  //       }
-  //       return acc;
-  //     }, [] as (string | null)[])
-  //     .filter((date) => date !== null).length;
-
-  //   if (countApprovedDays >= 3) {
-  //     await makeUserComplete(user);
-  //     console.log("Made user completed");
-  //   }
-  // }
-
-  // pick 100 inactive users from prisma db
-  const users = await prisma.user.findMany({
-    where: {
-      email: {
-        contains: "-",
+const addTestImages = async ({
+  numUsers,
+  userIndex,
+  numImageMax,
+  sdImage,
+  reset,
+  date,
+}: {
+  numUsers?: number;
+  userIndex: number;
+  numImageMax?: number;
+  sdImage?: number;
+  reset?: boolean;
+  date?: Date;
+}) => {
+  if (reset) {
+    const users = await prisma.user.findMany({
+      where: {
+        phoneNumber: {
+          contains: `TEST${userIndex}`,
+        },
       },
-    },
-    take: 100,
-  });
+    });
+    for (const [index, user] of users.entries()) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  for (const [index, user] of [...users].entries()) {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log(`Processing user ${index + 1} of ${users.length}`);
 
-    console.log(`Processing user ${index + 1} of ${users.length}`);
-
-    // await prisma.user.update({
-    //   where: {
-    //     id: user.id,
-    //   },
-    //   data: {
-    //     email: v4(),
-    //     phoneNumber: v4(),
-    //     userStatusId: "initialized",
-    //     activatedAt: null,
-    //     deletedAt: null,
-    //     posts: {
-    //       deleteMany: {},
-    //     },
-    //   },
-    // });
-
-    // get a random number from -1 to 10
-    const random = Math.floor(Math.random() * 11) - 1;
-    // pick 10 numbers randomly from 0 to 58
-    const numbers: number[] = [];
-    while (numbers.length < random) {
-      const number = Math.floor(Math.random() * 58);
-      if (!numbers.includes(number)) {
-        numbers.push(number);
-      }
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          email: v4(),
+          phoneNumber: v4(),
+          userStatusId: "initialized",
+          activatedAt: null,
+          deletedAt: null,
+          posts: {
+            deleteMany: {},
+          },
+        },
+      });
     }
+  } else if (numUsers && numImageMax && sdImage && date) {
+    const users = await prisma.user.findMany({
+      where: {
+        email: {
+          contains: "-",
+        },
+      },
+      take: numUsers,
+    });
 
-    // pick a time between October 1, 2024 and October 8, 2024
-    const daysToAddToSurveyCompletionStandardDate = Math.random() * 7;
-    const surveyCompletionStandardDate = new Date(2024, 10, 1);
-    const surveyCompletionDate = new Date(
-      surveyCompletionStandardDate.getTime() +
-        daysToAddToSurveyCompletionStandardDate * 24 * 60 * 60 * 1000
-    );
+    for (const [index, user] of users.entries()) {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    const daysToAddToSurveyCompletionDate = Math.random() * 3;
-    const activationDate = new Date(
-      surveyCompletionDate.getTime() +
-        daysToAddToSurveyCompletionDate * 24 * 60 * 60 * 1000
-    );
+      console.log(`Processing user ${index + 1} of ${users.length}`);
 
-    // read a local jpeg image file with the file name as the number
-    const images = await Promise.all(
-      numbers.map(async (number) => {
-        const image = await fs.readFile(`./test/images/${number}.jpg`);
-        return image;
-      })
-    );
+      const random = Math.floor(Math.random() * numImageMax + 1) - 1;
+      const numbers: number[] = [];
+      while (numbers.length < random) {
+        const number = Math.floor(Math.random() * 58);
+        if (!numbers.includes(number)) {
+          numbers.push(number);
+        }
+      }
 
-    const prismaImages: Omit<Prisma.PostCreateManyInput, "postedById">[] =
-      images.map((image, imageIndex) => {
+      // pick a time between October 1, 2024 and October 8, 2024
+      const daysToAddToSurveyCompletionStandardDate = Math.random() * 7;
+      const surveyCompletionStandardDate = date;
+      const surveyCompletionDate = new Date(
+        surveyCompletionStandardDate.getTime() +
+          daysToAddToSurveyCompletionStandardDate * 24 * 60 * 60 * 1000
+      );
+
+      const daysToAddToSurveyCompletionDate = Math.random() * 3;
+      const activationDate = new Date(
+        surveyCompletionDate.getTime() +
+          daysToAddToSurveyCompletionDate * 24 * 60 * 60 * 1000
+      );
+
+      // read a local jpeg image file with the file name as the number
+      const images = await Promise.all(
+        numbers.map(async (number) => {
+          const image = await fs.readFile(`./test/images/${number}.jpg`);
+          return image;
+        })
+      );
+
+      const prismaImages: Promise<
+        Omit<Prisma.PostCreateManyInput, "postedById">
+      >[] = images.map(async (image, imageIndex) => {
+        const imageId = `TEST-${user.accessCode}-IMG-${imageIndex + 1}`;
+        const blobServiceClient = BlobServiceClient.fromConnectionString(
+          process.env.AZURE_STORAGE_CONNECTION_STRING!
+        );
+        let blobUrl = "";
+
+        try {
+          const containerClient = blobServiceClient.getContainerClient(
+            process.env.AZURE_STORAGE_CONTAINER_NAME!
+          );
+
+          const blobName = `${imageId}.jpg`;
+          const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+          await blockBlobClient.upload(image, image.length);
+          blobUrl = `https://${process.env
+            .AZURE_STORAGE_ACCOUNT_NAME!}.blob.core.windows.net/${process.env
+            .AZURE_STORAGE_CONTAINER_NAME!}/${blobName}`;
+        } catch (e) {
+          console.error(e);
+        }
+
         let daysToAddToActivationDate;
-        const randNormal = r.normal(0, 8);
+        const randNormal = r.normal(0, sdImage);
         const randNormalValue = randNormal();
         if (randNormalValue < 0) {
           daysToAddToActivationDate = Math.abs(randNormalValue);
@@ -128,8 +139,8 @@ const addTestImages = async () => {
         }
 
         return {
-          id: `TEST-${user.accessCode}-IMG-${imageIndex + 1}`,
-          image: image,
+          id: imageId,
+          image: blobUrl,
           createdAt: new Date(
             activationDate.getTime() +
               daysToAddToActivationDate * 24 * 60 * 60 * 1000
@@ -139,35 +150,93 @@ const addTestImages = async () => {
         };
       });
 
-    console.log(prismaImages);
+      console.log(prismaImages);
 
-    const phoneNumber = Math.floor(Math.random() * 10000000000)
-      .toString()
-      .padStart(10, "0");
+      const phoneNumber = Math.floor(Math.random() * 10000000000)
+        .toString()
+        .padStart(10, "0");
 
-    const email = `test2${phoneNumber}@hogehoge.fugafuga`;
-    const cipher = crypto.createCipheriv(algorithm, secretKey!, iv!);
+      const email = `test${userIndex}${phoneNumber}@hogehoge.fugafuga`;
+      const cipher = crypto.createCipheriv(algorithm, secretKey!, iv!);
 
-    const result = await prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        // TEST1 + random 10 numbers
-        phoneNumber: `TEST2${phoneNumber}`,
-        activatedAt: activationDate,
-        userStatusId: random === -1 ? "initialized" : "activated",
-        email: cipher.update(email, "utf8", "hex") + cipher.final("hex"),
-        posts: {
-          createMany: {
-            data: prismaImages,
+      const result = await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          // TEST1 + random 10 numbers
+          phoneNumber: `TEST${userIndex}${phoneNumber}`,
+          activatedAt: activationDate,
+          userStatusId: random === -1 ? "initialized" : "activated",
+          email: cipher.update(email, "utf8", "hex") + cipher.final("hex"),
+          posts: {
+            createMany: {
+              data: await Promise.all(prismaImages),
+            },
           },
         },
-      },
-    });
+      });
 
-    console.log(result);
+      console.log(result);
+    }
   }
 };
 
-addTestImages();
+// await addTestImages({
+//   userIndex: 1,
+//   numUsers: 40,
+//   numImageMax: 10,
+//   sdImage: 3,
+//   date: new Date("2024-10-01"),
+// })
+//   .catch((e) => {
+//     console.error(e);
+//     process.exit(1);
+//   })
+//   .finally(async () => {
+//     await prisma.$disconnect();
+//     process.exit(0);
+//   });
+
+await addTestImages({
+  userIndex: 2,
+  numUsers: 50,
+  numImageMax: 10,
+  sdImage: 3,
+  date: new Date("2024-10-01"),
+})
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
+
+await addTestImages({
+  userIndex: 3,
+  numUsers: 60,
+  numImageMax: 10,
+  sdImage: 3,
+  date: new Date("2024-10-01"),
+})
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
+
+// addTestImages({
+//   userIndex: 1,
+//   reset: true,
+// })
+//   .catch((e) => {
+//     console.error(e);
+//     process.exit(1);
+//   })
+//   .finally(async () => {
+//     await prisma.$disconnect();
+//     process.exit(0);
+//   });

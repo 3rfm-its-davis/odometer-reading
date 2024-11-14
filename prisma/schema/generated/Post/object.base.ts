@@ -44,7 +44,7 @@ export const PostCreatedAtFieldObject = defineFieldObject('Post', {
 });
 
 export const PostImageFieldObject = defineFieldObject('Post', {
-  type: Inputs.Bytes,
+  type: "String",
   description: undefined,
   nullable: false,
   resolve: (parent) => parent.image,

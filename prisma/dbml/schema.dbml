@@ -36,7 +36,7 @@ Table Admin {
 Table Post {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
-  image Bytes [not null]
+  image String [not null]
   reading Float [not null, default: 0]
   postStatus PostStatus [not null]
   postStatusId String [not null]
