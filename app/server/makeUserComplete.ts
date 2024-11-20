@@ -16,7 +16,9 @@ export const makeUserComplete = async (user: {
 
   const ourPhoneNumber = process.env.OUR_PHONE_NUMBER;
 
-  await new Promise((resolve) => setTimeout(resolve, 30000));
+  if (user.phoneNumber.includes("TEST")) {
+    return;
+  }
 
   axios.post(
     `https://graph.facebook.com/v19.0/${ourPhoneNumber}/messages`,

@@ -1,4 +1,5 @@
 import { json } from "@remix-run/node";
+import { deleteImageFromBlobContainer } from "~/utils/handleImageOnBlobContainer";
 import { sendWhatsAppMessageText } from "~/utils/sendWhatsAppMessage";
 import { message } from "./messageConst";
 import { prisma } from "./prisma.server";
@@ -59,12 +60,23 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
 export const handleDelete = async (payload: HandleRequestPayload) => {
   const imageId = payload.message?.replace("DELETE ", "");
 
+  const image = await prisma.post.findFirstOrThrow({
+    where: {
+      id: payload.user!.accessCode + "-" + imageId,
+    },
+    select: {
+      image: true,
+    },
+  });
+
+  deleteImageFromBlobContainer(image.image);
+
   const result = await prisma.post.updateMany({
     where: {
       id: payload.user!.accessCode + "-" + imageId,
     },
     data: {
-      image: Buffer.from(""),
+      image: "",
       size: 0,
     },
   });
@@ -102,6 +114,19 @@ export const handleStop = async (payload: HandleRequestPayload) => {
     } else if (
       payload.message === `STOP AND DELETE ${payload.user.accessCode}`
     ) {
+      const imageBlobUrls = await prisma.post.findMany({
+        where: {
+          postedById: payload.user.id,
+        },
+        select: {
+          image: true,
+        },
+      });
+
+      imageBlobUrls.forEach((imageBlobUrl) => {
+        deleteImageFromBlobContainer(imageBlobUrl.image);
+      });
+
       await prisma.user.update({
         where: {
           id: payload.user.id,
@@ -115,7 +140,8 @@ export const handleStop = async (payload: HandleRequestPayload) => {
                 postedById: payload.user.id,
               },
               data: {
-                image: Buffer.from(""),
+                image: "",
+                size: 0,
               },
             },
           },

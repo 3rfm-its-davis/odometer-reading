@@ -49,6 +49,24 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   const form = await request.formData();
+
+  if (String(form.get("intent")) === "suspend") {
+    await prisma.user.update({
+      where: {
+        id: String(form.get("userId")),
+      },
+      data: {
+        userStatusId: "suspended",
+      },
+    });
+    return json({
+      message: "User suspended",
+      status: 200,
+      actions: [],
+      result: null,
+    });
+  }
+
   const actions = JSON.parse(String(form.get("actions")));
 
   if (actions.length === 0) {
@@ -58,7 +76,7 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   // return actions without the first item
   // return json({ actions: actions.slice(1) });
@@ -146,10 +164,10 @@ export async function action({ request }: ActionFunctionArgs) {
     action.rejectionReason &&
     result.postedBy.userStatusId === "activated"
   ) {
-    await sendTemplateMessage(result.postedBy.phoneNumber, "reject_post", [
-      action.rejectionReason,
-      result.id.replace(`${result.postedBy.accessCode}-`, ""),
-    ]);
+    // await sendTemplateMessage(result.postedBy.phoneNumber, "reject_post", [
+    //   action.rejectionReason,
+    //   result.id.replace(`${result.postedBy.accessCode}-`, ""),
+    // ]);
 
     return json(
       {
@@ -198,6 +216,7 @@ export default function User() {
   const submit = useSubmit();
   const actionData = useActionData<typeof action>();
   const [uiPosts, setUiPosts] = useState<UIPost[]>([]);
+  const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(false);
 
   useEffect(() => {
     if (posts) {
@@ -261,6 +280,7 @@ export default function User() {
         }
       );
     } else {
+      setIsSubmitButtonDisabled(false);
       console.log("All actions completed");
     }
   }, [actionData]);
@@ -416,11 +436,45 @@ export default function User() {
     <div className="flex flex-col h-full w-full p-4">
       <div className="flex flex-row justify-between pb-4 border-b border-slate-800">
         <h1 className="flex text-3xl self-baseline">User: {user.accessCode}</h1>
-        <div className="flex flex-row gap-x-4 self-baseline">
-          <h3 className="flex text-xl">
+        <div className="flex flex-row gap-x-4">
+          <Form method="post">
+            <button
+              className="px-4 py-2 rounded border-solid border-2 border-red-800 hover:bg-red-500 bg-red-300 active:bg-red-300 transition duration-300 ease-in-out"
+              type="submit"
+              name="intent"
+              value="suspend"
+            >
+              {"Suspend User"}
+            </button>
+          </Form>
+          <h3 className="flex text-xl self-center">
             Activation Date: {new Date(user?.activatedAt || "").toISOString()}
           </h3>
-          <h3 className="flex text-xl">Post Count {posts.length}</h3>
+          <h3 className="flex text-xl self-center">
+            Post Count {posts.length}
+          </h3>
+          {user.userStatusId === "activated" ? (
+            <span className="text-white text-md bg-green-500 rounded p-1.5 self-center">
+              Activated
+            </span>
+          ) : user.userStatusId === "suspended" ? (
+            <span className="text-white text-md bg-red-500 rounded p-1.5 self-center">
+              Suspended
+            </span>
+          ) : user.userStatusId === "completed" ? (
+            <span className="text-white text-md bg-blue-500 rounded p-1.5 self-center">
+              Completed
+            </span>
+          ) : user.userStatusId === "closed" ||
+            user.userStatusId === "deleted" ? (
+            <span className="text-white text-md bg-gray-500 rounded p-1.5 self-center">
+              Closed / Deleted
+            </span>
+          ) : (
+            <span className="text-white text-md bg-gray-500 rounded p-1.5 self-center">
+              Unknown
+            </span>
+          )}
         </div>
       </div>
       <div className="flex flex-grow flex-row gap-4 h-full overflow-auto py-4">
@@ -471,6 +525,8 @@ export default function User() {
                     {uiPost.postStatusId === "rejected" && (
                       <span className="text-white text-sm bg-red-500 rounded p-1">
                         Rejected by {uiPost.statusChangedByEmail}
+                        <br />
+                        {uiPost.rejectionReasonId}
                       </span>
                     )}
                     {!["submitted", "read", "approved", "rejected"].includes(
@@ -484,7 +540,8 @@ export default function User() {
                   <div className="flex flex-row justify-start gap-2">
                     <div className="flex flex-row justify-between gap-2">
                       {uiPost.postStatusId === "submitted" ||
-                      uiPost.postStatusId === "read" ? (
+                      uiPost.postStatusId === "read" ||
+                      uiPost.postStatusId === "rejected" ? (
                         <>
                           <p>Reading</p>
                           <Input
@@ -502,23 +559,21 @@ export default function User() {
                             }}
                           />
                         </>
-                      ) : uiPost.postStatusId === "approved" ? (
+                      ) : (
                         <>
                           <p>Reading:</p>
                           <p>{uiPost.reading}</p>
                         </>
-                      ) : (
-                        <p>Rejected as: {uiPost.rejectionReasonId}</p>
                       )}
                     </div>
                   </div>
                   <div className="flex flex-row justify-between gap-2">
                     {uiPost.postStatusId === "read" ? (
                       <div className="flex flex-row gap-1">
-                        Approved
+                        Approve
                         <Switch
                           disabled={
-                            // uiPost.statusChangedById === adminId ||
+                            uiPost.statusChangedById === adminId ||
                             formDataElement?.changeTo === "rejected"
                           }
                           onChange={(e) => {
@@ -569,6 +624,7 @@ export default function User() {
         className="flex flex-grow flex-row justify-end w-full"
         onSubmit={(e) => {
           e.preventDefault();
+          setIsSubmitButtonDisabled(true);
           submit(
             {
               actions: JSON.stringify(formData.filter((data) => data.changeTo)),
@@ -580,8 +636,9 @@ export default function User() {
         }}
       >
         <Button
-          className="w-40 p-2 rounded bg-blue-500 hover:bg-blue-700 transition duration-300 ease-in-out text-white"
+          className="w-40 p-2 rounded border-solid border-blue-800 border-2 bg-blue-300 hover:bg-blue-500 active:bg-blue-300 disabled:bg-gray-200 transition duration-300 ease-in-out"
           type="submit"
+          disabled={isSubmitButtonDisabled}
         >
           {"Submit Changes"}
         </Button>

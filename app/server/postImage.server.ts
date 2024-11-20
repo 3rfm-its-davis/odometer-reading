@@ -1,7 +1,7 @@
-import axios from "axios";
-import { prisma } from "./prisma.server";
-import { User } from "@prisma/client";
 import { json } from "@remix-run/node";
+import axios from "axios";
+import { postImageToBlobContainer } from "~/utils/handleImageOnBlobContainer";
+import { prisma } from "./prisma.server";
 import { HandleRequestPayload } from "./types.server";
 
 export const postImage = async (payload: HandleRequestPayload) => {
@@ -57,12 +57,16 @@ export const postImage = async (payload: HandleRequestPayload) => {
       },
     })) + 1;
 
+  const imageId = payload.user!.accessCode + "-IMG-" + count;
+
+  const blobUrl = await postImageToBlobContainer(imageId, imageBuffer);
+
   prisma.post
     .create({
       data: {
         // id: payload.messageId!,
         id: payload.user!.accessCode + "-IMG-" + count,
-        image: imageBuffer,
+        image: blobUrl,
         postStatus: {
           connect: {
             id: "submitted",

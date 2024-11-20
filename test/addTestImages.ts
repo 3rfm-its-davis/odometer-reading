@@ -1,4 +1,3 @@
-import { BlobServiceClient } from "@azure/storage-blob";
 import { Prisma } from "@prisma/client";
 import crypto from "crypto";
 import dotenv from "dotenv";
@@ -6,6 +5,7 @@ import fs from "fs/promises";
 import r from "random";
 import { v4 } from "uuid";
 import { prisma } from "~/server/prisma.server";
+import { postImageToBlobContainer } from "~/utils/handleImageOnBlobContainer";
 
 dotenv.config();
 
@@ -106,26 +106,8 @@ const addTestImages = async ({
       const prismaImages: Promise<
         Omit<Prisma.PostCreateManyInput, "postedById">
       >[] = images.map(async (image, imageIndex) => {
-        const imageId = `TEST-${user.accessCode}-IMG-${imageIndex + 1}`;
-        const blobServiceClient = BlobServiceClient.fromConnectionString(
-          process.env.AZURE_STORAGE_CONNECTION_STRING!
-        );
-        let blobUrl = "";
-
-        try {
-          const containerClient = blobServiceClient.getContainerClient(
-            process.env.AZURE_STORAGE_CONTAINER_NAME!
-          );
-
-          const blobName = `${imageId}.jpg`;
-          const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-          await blockBlobClient.upload(image, image.length);
-          blobUrl = `https://${process.env
-            .AZURE_STORAGE_ACCOUNT_NAME!}.blob.core.windows.net/${process.env
-            .AZURE_STORAGE_CONTAINER_NAME!}/${blobName}`;
-        } catch (e) {
-          console.error(e);
-        }
+        const imageId = `${user.id}-${imageIndex}`;
+        const blobUrl = await postImageToBlobContainer(imageId, image);
 
         let daysToAddToActivationDate;
         const randNormal = r.normal(0, sdImage);
@@ -199,11 +181,11 @@ const addTestImages = async ({
 //   });
 
 await addTestImages({
-  userIndex: 2,
-  numUsers: 50,
-  numImageMax: 10,
-  sdImage: 3,
-  date: new Date("2024-10-01"),
+  userIndex: 3,
+  numUsers: 30,
+  numImageMax: 7,
+  sdImage: 2,
+  date: new Date("2024-12-01"),
 })
   .catch((e) => {
     console.error(e);
@@ -213,23 +195,23 @@ await addTestImages({
     await prisma.$disconnect();
   });
 
-await addTestImages({
-  userIndex: 3,
-  numUsers: 60,
-  numImageMax: 10,
-  sdImage: 3,
-  date: new Date("2024-10-01"),
-})
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+// await addTestImages({
+//   userIndex: 3,
+//   numUsers: 60,
+//   numImageMax: 10,
+//   sdImage: 3,
+//   date: new Date("2024-10-01"),
+// })
+//   .catch((e) => {
+//     console.error(e);
+//     process.exit(1);
+//   })
+//   .finally(async () => {
+//     await prisma.$disconnect();
+//   });
 
 // addTestImages({
-//   userIndex: 1,
+//   userIndex: 2,
 //   reset: true,
 // })
 //   .catch((e) => {
@@ -238,5 +220,16 @@ await addTestImages({
 //   })
 //   .finally(async () => {
 //     await prisma.$disconnect();
-//     process.exit(0);
+//   });
+
+// addTestImages({
+//   userIndex: 3,
+//   reset: true,
+// })
+//   .catch((e) => {
+//     console.error(e);
+//     process.exit(1);
+//   })
+//   .finally(async () => {
+//     await prisma.$disconnect();
 //   });

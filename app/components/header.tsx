@@ -23,6 +23,9 @@ export const Header = ({ isLoginPage }: { isLoginPage: boolean }) => {
             <li>
               <a href="/messages">Messages</a>
             </li>
+            <li>
+              <a href="/giftcard">Gift card</a>
+            </li>
           </ul>
         </nav>
       ) : null}
