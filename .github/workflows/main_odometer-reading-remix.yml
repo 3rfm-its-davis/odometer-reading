@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: "Production"
+      name: "dev"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
@@ -54,6 +54,6 @@ jobs:
         id: deploy-to-webapp
         with:
           app-name: "odometer-reading-remix"
-          slot-name: "Production"
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_986791073EA04897A3D63D2375A3ACAD }}
+          slot-name: "dev"
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A40B476DDA574F17BA116D9FF8AB7BB1 }}
           package: "release.zip"

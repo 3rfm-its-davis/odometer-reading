@@ -49,22 +49,34 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   const form = await request.formData();
+  const adminId = await requireAdminId(request);
+
+  console.log("adminId: ", adminId);
 
   if (String(form.get("intent")) === "suspend") {
-    await prisma.user.update({
-      where: {
-        id: String(form.get("userId")),
-      },
-      data: {
-        userStatusId: "suspended",
-      },
-    });
-    return json({
-      message: "User suspended",
-      status: 200,
-      actions: [],
-      result: null,
-    });
+    if (form.get("key") === process.env.SUSPEND_KEY) {
+      await prisma.user.update({
+        where: {
+          id: String(form.get("userId")),
+        },
+        data: {
+          userStatusId: "suspended",
+        },
+      });
+      return json({
+        message: "User suspended",
+        status: 200,
+        actions: [],
+        result: null,
+      });
+    } else {
+      return json({
+        message: "User not suspended: key is wrong",
+        status: 400,
+        actions: [],
+        result: null,
+      });
+    }
   }
 
   const actions = JSON.parse(String(form.get("actions")));
@@ -82,7 +94,6 @@ export async function action({ request }: ActionFunctionArgs) {
   // return json({ actions: actions.slice(1) });
 
   const action = actions[0] as PostAction;
-  const adminId = await requireAdminId(request);
 
   const result = await prisma.post.update({
     where: { id: action.id },
@@ -437,21 +448,32 @@ export default function User() {
       <div className="flex flex-row justify-between pb-4 border-b border-slate-800">
         <h1 className="flex text-3xl self-baseline">User: {user.accessCode}</h1>
         <div className="flex flex-row gap-x-4">
-          <Form method="post">
-            <button
-              className="px-4 py-2 rounded border-solid border-2 border-red-800 hover:bg-red-500 bg-red-300 active:bg-red-300 transition duration-300 ease-in-out"
-              type="submit"
-              name="intent"
-              value="suspend"
-            >
-              {"Suspend User"}
-            </button>
-          </Form>
+          {user.userStatusId !== "suspended" && (
+            <Form method="post" className="flex flex-row gap-x-2">
+              <h5 className="flex text-sm self-center">Suspension Key:</h5>
+              <Input
+                autoComplete="off"
+                name="key"
+                className={
+                  "block rounded outline outline-1 outline-gray-500 disabled:bg-gray-200 focus:outline-indigo-800"
+                }
+              />
+              <button
+                className="px-2 text-xs rounded border-solid border-2 border-red-800 hover:bg-red-500 bg-red-300 active:bg-red-300 transition duration-300 ease-in-out"
+                type="submit"
+                name="intent"
+                value="suspend"
+              >
+                {"Suspend"}
+              </button>
+              <input name="userId" type="hidden" value={user.id} />
+            </Form>
+          )}
           <h3 className="flex text-xl self-center">
             Activation Date: {new Date(user?.activatedAt || "").toISOString()}
           </h3>
           <h3 className="flex text-xl self-center">
-            Post Count {posts.length}
+            Post Count: {posts.length}
           </h3>
           {user.userStatusId === "activated" ? (
             <span className="text-white text-md bg-green-500 rounded p-1.5 self-center">
@@ -573,7 +595,7 @@ export default function User() {
                         Approve
                         <Switch
                           disabled={
-                            uiPost.statusChangedById === adminId ||
+                            // uiPost.statusChangedById === adminId ||
                             formDataElement?.changeTo === "rejected"
                           }
                           onChange={(e) => {

@@ -33,7 +33,7 @@ export const sendEmail = async (users: any[], adminId?: string) => {
   const newUsers = users.map(async (user, index) => {
     const firstInvitation = {
       subject:
-        "[3RFM Internal Test] Instructions for Participating in Odometer Picture Collection Study",
+        "Instructions for Participating in Odometer Picture Collection Study",
       html: message("instruction", user.accessCode),
     };
 
