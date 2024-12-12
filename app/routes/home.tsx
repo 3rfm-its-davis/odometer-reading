@@ -32,6 +32,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
         },
       },
     },
+    where: {
+      posts: {
+        some: {
+          size: {
+            gt: 0,
+          },
+        },
+      },
+    },
   });
 
   return { _users, admin };
