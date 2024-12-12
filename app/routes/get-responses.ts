@@ -18,6 +18,8 @@ export async function action({ request }: ActionFunctionArgs) {
     await prisma.lastQualtricsResponseRetrieval.findFirst({})
   )?.id;
 
+  await new Promise((resolve) => setTimeout(resolve, 180000));
+
   const progressId = (
     await axios.post(
       `https://${server}.qualtrics.com/API/v3/surveys/${surveyId}/export-responses`,
