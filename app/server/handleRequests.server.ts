@@ -60,7 +60,7 @@ export const handleRegistration = async (payload: HandleRequestPayload) => {
 export const handleDelete = async (payload: HandleRequestPayload) => {
   const imageId = payload.message?.replace("DELETE ", "");
 
-  const image = await prisma.post.findFirstOrThrow({
+  const image = await prisma.post.findFirst({
     where: {
       id: payload.user!.accessCode + "-" + imageId,
     },
@@ -68,6 +68,12 @@ export const handleDelete = async (payload: HandleRequestPayload) => {
       image: true,
     },
   });
+
+  if (!image) {
+    sendWhatsAppMessageText(payload.phoneNumber, message("imageNotFound"));
+
+    return { body: "OK", status: 200 };
+  }
 
   deleteImageFromBlobContainer(image.image);
 
