@@ -31,41 +31,19 @@ export const sendEmail = async (users: any[], adminId?: string) => {
     new Promise((resolve) => setTimeout(resolve, ms));
 
   const newUsers = users.map(async (user, index) => {
-    const firstInvitation = {
-      subject:
-        "Instructions for Participating in Odometer Picture Collection Study",
-      html: message("instruction", user.accessCode),
-    };
-
-    const secondInvitation = {
-      subject:
-        "Reminder: Participate in Our Odometer Picture Collection Trial Today!",
-      html: `Dear 3RFM Members,<br>
-<br>
-Please submit three odometer pictures via WhatsApp by 5 PM today and provide feedback on the process.<br>
-Your participation is crucial for testing our new data collection framework. For any questions, contact Siddhartha or Keita.
-<br>
-Best regards,<br>
-Siddhartha Gulhare<br>
-Postdoctoral Researcher<br>
-3 Revolutions Future Mobility<br>
-Institute of Transportation Studies, UC Davis<br>`,
-    };
-
     await delay(index * 1000);
+
+    if (user.invitationCount > 0) {
+      return user;
+    }
 
     try {
       await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: user.email!,
         subject:
-          user.invitationCount > 0
-            ? firstInvitation.subject
-            : firstInvitation.subject,
-        html:
-          user.invitationCount > 0
-            ? firstInvitation.html
-            : firstInvitation.html,
+          "Instructions for Participating in Odometer Picture Collection Study",
+        html: message("instruction", user.accessCode),
       });
 
       await prisma.user.update({
