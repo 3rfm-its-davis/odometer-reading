@@ -47,9 +47,9 @@ export const cronJob = async () => {
   });
 
   CronJob.from({
-    cronTime: "0 */10 * * * *",
+    cronTime: "0 /10 * * * *",
     onTick: async () => {
-      const continuationToken = (
+      const startDate = (
         await prisma.lastQualtricsResponseRetrieval.findFirst({})
       )?.id;
 
@@ -58,11 +58,9 @@ export const cronJob = async () => {
           `https://${process.env.QUALTRICS_SERVER}.qualtrics.com/API/v3/surveys/${process.env.QUALTRICS_SURVEY}/export-responses`,
           {
             format: "json",
-            limit: 5,
+            limit: 10,
             compress: false,
-            allowContinuation: continuationToken !== "default" ? false : true,
-            continuationToken:
-              continuationToken !== "default" ? continuationToken : undefined,
+            startDate: startDate === "default" ? undefined : startDate,
           },
           {
             headers: {
@@ -77,7 +75,6 @@ export const cronJob = async () => {
       }
 
       let fileId = undefined;
-      let newContinuationToken = continuationToken;
 
       const getFileIdInterval = setInterval(async () => {
         const response = await axios.get(
@@ -90,7 +87,6 @@ export const cronJob = async () => {
         );
 
         fileId = response.data?.result?.fileId;
-        newContinuationToken = response.data?.result?.continuationToken;
 
         if (fileId) {
           clearInterval(getFileIdInterval);
@@ -113,12 +109,22 @@ export const cronJob = async () => {
       ).data;
 
       if (file.responses.length > 0) {
+        const newStartDate = file.responses
+          .map(
+            (item: { values: { recordedDate: any } }) =>
+              item.values.recordedDate
+          )
+          // get the latest datetime
+          .sort(
+            (a: any, b: any) => new Date(b).getTime() - new Date(a).getTime()
+          )[0];
+
         await prisma.lastQualtricsResponseRetrieval.update({
           where: {
-            id: continuationToken,
+            id: startDate,
           },
           data: {
-            id: newContinuationToken,
+            id: `${new Date(newStartDate).toISOString().split(".")[0]}Z`,
           },
         });
       }
