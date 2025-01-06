@@ -47,7 +47,7 @@ export const cronJob = async () => {
   });
 
   CronJob.from({
-    cronTime: "0 /10 * * * *",
+    cronTime: "0 */10 * * * *",
     onTick: async () => {
       const startDate = (
         await prisma.lastQualtricsResponseRetrieval.findFirst({})
